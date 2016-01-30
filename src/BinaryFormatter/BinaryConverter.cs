@@ -15,7 +15,7 @@ namespace BinaryFormatter
             ICollection<PropertyInfo> properties = t.GetProperties().ToArray();
             int totalSize = 150 + sizeof(int) * properties.Count;
 
-            byte[] array = new byte[totalSize];
+            byte[] serializedObject = new byte[totalSize];
 
             int offset = 0;
             foreach (PropertyInfo property in t.GetProperties())
@@ -23,11 +23,11 @@ namespace BinaryFormatter
                 object prop = property.GetValue(obj);
                 Byte[] elementBytes = GetBytesFromEement(prop);
 
-                Array.ConstrainedCopy(elementBytes, 0, array, offset, elementBytes.Length);
+                Array.ConstrainedCopy(elementBytes, 0, serializedObject, offset, elementBytes.Length);
                 offset += elementBytes.Length;
             }
 
-            return new byte[0];
+            return serializedObject;
         }
 
         private static byte[] GetBytesFromEement(object element)
