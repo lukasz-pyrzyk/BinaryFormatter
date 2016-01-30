@@ -7,7 +7,7 @@ namespace BinaryFormatterTests.TypeConverter
     public class SByteConverterTests
     {
         [Fact]
-        public void CanCorrectSerializeShort()
+        public void CanCorrectSerialize()
         {
             sbyte value = sbyte.MaxValue;
             SByteConverter converter = new SByteConverter();

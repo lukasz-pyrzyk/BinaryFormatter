@@ -7,7 +7,7 @@ namespace BinaryFormatterTests.TypeConverter
     public class ByteConverterTests
     {
         [Fact]
-        public void CanCorrectSerializeShort()
+        public void CanCorrectSerialize()
         {
             byte value = byte.MaxValue;
             ByteConverter converter = new ByteConverter();

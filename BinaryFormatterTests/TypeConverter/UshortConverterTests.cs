@@ -7,7 +7,7 @@ namespace BinaryFormatterTests.TypeConverter
     public class UShortConverterTests
     {
         [Fact]
-        public void CanCorrectSerializeUshort()
+        public void CanCorrectSerialize()
         {
             ushort value = ushort.MaxValue;
             UShortConverter converter = new UShortConverter();

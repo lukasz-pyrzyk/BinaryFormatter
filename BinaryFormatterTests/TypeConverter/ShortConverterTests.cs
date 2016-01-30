@@ -7,7 +7,7 @@ namespace BinaryFormatterTests.TypeConverter
     public class ShortConverterTests
     {
         [Fact]
-        public void CanCorrectSerializeShort()
+        public void CanCorrectSerialize()
         {
             short value = short.MaxValue;
             ShortConverter converter = new ShortConverter();
