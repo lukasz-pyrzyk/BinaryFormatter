@@ -8,5 +8,10 @@ namespace BinaryFormatter.TypeConverter
         {
             return BitConverter.GetBytes(obj);
         }
+
+        protected override int GetTypeSize()
+        {
+            return sizeof (short);
+        }
     }
 }
