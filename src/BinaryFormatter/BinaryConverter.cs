@@ -13,21 +13,16 @@ namespace BinaryFormatter
             Type t = obj.GetType();
 
             ICollection<PropertyInfo> properties = t.GetProperties().ToArray();
-            int totalSize = 150 + sizeof(int) * properties.Count;
 
-            byte[] serializedObject = new byte[totalSize];
-
-            int offset = 0;
-            foreach (PropertyInfo property in t.GetProperties())
+            List<byte> serializedObject = new List<byte>();
+            foreach (PropertyInfo property in properties)
             {
                 object prop = property.GetValue(obj);
-                Byte[] elementBytes = GetBytesFromEement(prop);
-
-                Array.ConstrainedCopy(elementBytes, 0, serializedObject, offset, elementBytes.Length);
-                offset += elementBytes.Length;
+                byte[] elementBytes = GetBytesFromEement(prop);
+                serializedObject.AddRange(elementBytes);
             }
 
-            return serializedObject;
+            return serializedObject.ToArray();
         }
 
         private static byte[] GetBytesFromEement(object element)
