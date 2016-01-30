@@ -3,15 +3,18 @@ using Xunit;
 
 namespace BinaryFormatterTests
 {
-    public class ParserTests
+    public class BinaryConverterTests
     {
         [Fact]
-        public void DoWork()
+        public void CanSerializeObject()
         {
-            Test test = new Test(5, 4, "jedynascie");
+            Test test = new Test(5, 4, "Lorem ipsum");
 
-            //BinaryConverter p = new BinaryConverter();
-            //byte[] array = p.Parse(test);
+            BinaryConverter p = new BinaryConverter();
+            byte[] array = p.Parse(test);
+
+            Assert.NotNull(array);
+            Assert.NotEmpty(array);
         }
 
         internal class Test

@@ -6,7 +6,7 @@ using BinaryFormatter.TypeConverter;
 
 namespace BinaryFormatter
 {
-    public class Parser
+    public class BinaryConverter
     {
         public byte[] Parse(object obj)
         {
