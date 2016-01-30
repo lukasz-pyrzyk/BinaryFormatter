@@ -10,7 +10,7 @@ namespace BinaryFormatterTests.TypeConverter
         public void CanCorrectSerialize()
         {
             byte value = byte.MaxValue;
-            BaseTypeConverter converter = new ByteConverter();
+            ByteConverter converter = new ByteConverter();
             byte[] bytes = converter.Serialize(value);
 
             int size = BitConverter.ToInt32(bytes, 0);
