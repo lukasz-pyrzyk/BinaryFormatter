@@ -96,6 +96,7 @@ namespace BinaryFormatter
             // TODO decimal
 
             byte[] sizeBytes = BitConverter.GetBytes(elementSize);
+
             Byte[] finalPackage = new byte[sizeBytes.Length + elementBytes.Length];
             
             Array.ConstrainedCopy(sizeBytes, 0, finalPackage, 0, sizeBytes.Length);

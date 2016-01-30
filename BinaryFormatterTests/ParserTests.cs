@@ -10,8 +10,8 @@ namespace BinaryFormatterTests
         {
             Test test = new Test(5, 4, "jedynascie");
 
-            BinaryConverter p = new BinaryConverter();
-            byte[] array = p.Parse(test);
+            //BinaryConverter p = new BinaryConverter();
+            //byte[] array = p.Parse(test);
         }
 
         internal class Test
