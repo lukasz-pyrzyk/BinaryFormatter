@@ -3,8 +3,15 @@ using System.Runtime.InteropServices;
 
 namespace BinaryFormatter.TypeConverter
 {
-    internal abstract class BaseTypeConverter<T>
+    internal abstract class BaseTypeConverter<T> : BaseTypeConverter
     {
+        public override byte[] Serialize(object obj)
+        {
+            if (obj == null) throw new ArgumentNullException(nameof(obj));
+
+            return Serialize((T)obj);
+        }
+
         public byte[] Serialize(T obj)
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
@@ -26,5 +33,10 @@ namespace BinaryFormatter.TypeConverter
         }
 
         protected abstract byte[] ProcessSerialize(T obj);
+    }
+
+    internal abstract class BaseTypeConverter
+    {
+        public abstract byte[] Serialize(object obj);
     }
 }

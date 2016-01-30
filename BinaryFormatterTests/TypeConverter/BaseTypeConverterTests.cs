@@ -30,6 +30,14 @@ namespace BinaryFormatterTests.TypeConverter
             Assert.ThrowsAny<ArgumentNullException>(() => fake.Serialize(null));
         }
 
+        [Fact]
+        public void ThrowsWhenObjIsNullWithCasting()
+        {
+            Fake fake = new Fake();
+
+            Assert.ThrowsAny<ArgumentNullException>(() => fake.Serialize((object)null));
+        }
+
         internal class Fake : BaseTypeConverter<string>
         {
             protected override int GetTypeSize()
