@@ -4,13 +4,13 @@ using Xunit;
 
 namespace BinaryFormatterTests.TypeConverter
 {
-    public class UshortConverterTests
+    public class UShortConverterTests
     {
         [Fact]
         public void CanCorrectSerializeUshort()
         {
             ushort value = ushort.MaxValue;
-            UshortConverter converter = new UshortConverter();
+            UShortConverter converter = new UShortConverter();
             byte[] bytes = converter.Serialize(value);
 
             int size = BitConverter.ToInt32(bytes, 0);
