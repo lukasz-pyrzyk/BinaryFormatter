@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+using BinaryFormatter.TypeConverter;
 
 namespace BinaryFormatter
 {
@@ -34,75 +32,64 @@ namespace BinaryFormatter
 
         private static byte[] GetBytesFromEement(object element)
         {
-            byte[] elementBytes = new byte[0];
-            int elementSize = 0;
+            if (element is byte)
+            {
+                return new ByteConverter().Serialize(element);
+            }
+            if (element is sbyte)
+            {
+                return new SByteConverter().Serialize(element);
+            }
+            if (element is int)
+            {
+                return new IntConverter().Serialize(element);
+            }
+            if (element is uint)
+            {
+                return new UIntConverter().Serialize(element);
+            }
             if (element is short)
             {
-                elementBytes = BitConverter.GetBytes((short) element);
-                elementSize = sizeof (short);
+                return new ShortConverter().Serialize(element);
             }
             if (element is ushort)
             {
-                elementBytes = BitConverter.GetBytes((ushort)element);
-                elementSize = sizeof(ushort);
+                return new UShortConverter().Serialize(element);
             }
-            else if (element is int)
+            if (element is long)
             {
-                elementBytes = BitConverter.GetBytes((int)element);
-                elementSize = sizeof(int);
+                return new LongConverter().Serialize(element);
             }
-            else if (element is uint)
+            if (element is ulong)
             {
-                elementBytes = BitConverter.GetBytes((uint)element);
-                elementSize = sizeof(uint);
+                return new ULongConverter().Serialize(element);
             }
-            else if (element is long)
+            if (element is float)
             {
-                elementBytes = BitConverter.GetBytes((long)element);
-                elementSize = sizeof(long);
+                return new FloatConverter().Serialize(element);
             }
-            else if (element is ulong)
+            if (element is double)
             {
-                elementBytes = BitConverter.GetBytes((ulong)element);
-                elementSize = sizeof(ulong);
+                return new DoubleConverter().Serialize(element);
             }
-            else if (element is float)
+            if (element is char)
             {
-                elementBytes = BitConverter.GetBytes((float)element);
-                elementSize = sizeof(float);
+                return new CharConverter().Serialize(element);
             }
-            else if (element is double)
+            if (element is bool)
             {
-                elementBytes = BitConverter.GetBytes((double)element);
-                elementSize = sizeof(double);
+                return new BoolConverter().Serialize(element);
             }
-            else if (element is char)
+            if (element is string)
             {
-                elementBytes = BitConverter.GetBytes((char)element);
-                elementSize = sizeof(char);
+                return new StringConverter().Serialize(element);
             }
-            else if (element is string)
+            if (element is decimal)
             {
-                string selement = (string) element;
-                elementBytes = Encoding.UTF8.GetBytes(selement);
-                elementSize = selement.Length;
+                return new DecimalConverter().Serialize(element);
             }
-            else if (element is DateTime)
-            {
-                DateTime date = (DateTime) element;
-                elementBytes = BitConverter.GetBytes(date.Ticks);
-                elementSize = sizeof (long);
-            }
-            // TODO decimal
 
-            byte[] sizeBytes = BitConverter.GetBytes(elementSize);
-
-            Byte[] finalPackage = new byte[sizeBytes.Length + elementBytes.Length];
-            
-            Array.ConstrainedCopy(sizeBytes, 0, finalPackage, 0, sizeBytes.Length);
-            Array.ConstrainedCopy(elementBytes, 0, finalPackage, sizeBytes.Length, elementBytes.Length);
-
-            return finalPackage;
+            throw new InvalidOperationException("Cannot find specific BinaryConverter");
         }
     }
 }
