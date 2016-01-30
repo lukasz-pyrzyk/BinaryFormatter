@@ -10,7 +10,7 @@ namespace BinaryFormatterTests.TypeConverter
         public void CanCorrectSerialize()
         {
             ulong value = ulong.MaxValue;
-            ULongConverter converter = new ULongConverter();
+            BaseTypeConverter converter = new ULongConverter();
             byte[] bytes = converter.Serialize(value);
 
             int size = BitConverter.ToInt32(bytes, 0);

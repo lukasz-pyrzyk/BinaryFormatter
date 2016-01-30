@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace BinaryFormatter.TypeConverter
 {
-    internal abstract class BaseTypeConverter<T>
+    internal abstract class BaseTypeConverter<T> : BaseTypeConverter
     {
         public byte[] Serialize(T obj)
         {
@@ -26,5 +26,10 @@ namespace BinaryFormatter.TypeConverter
         }
 
         protected abstract byte[] ProcessSerialize(T obj);
+    }
+
+    internal abstract class BaseTypeConverter
+    {
+        public abstract byte[] Serialize<T>(T obj);
     }
 }
