@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using BinaryFormatter;
 using Xunit;
 
@@ -18,6 +19,7 @@ namespace BinaryFormatterTests
             Assert.Equal(obj.X, objFromBytes.X);
             Assert.Equal(obj.Y, objFromBytes.Y);
             Assert.Equal(obj.Word, objFromBytes.Word);
+            Assert.Equal(obj.WordBytes, objFromBytes.WordBytes);
         }
 
         internal class Test
@@ -27,6 +29,7 @@ namespace BinaryFormatterTests
                 X = x;
                 Y = y;
                 Word = word;
+                WordBytes = Encoding.UTF8.GetBytes(word);
             }
 
             public Test()
@@ -36,6 +39,7 @@ namespace BinaryFormatterTests
             public int X { get; set; }
             public string Word { get; set; }
             public int Y { get; set; }
+            public byte[] WordBytes { get; set; }
         }
     }
 }

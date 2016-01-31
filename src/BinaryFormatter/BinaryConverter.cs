@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -30,6 +31,14 @@ namespace BinaryFormatter
 
         public byte[] Serialize(object obj)
         {
+            try
+            {
+                return GetBytesFromEement(obj);
+            }
+            catch (InvalidOperationException)
+            {
+            }
+
             Type t = obj.GetType();
 
             ICollection<PropertyInfo> properties = t.GetProperties().ToArray();
@@ -65,6 +74,16 @@ namespace BinaryFormatter
             {
                 BaseTypeConverter converter = _converters[t];
                 return converter.Serialize(element);
+            }
+
+            if (t.GetInterfaces().Contains(typeof(IEnumerable)))
+            {
+                List<byte> bytes = new List<byte>();
+                foreach (object item in (IEnumerable)element)
+                {
+                    bytes.AddRange(Serialize(item));
+                }
+                return bytes.ToArray();
             }
 
             throw new InvalidOperationException("Cannot find specific BinaryConverter");
