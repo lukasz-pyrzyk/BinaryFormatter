@@ -1,4 +1,5 @@
-﻿using BinaryFormatter;
+﻿using System;
+using BinaryFormatter;
 using Xunit;
 
 namespace BinaryFormatterTests
@@ -11,7 +12,7 @@ namespace BinaryFormatterTests
             Test test = new Test(5, 4, "Lorem ipsum");
 
             BinaryConverter p = new BinaryConverter();
-            byte[] array = p.Parse(test);
+            byte[] array = p.Serialize(test);
 
             Assert.NotNull(array);
             Assert.NotEmpty(array);
@@ -24,11 +25,13 @@ namespace BinaryFormatterTests
                 X = x;
                 Y = y;
                 Word = word;
+                TestObject = new object();
             }
 
             public int X { get; set; }
             public int Y { get; set; }
             public string Word { get; set; }
+            public Object TestObject { get; set; }
         }
     }
 }
