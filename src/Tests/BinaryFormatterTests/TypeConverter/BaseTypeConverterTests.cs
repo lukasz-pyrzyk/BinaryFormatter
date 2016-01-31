@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using BinaryFormatter.TypeConverter;
+using BinaryFormatter.Types;
 using Xunit;
 
 namespace BinaryFormatterTests.TypeConverter
@@ -8,20 +9,7 @@ namespace BinaryFormatterTests.TypeConverter
     public class BaseTypeConverterTests
     {
         public const string Message = "Lorem ipsum";
-
-        [Fact]
-        public void CanSerializeWithSize()
-        {
-            Fake fake = new Fake();
-            byte[] bytes = fake.Serialize(Message);
-
-            int typeSize = BitConverter.ToInt32(bytes, 0);
-            string word = Encoding.UTF8.GetString(bytes, sizeof (int), bytes.Length - sizeof (int));
-
-            Assert.Equal(typeSize, Message.Length);
-            Assert.Equal(word, Message);
-        }
-
+        
         [Fact]
         public void ThrowsWhenObjIsNull()
         {
@@ -49,6 +37,15 @@ namespace BinaryFormatterTests.TypeConverter
             {
                 return Encoding.UTF8.GetBytes(obj);
             }
+
+            protected override string ProcessDeserialize(byte[] stream, ref int offset)
+            {
+                int size = BitConverter.ToInt32(stream, offset);
+                offset += sizeof (int);
+                return Encoding.UTF8.GetString(stream, offset, size);
+            }
+
+            public override SerializedType Type => SerializedType.String;
         }
     }
 }

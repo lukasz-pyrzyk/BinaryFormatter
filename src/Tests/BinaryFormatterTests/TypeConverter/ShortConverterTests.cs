@@ -7,16 +7,14 @@ namespace BinaryFormatterTests.TypeConverter
     public class ShortConverterTests
     {
         [Fact]
-        public void CanCorrectSerialize()
+        public void CanSerializeAndDeserialize()
         {
             short value = short.MaxValue;
             ShortConverter converter = new ShortConverter();
             byte[] bytes = converter.Serialize(value);
 
-            int size = BitConverter.ToInt32(bytes, 0);
-            short valueFromBytes = BitConverter.ToInt16(bytes, sizeof (int));
+            short valueFromBytes = converter.Deserialize(bytes);
 
-            Assert.Equal(size, sizeof(short));
             Assert.Equal(valueFromBytes, value);
         }
     }

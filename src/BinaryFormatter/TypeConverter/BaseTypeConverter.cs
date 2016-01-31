@@ -1,10 +1,28 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using BinaryFormatter.Types;
 
 namespace BinaryFormatter.TypeConverter
 {
     internal abstract class BaseTypeConverter<T> : BaseTypeConverter
     {
+        public byte[] Serialize(T obj)
+        {
+            if (obj == null) throw new ArgumentNullException(nameof(obj));
+
+            byte[] objectBytes = ProcessSerialize(obj);
+            byte[] objectType = BitConverter.GetBytes((short)Type);
+
+            byte[] final = new byte[objectType.Length + objectBytes.Length];
+
+            int offset = 0;
+            Array.Copy(objectType, 0, final, offset, objectType.Length);
+            offset += objectType.Length;
+            Array.Copy(objectBytes, 0, final, offset, objectBytes.Length);
+
+            return final;
+        }
+
         public override byte[] Serialize(object obj)
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
@@ -12,19 +30,15 @@ namespace BinaryFormatter.TypeConverter
             return Serialize((T)obj);
         }
 
-        public byte[] Serialize(T obj)
+        public T Deserialize(byte[] stream)
         {
-            if (obj == null) throw new ArgumentNullException(nameof(obj));
+            int offset = sizeof (short);
+            return ProcessDeserialize(stream, ref offset);
+        }
 
-            byte[] objectBytes = ProcessSerialize(obj);
-            byte[] sizeBytes = BitConverter.GetBytes(GetTypeSize());
-
-            byte[] final = new byte[sizeBytes.Length + objectBytes.Length];
-
-            Array.Copy(sizeBytes, 0, final, 0, sizeBytes.Length);
-            Array.Copy(objectBytes, 0, final, sizeBytes.Length, objectBytes.Length);
-
-            return final;
+        public override object DeserializeToObject(byte[] stream)
+        {
+            return Deserialize(stream);
         }
 
         protected virtual int GetTypeSize()
@@ -33,10 +47,20 @@ namespace BinaryFormatter.TypeConverter
         }
 
         protected abstract byte[] ProcessSerialize(T obj);
+        protected abstract T ProcessDeserialize(byte[] stream, ref int offset);
+
+        protected virtual SerializedType GetPackageType(byte[] stream, ref int offset)
+        {
+            short type = BitConverter.ToInt16(stream, offset);
+            offset += sizeof (short);
+            return (SerializedType)type;
+        }
     }
 
     internal abstract class BaseTypeConverter
     {
         public abstract byte[] Serialize(object obj);
+        public abstract object DeserializeToObject(byte[] stream);
+        public abstract SerializedType Type { get; }
     }
 }

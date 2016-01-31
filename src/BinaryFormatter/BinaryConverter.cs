@@ -8,7 +8,7 @@ namespace BinaryFormatter
 {
     public class BinaryConverter
     {
-        public byte[] Parse(object obj)
+        public byte[] Serialize(object obj)
         {
             Type t = obj.GetType();
 
@@ -25,7 +25,27 @@ namespace BinaryFormatter
             return serializedObject.ToArray();
         }
 
-        private static byte[] GetBytesFromEement(object element)
+        public T Deserialize<T>(byte[] stream)
+        {
+            T instance = (T)Activator.CreateInstance(typeof(T));
+
+            int offset = 0;
+            foreach (PropertyInfo property in instance.GetType().GetProperties())
+            {
+                AssignValue(property, instance, stream, ref offset);
+            }
+
+            return instance;
+        }
+
+        private void AssignValue<T>(PropertyInfo property, T instance, byte[] stream, ref int offset)
+        {
+            int size = BitConverter.ToInt32(stream, offset);
+            offset += sizeof (int);
+
+        }
+
+        private byte[] GetBytesFromEement(object element)
         {
             if (element is byte)
             {
@@ -82,6 +102,10 @@ namespace BinaryFormatter
             if (element is decimal)
             {
                 return new DecimalConverter().Serialize(element);
+            }
+            if (element != null && element.GetType().Name != "System.Object")
+            {
+                return Serialize(element);
             }
 
             throw new InvalidOperationException("Cannot find specific BinaryConverter");

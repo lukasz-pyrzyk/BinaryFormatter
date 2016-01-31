@@ -7,16 +7,14 @@ namespace BinaryFormatterTests.TypeConverter
     public class FloatConverterTests
     {
         [Fact]
-        public void CanCorrectSerialize()
+        public void CanSerializeAndDeserialize()
         {
             float value = float.MaxValue;
             FloatConverter converter = new FloatConverter();
             byte[] bytes = converter.Serialize(value);
 
-            int size = BitConverter.ToInt32(bytes, 0);
-            float valueFromBytes = BitConverter.ToSingle(bytes, sizeof (int));
+            float valueFromBytes = converter.Deserialize(bytes);
 
-            Assert.Equal(size, sizeof(float));
             Assert.Equal(valueFromBytes, value);
         }
     }

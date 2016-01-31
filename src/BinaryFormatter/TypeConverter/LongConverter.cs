@@ -1,4 +1,5 @@
 ﻿using System;
+using BinaryFormatter.Types;
 
 namespace BinaryFormatter.TypeConverter
 {
@@ -9,9 +10,16 @@ namespace BinaryFormatter.TypeConverter
             return BitConverter.GetBytes(obj);
         }
 
+        protected override long ProcessDeserialize(byte[] stream, ref int offset)
+        {
+            return BitConverter.ToInt64(stream, offset);
+        }
+
         protected override int GetTypeSize()
         {
             return sizeof (long);
         }
+
+        public override SerializedType Type => SerializedType.Long;
     }
 }

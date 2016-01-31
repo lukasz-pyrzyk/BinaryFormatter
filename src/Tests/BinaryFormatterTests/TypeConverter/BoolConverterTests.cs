@@ -7,17 +7,15 @@ namespace BinaryFormatterTests.TypeConverter
     public class BoolConverterTests
     {
         [Fact]
-        public void CanCorrectSerialize()
+        public void CanSerializeAndDeserialize()
         {
             bool value = false;
             BoolConverter converter = new BoolConverter();
             byte[] bytes = converter.Serialize(value);
 
-            int size = BitConverter.ToInt32(bytes, 0);
-            bool valueFromBytes = BitConverter.ToBoolean(bytes, sizeof (int));
+            bool valueFromBytes = converter.Deserialize(bytes);
 
-            Assert.Equal(size, sizeof(bool));
-            Assert.Equal(valueFromBytes, value);
+            Assert.Equal(value, valueFromBytes);
         }
     }
 }

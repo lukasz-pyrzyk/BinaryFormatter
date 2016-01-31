@@ -7,16 +7,14 @@ namespace BinaryFormatterTests.TypeConverter
     public class CharConverterTests
     {
         [Fact]
-        public void CanCorrectSerialize()
+        public void CanSerializeAndDeserialize()
         {
             char value = char.MaxValue;
             CharConverter converter = new CharConverter();
             byte[] bytes = converter.Serialize(value);
 
-            int size = BitConverter.ToInt32(bytes, 0);
-            char valueFromBytes = BitConverter.ToChar(bytes, sizeof (int));
+            char valueFromBytes = converter.Deserialize(bytes);
 
-            Assert.Equal(size, sizeof(char));
             Assert.Equal(valueFromBytes, value);
         }
     }
