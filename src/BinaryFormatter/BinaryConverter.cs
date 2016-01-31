@@ -26,7 +26,8 @@ namespace BinaryFormatter
             [typeof(bool)] = new BoolConverter(),
             [typeof(decimal)] = new DecimalConverter(),
             [typeof(string)] = new StringConverter(),
-            [typeof(DateTime)] = new DatetimeConverter()
+            [typeof(DateTime)] = new DatetimeConverter(),
+            [typeof(byte[])] = new ByteArrayConverter()
         };
 
         public byte[] Serialize(object obj)

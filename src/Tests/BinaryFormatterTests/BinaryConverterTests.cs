@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using BinaryFormatter;
 using Xunit;
 
@@ -9,7 +10,7 @@ namespace BinaryFormatterTests
         [Fact]
         public void CanSerializeAndDeserializeNestedTypes()
         {
-            Test obj = new Test
+            Test model = new Test
             {
                 Two = new TestTwo
                 {
@@ -23,16 +24,36 @@ namespace BinaryFormatterTests
                 X = 1
             };
 
-            BinaryConverter p = new BinaryConverter();
-            byte[] array = p.Serialize(obj);
-            Test objFromBytes = p.Deserialize<Test>(array);
+            BinaryConverter converter = new BinaryConverter();
+            byte[] array = converter.Serialize(model);
+            Test objFromBytes = converter.Deserialize<Test>(array);
 
-            Assert.Equal(obj.X, objFromBytes.X);
-            Assert.Equal(obj.Two.Message, objFromBytes.Two.Message);
-            Assert.Equal(obj.Two.Three.Date, objFromBytes.Two.Three.Date);
-            Assert.Equal(obj.Two.Three.Z, objFromBytes.Two.Three.Z);
+            Assert.Equal(objFromBytes.X, model.X);
+            Assert.Equal(objFromBytes.Two.Message, model.Two.Message);
+            Assert.Equal(objFromBytes.Two.Three.Date, model.Two.Three.Date);
+            Assert.Equal(objFromBytes.Two.Three.Z, model.Two.Three.Z);
         }
 
+        [Fact]
+        public void CanSerializeAndDeserializeNestedTypeWithByteArray()
+        {
+            TestFour model = new TestFour
+            {
+                ByteArray = new ByteArray
+                {
+                    Array = Encoding.UTF8.GetBytes("lorem ipsum")
+                },
+                X = 15
+            };
+
+            BinaryConverter converter = new BinaryConverter();
+            byte[] bytes = converter.Serialize(model);
+            TestFour modelFromBytes = converter.Deserialize<TestFour>(bytes);
+
+            Assert.Equal(modelFromBytes.X, model.X);
+            Assert.Equal(modelFromBytes.ByteArray.Array, model.ByteArray.Array);
+        }
+        
         internal class Test
         {
             public int X { get; set; }
@@ -49,6 +70,17 @@ namespace BinaryFormatterTests
         {
             public DateTime Date { get; set; }
             public int Z { get; set; }
+        }
+
+        internal class TestFour
+        {
+            public int X { get; set; }
+            public ByteArray ByteArray { get; set; }
+        }
+
+        internal class ByteArray
+        {
+            public byte[] Array { get; set; }
         }
     }
 }
