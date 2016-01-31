@@ -31,27 +31,39 @@ namespace BinaryFormatter
 
         public byte[] Serialize(object obj)
         {
-            try
-            {
-                return GetBytesFromEement(obj);
-            }
-            catch (InvalidOperationException)
-            {
-            }
+            return SerializeProperties(obj);
+        }
 
+        private byte[] SerializeProperties(object obj)
+        {
             Type t = obj.GetType();
-
             ICollection<PropertyInfo> properties = t.GetProperties().ToArray();
 
             List<byte> serializedObject = new List<byte>();
             foreach (PropertyInfo property in properties)
             {
                 object prop = property.GetValue(obj);
-                byte[] elementBytes = GetBytesFromEement(prop);
+                byte[] elementBytes = GetBytesFromProperty(prop);
                 serializedObject.AddRange(elementBytes);
             }
 
             return serializedObject.ToArray();
+        }
+
+        private byte[] GetBytesFromProperty(object element)
+        {
+            if (element == null) return new byte[0];
+
+            Type t = element.GetType();
+            if (_converters.ContainsKey(t))
+            {
+                BaseTypeConverter converter = _converters[t];
+                return converter.Serialize(element);
+            }
+            
+            // TODO serialize if IEnumerable
+
+            return SerializeProperties(element);
         }
 
         public T Deserialize<T>(byte[] stream)
@@ -59,38 +71,31 @@ namespace BinaryFormatter
             T instance = (T)Activator.CreateInstance(typeof(T));
 
             int offset = 0;
-            foreach (PropertyInfo property in instance.GetType().GetProperties())
-            {
-                AssignValue(property, instance, stream, ref offset);
-            }
+            DeserializeObject(stream, instance, ref offset);
 
             return instance;
         }
 
-        private byte[] GetBytesFromEement(object element)
+        private void DeserializeObject<T>(byte[] stream, T instance, ref int offset)
         {
-            Type t = element.GetType();
-            if (_converters.ContainsKey(t))
+            foreach (PropertyInfo property in instance.GetType().GetProperties())
             {
-                BaseTypeConverter converter = _converters[t];
-                return converter.Serialize(element);
+                DeserializeProperty(property, instance, stream, ref offset);
+                if (offset == stream.Length)
+                    return;
             }
-
-            if (t.GetInterfaces().Contains(typeof(IEnumerable)))
-            {
-                List<byte> bytes = new List<byte>();
-                foreach (object item in (IEnumerable)element)
-                {
-                    bytes.AddRange(Serialize(item));
-                }
-                return bytes.ToArray();
-            }
-
-            throw new InvalidOperationException("Cannot find specific BinaryConverter");
         }
 
-        private void AssignValue<T>(PropertyInfo property, T instance, byte[] stream, ref int offset)
+        private void DeserializeProperty<T>(PropertyInfo property, T instance, byte[] stream, ref int offset)
         {
+            if (!property.PropertyType.AssemblyQualifiedName.Contains("mscorlib"))
+            {
+                object propertyValue = Activator.CreateInstance(property.PropertyType);
+                property.SetValue(instance, propertyValue);
+                DeserializeObject(stream, propertyValue, ref offset);
+                return;
+            }
+
             SerializedType type = (SerializedType)BitConverter.ToInt16(stream, offset);
             offset += sizeof(short);
 
