@@ -6,7 +6,7 @@ namespace BinaryFormatter.TypeConverter
 {
     internal class StringConverter : BaseTypeConverter<string>
     {
-        private int Size { get; set; } = 0;
+        private int Size { get; set; }
 
         protected override byte[] ProcessSerialize(string obj)
         {
@@ -24,10 +24,10 @@ namespace BinaryFormatter.TypeConverter
 
         protected override string ProcessDeserialize(byte[] stream, ref int offset)
         {
-            int size = BitConverter.ToInt32(stream, offset);
+            Size = BitConverter.ToInt32(stream, offset);
             offset += sizeof (int);
 
-            return Encoding.UTF8.GetString(stream, offset, size);
+            return Encoding.UTF8.GetString(stream, offset, Size);
         }
 
         protected override int GetTypeSize()
