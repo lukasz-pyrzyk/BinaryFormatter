@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>BinaryFormatter</id>
+    <version>0.0.1</version>
+    <authors>Łukasz Pyrzyk</authors>
+    <owners>Łukasz Pyrzyk</owners>
+    <licenseUrl>https://github.com/MrJaqbq/Game.NET/blob/master/License.txt</licenseUrl>
+    <projectUrl>https://github.com/lukasz-pyrzyk/BinaryFormatter</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/lukasz-pyrzyk/BinaryFormatter/master/Nuget/Icon.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Multiplatform (also for .NET Core) BinaryFormatter. Allows you to serialize your object to byte array and deserialize it again to your type.</description>
+    <releaseNotes>First version of package</releaseNotes>
+    <copyright>Copyright 2016</copyright>
+    <tags>binaryFormatter serializer deserializer serialize deserialize parser binary byte bytearray</tags>
+  </metadata>
+</package>
