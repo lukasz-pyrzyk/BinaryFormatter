@@ -3,11 +3,30 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using BinaryFormatter.TypeConverter;
+using BinaryFormatter.Types;
 
 namespace BinaryFormatter
 {
     public class BinaryConverter
     {
+        private readonly IDictionary<Type, BaseTypeConverter> _converters = new Dictionary<Type, BaseTypeConverter>
+        {
+            [typeof(byte)] = new ByteConverter(),
+            [typeof(sbyte)] = new SByteConverter(),
+            [typeof(char)] = new CharConverter(),
+            [typeof(short)] = new ShortConverter(),
+            [typeof(ushort)] = new UShortConverter(),
+            [typeof(int)] = new IntConverter(),
+            [typeof(uint)] = new UIntConverter(),
+            [typeof(long)] = new LongConverter(),
+            [typeof(ulong)] = new ULongConverter(),
+            [typeof(float)] = new FloatConverter(),
+            [typeof(double)] = new DoubleConverter(),
+            [typeof(bool)] = new BoolConverter(),
+            [typeof(decimal)] = new DecimalConverter(),
+            [typeof(string)] = new StringConverter()
+        };
+
         public byte[] Serialize(object obj)
         {
             Type t = obj.GetType();
@@ -38,77 +57,26 @@ namespace BinaryFormatter
             return instance;
         }
 
-        private void AssignValue<T>(PropertyInfo property, T instance, byte[] stream, ref int offset)
-        {
-            int size = BitConverter.ToInt32(stream, offset);
-            offset += sizeof (int);
-
-        }
-
         private byte[] GetBytesFromEement(object element)
         {
-            if (element is byte)
+            Type t = element.GetType();
+            if (_converters.ContainsKey(t))
             {
-                return new ByteConverter().Serialize(element);
-            }
-            if (element is sbyte)
-            {
-                return new SByteConverter().Serialize(element);
-            }
-            if (element is int)
-            {
-                return new IntConverter().Serialize(element);
-            }
-            if (element is uint)
-            {
-                return new UIntConverter().Serialize(element);
-            }
-            if (element is short)
-            {
-                return new ShortConverter().Serialize(element);
-            }
-            if (element is ushort)
-            {
-                return new UShortConverter().Serialize(element);
-            }
-            if (element is long)
-            {
-                return new LongConverter().Serialize(element);
-            }
-            if (element is ulong)
-            {
-                return new ULongConverter().Serialize(element);
-            }
-            if (element is float)
-            {
-                return new FloatConverter().Serialize(element);
-            }
-            if (element is double)
-            {
-                return new DoubleConverter().Serialize(element);
-            }
-            if (element is char)
-            {
-                return new CharConverter().Serialize(element);
-            }
-            if (element is bool)
-            {
-                return new BoolConverter().Serialize(element);
-            }
-            if (element is string)
-            {
-                return new StringConverter().Serialize(element);
-            }
-            if (element is decimal)
-            {
-                return new DecimalConverter().Serialize(element);
-            }
-            if (element != null && element.GetType().Name != "System.Object")
-            {
-                return Serialize(element);
+                BaseTypeConverter converter = _converters[t];
+                return converter.Serialize(element);
             }
 
             throw new InvalidOperationException("Cannot find specific BinaryConverter");
+        }
+
+        private void AssignValue<T>(PropertyInfo property, T instance, byte[] stream, ref int offset)
+        {
+            SerializedType type = (SerializedType)BitConverter.ToInt16(stream, offset);
+            offset += sizeof(short);
+
+            BaseTypeConverter converter = _converters.First(x => x.Value.Type == type).Value;
+            object data = converter.DeserializeToObject(stream, ref offset);
+            property.SetValue(instance, data);
         }
     }
 }
