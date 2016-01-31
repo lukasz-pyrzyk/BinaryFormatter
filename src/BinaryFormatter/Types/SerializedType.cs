@@ -16,6 +16,7 @@
         Bool = 12,
         Decimal = 13,
         String = 14,
-        Datetime = 15
+        Datetime = 15,
+        ByteArray = 16
     }
 }
