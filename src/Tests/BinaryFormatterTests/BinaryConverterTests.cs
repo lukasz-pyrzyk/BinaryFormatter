@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 using BinaryFormatter;
 using Xunit;
 
@@ -8,7 +7,7 @@ namespace BinaryFormatterTests
     public class BinaryConverterTests
     {
         [Fact]
-        public void CanSerializeAndDeserialize()
+        public void CanSerializeAndDeserializeNestedTypes()
         {
             Test obj = new Test
             {
