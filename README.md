@@ -3,9 +3,8 @@
 BinaryFormatter is a byte serialized/deserializer for .NET Core, created for Distributed Cache Platform - [Kronos][kronos-url]. After few days of development, [Protobuf-Net][protobuf-net-url] (contract base serializer, fork of Google Protobuf) has announcement  support for .NET Core. 
 
 ### Supported types
-  - Type some Markdown on the left
-  - (s)byte
   - char
+  - (s)byte
   - (u)short
   - (u)int
   - (u)long
@@ -15,8 +14,7 @@ BinaryFormatter is a byte serialized/deserializer for .NET Core, created for Dis
   - decimal
   - DateTime
   - byte[]
-  - classes
-  - structures
+  - classes and structures
 
  ### Not supported types
   - Collections
