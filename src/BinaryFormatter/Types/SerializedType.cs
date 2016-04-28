@@ -1,6 +1,6 @@
 ﻿namespace BinaryFormatter.Types
 {
-    internal enum SerializedType : short
+    internal enum SerializedType : ushort
     {
         Byte = 1,
         Sbyte = 2,

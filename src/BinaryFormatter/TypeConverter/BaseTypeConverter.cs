@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using BinaryFormatter.Types;
 
 namespace BinaryFormatter.TypeConverter
@@ -11,7 +10,7 @@ namespace BinaryFormatter.TypeConverter
             if (obj == null) throw new ArgumentNullException(nameof(obj));
 
             byte[] objectBytes = ProcessSerialize(obj);
-            byte[] objectType = BitConverter.GetBytes((short)Type);
+            byte[] objectType = BitConverter.GetBytes((ushort)Type);
 
             byte[] final = new byte[objectType.Length + objectBytes.Length];
 

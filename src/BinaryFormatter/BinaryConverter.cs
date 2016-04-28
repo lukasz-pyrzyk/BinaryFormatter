@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -32,6 +31,13 @@ namespace BinaryFormatter
 
         public byte[] Serialize(object obj)
         {
+            Type t = obj.GetType();
+            BaseTypeConverter converter;
+            if (_converters.TryGetValue(t, out converter))
+            {
+                return converter.Serialize(obj);
+            }
+
             return SerializeProperties(obj);
         }
 
@@ -61,7 +67,7 @@ namespace BinaryFormatter
                 BaseTypeConverter converter = _converters[t];
                 return converter.Serialize(element);
             }
-            
+
             // TODO serialize if IEnumerable
 
             return SerializeProperties(element);
@@ -69,6 +75,12 @@ namespace BinaryFormatter
 
         public T Deserialize<T>(byte[] stream)
         {
+            BaseTypeConverter converter;
+            if (_converters.TryGetValue(typeof(T), out converter))
+            {
+                return (T)converter.DeserializeToObject(stream);
+            }
+
             T instance = (T)Activator.CreateInstance(typeof(T));
 
             int offset = 0;
