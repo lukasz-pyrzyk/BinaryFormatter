@@ -44,7 +44,7 @@ namespace BinaryFormatter
         private byte[] SerializeProperties(object obj)
         {
             Type t = obj.GetType();
-            ICollection<PropertyInfo> properties = t.GetProperties().ToArray();
+            ICollection<PropertyInfo> properties = t.GetTypeInfo().DeclaredProperties.ToArray();
 
             List<byte> serializedObject = new List<byte>();
             foreach (PropertyInfo property in properties)
@@ -91,7 +91,7 @@ namespace BinaryFormatter
 
         private void DeserializeObject<T>(byte[] stream, T instance, ref int offset)
         {
-            foreach (PropertyInfo property in instance.GetType().GetProperties())
+            foreach (PropertyInfo property in instance.GetType().GetTypeInfo().DeclaredProperties)
             {
                 DeserializeProperty(property, instance, stream, ref offset);
                 if (offset == stream.Length)

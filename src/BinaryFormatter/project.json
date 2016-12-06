@@ -1,20 +1,28 @@
 ﻿{
-    "authors": [ "lpyrz" ],
-    "description": "BinaryFormatter Class Library",
-    "frameworks": {
-        "dnx451": { },
-        "dnxcore50": {
-            "dependencies": {
-                "Microsoft.CSharp": "4.0.1-beta-23516",
-                "System.Collections": "4.0.11-beta-23516",
-                "System.Linq": "4.0.1-beta-23516",
-                "System.Runtime": "4.0.21-beta-23516",
-                "System.Threading": "4.0.11-beta-23516"
-            }
-        }
-    },
-    "licenseUrl": "",
-    "projectUrl": "",
-    "tags": [ "" ],
-    "version": "1.0.0-*"
+  "authors": [ "Lukasz Pyrzyk" ],
+  "copyright": "Lukasz Pyrzyk",
+  "dependencies": {
+    "NETStandard.Library": "1.6.1"
+  },
+  "buildOptions": {
+    "optimize": true
+  },
+  "description": "BinaryFormatter - easy and light binary serializer",
+  "frameworks": {
+    "net452": {},
+    "net461": {},
+    "netstandard1.1": {
+      "imports": [
+        "dnxcore50"
+      ]
+    }
+  },
+  "packOptions": {
+    "iconUrl": "https://raw.githubusercontent.com/lukasz-pyrzyk/BinaryFormatter/master/Nuget/nuget-icon.png",
+    "licenseUrl": "https://raw.githubusercontent.com/lukasz-pyrzyk/BinaryFormatter/master/License.txt",
+    "projectUrl": "https://raw.githubusercontent.com/lukasz-pyrzyk/BinaryFormatter/",
+    "summary": "BinaryFormatter - easy and light binary serializer",
+    "tags": [ "binary serializer formatter deserializer serialization" ]
+  },
+  "version": "1.0.1"
 }

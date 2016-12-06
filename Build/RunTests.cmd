@@ -1,1 +1,0 @@
-dnx -p ..\Src\Tests\BinaryFormatterTests test
