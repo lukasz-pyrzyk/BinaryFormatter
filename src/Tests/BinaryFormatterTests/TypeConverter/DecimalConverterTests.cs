@@ -1,6 +1,4 @@
-﻿using System;
-using System.Text;
-using BinaryFormatter.TypeConverter;
+﻿using BinaryFormatter.TypeConverter;
 using Xunit;
 
 namespace BinaryFormatterTests.TypeConverter
