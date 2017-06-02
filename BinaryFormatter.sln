@@ -1,20 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4FDCDFA3-665B-4347-8157-1157ADE65859}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F7E4F0AF-1EF9-4DF8-8522-701861866825}"
-	ProjectSection(SolutionItems) = preProject
-		global.json = global.json
-	EndProjectSection
-EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "BinaryFormatter", "src\BinaryFormatter\BinaryFormatter.xproj", "{05B6E943-30A4-4AFA-9329-A11128445055}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{B80CCA93-FD29-458E-BEFA-6BB248089C6B}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "BinaryFormatterTests", "src\Tests\BinaryFormatterTests\BinaryFormatterTests.xproj", "{9A4B6B9F-4B87-4CF1-BE65-BA757A6803E3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BinaryFormatter", "src\BinaryFormatter\BinaryFormatter.csproj", "{05B6E943-30A4-4AFA-9329-A11128445055}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BinaryFormatterTests", "src\Tests\BinaryFormatterTests\BinaryFormatterTests.csproj", "{9A4B6B9F-4B87-4CF1-BE65-BA757A6803E3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,8 +32,8 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{05B6E943-30A4-4AFA-9329-A11128445055} = {4FDCDFA3-665B-4347-8157-1157ADE65859}
 		{B80CCA93-FD29-458E-BEFA-6BB248089C6B} = {4FDCDFA3-665B-4347-8157-1157ADE65859}
+		{05B6E943-30A4-4AFA-9329-A11128445055} = {4FDCDFA3-665B-4347-8157-1157ADE65859}
 		{9A4B6B9F-4B87-4CF1-BE65-BA757A6803E3} = {B80CCA93-FD29-458E-BEFA-6BB248089C6B}
 	EndGlobalSection
 EndGlobal
