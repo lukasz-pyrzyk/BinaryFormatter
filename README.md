@@ -1,5 +1,5 @@
-# BinaryFormatter  [![Build status](https://ci.appveyor.com/api/projects/status/26qj17kq09btkkql?svg=true)](https://ci.appveyor.com/project/LukaszPyrzyk/binaryformatter)
-### Description
+# BinaryFormatter  [![Build status](https://ci.appveyor.com/api/projects/status/26qj17kq09btkkql?svg=true)](https://ci.appveyor.com/project/LukaszPyrzyk/binaryformatter) (Not supported)
+
 BinaryFormatter is a byte serialized/deserializer for .NET Core, created for Distributed Cache Platform - [Kronos][kronos-url]. After few days of development, [Protobuf-Net][protobuf-net-url] (contract base serializer, fork of Google Protobuf) has announcement  support for .NET Core. 
 
 ### Supported types
@@ -14,13 +14,12 @@ BinaryFormatter is a byte serialized/deserializer for .NET Core, created for Dis
   - decimal
   - DateTime
   - byte[]
-  - classes and structures
+  - classes
 
  ### Not supported types
   - Collections
+  - structures
 
-### Version
-1.0.0.1
 
 ### Installation
 ```powershell
