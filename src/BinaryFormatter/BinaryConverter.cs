@@ -9,7 +9,8 @@ namespace BinaryFormatter
 {
     public class BinaryConverter
     {
-        private readonly IDictionary<Type, BaseTypeConverter> _converters = new Dictionary<Type, BaseTypeConverter>
+        private static readonly List<string> excludedDlls = new List<string> { "CoreLib", "mscorlib" };
+        private static readonly IDictionary<Type, BaseTypeConverter> _converters = new Dictionary<Type, BaseTypeConverter>
         {
             [typeof(byte)] = new ByteConverter(),
             [typeof(sbyte)] = new SByteConverter(),
@@ -101,7 +102,7 @@ namespace BinaryFormatter
 
         private void DeserializeProperty<T>(PropertyInfo property, T instance, byte[] stream, ref int offset)
         {
-            if (!property.PropertyType.AssemblyQualifiedName.Contains("mscorlib"))
+            if (!excludedDlls.Any(x => property.PropertyType.AssemblyQualifiedName.Contains(x)))
             {
                 object propertyValue = Activator.CreateInstance(property.PropertyType);
                 property.SetValue(instance, propertyValue);
@@ -118,3 +119,4 @@ namespace BinaryFormatter
         }
     }
 }
+
