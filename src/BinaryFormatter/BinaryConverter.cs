@@ -76,13 +76,15 @@ namespace BinaryFormatter
 
         public T Deserialize<T>(byte[] stream)
         {
+            Type type = typeof(T);
+
             BaseTypeConverter converter;
-            if (_converters.TryGetValue(typeof(T), out converter))
+            if (_converters.TryGetValue(type, out converter))
             {
                 return (T)converter.DeserializeToObject(stream);
             }
 
-            T instance = (T)Activator.CreateInstance(typeof(T));
+            T instance = (T)Activator.CreateInstance(type);
 
             int offset = 0;
             DeserializeObject(stream, instance, ref offset);
