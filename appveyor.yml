@@ -1,11 +1,8 @@
 version: 1.1.{build}
-image: Visual Studio 2017
-build:
-  verbosity: minimal
-test_script:
+build_script:
 - cmd: >-
     dotnet restore
 
     dotnet build
-
-    dotnet test .\src\Tests\BinaryFormatterTests\BinaryFormatterTests.csproj
+test_script:
+- cmd: dotnet test .\src\Tests\BinaryFormatterTests\BinaryFormatterTests.csproj
