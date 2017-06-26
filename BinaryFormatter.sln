@@ -16,6 +16,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.travis.yml = .travis.yml
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{0F2CAD1A-85DE-49DF-83ED-D53FD463EC2A}"
+	ProjectSection(SolutionItems) = preProject
+		build.sh = build.sh
+		runTests.sh = runTests.sh
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
