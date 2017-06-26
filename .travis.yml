@@ -5,7 +5,7 @@ solution: BinaryFormatter.sln
 matrix:
   include:
     - dotnet: 1.0.4
-      mono: none
+      mono: latest
       dist: trusty
 
 before_script:
