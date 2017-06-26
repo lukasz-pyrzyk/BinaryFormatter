@@ -1,10 +1,9 @@
 language: csharp
+sudo: required
 solution: BinaryFormatter.sln
 
 matrix:
   include:
     - dotnet: 1.0.4
       mono: none
-      dist: trusty
-    - mono: latest
       dist: trusty
