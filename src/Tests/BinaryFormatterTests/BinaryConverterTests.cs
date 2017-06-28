@@ -176,6 +176,18 @@ namespace BinaryFormatterTests
         }
 
         [Fact]
+        public void CanSerialize_CyrillicsString()
+        {
+            string value = "Кто не ходит, тот и не падает.";
+
+            BinaryConverter converter = new BinaryConverter();
+            byte[] bytes = converter.Serialize(value);
+            string deserializedValue = converter.Deserialize<string>(bytes);
+
+            Assert.Equal(value, deserializedValue);
+        }
+
+        [Fact]
         public void CanSerialize_Datetime()
         {
             DateTime value = DateTime.MinValue;
