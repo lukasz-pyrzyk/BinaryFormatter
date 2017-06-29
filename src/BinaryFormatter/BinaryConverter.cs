@@ -50,7 +50,10 @@ namespace BinaryFormatter
             List<byte> serializedObject = new List<byte>();
             foreach (PropertyInfo property in properties)
             {
-                object prop = property.GetValue(obj);
+                if (property.GetMethod.IsVirtual)
+                    continue;
+
+                object prop = property.GetValue(obj, property.GetIndexParameters());
                 byte[] elementBytes = GetBytesFromProperty(prop);
                 serializedObject.AddRange(elementBytes);
             }
@@ -69,9 +72,21 @@ namespace BinaryFormatter
                 return converter.Serialize(element);
             }
 
-            // TODO serialize if IEnumerable
-
-            return SerializeProperties(element);
+            System.Collections.IEnumerable elementAsEnumerable = element as System.Collections.IEnumerable;
+            if (elementAsEnumerable != null)
+            {
+                List<byte> serializedObject = new List<byte>();
+                foreach (var item in elementAsEnumerable)
+                {
+                    byte[] elementBytes = GetBytesFromProperty(item);
+                    serializedObject.AddRange(elementBytes);
+                }
+                return serializedObject.ToArray();
+            }
+            else
+            {
+                return SerializeProperties(element);
+            }
         }
 
         public T Deserialize<T>(byte[] stream)
