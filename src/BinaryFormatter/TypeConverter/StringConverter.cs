@@ -10,11 +10,11 @@ namespace BinaryFormatter.TypeConverter
 
         protected override byte[] ProcessSerialize(string obj)
         {
-            Size = obj.Length;
-            byte[] sizeBytes = BitConverter.GetBytes(obj.Length);
             byte[] objBytes = Encoding.UTF8.GetBytes(obj);
+            byte[] sizeBytes = BitConverter.GetBytes(objBytes.Length);
+            Size = objBytes.Length;
 
-            byte[] serializedStringWithSize = new byte[sizeof(int) + obj.Length];
+            byte[] serializedStringWithSize = new byte[sizeof(int) + objBytes.Length];
 
             Array.ConstrainedCopy(sizeBytes, 0, serializedStringWithSize, 0, sizeBytes.Length);
             Array.ConstrainedCopy(objBytes, 0, serializedStringWithSize, sizeBytes.Length, objBytes.Length);
