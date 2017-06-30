@@ -8,8 +8,7 @@ matrix:
       dist: trusty
 
 before_script:
-  - chmod a+x ./scripts/build.sh
-  - chmod a+x ./scripts/runTests.sh
+  - chmod -R a+x ./scripts
 script:
   - ./scripts/build.sh
   - ./scripts/build.sh
