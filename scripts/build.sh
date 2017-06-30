@@ -1,3 +1,3 @@
 ﻿#!/bin/bash
-dotnet restore
+dotnet restore --verbosity q
 dotnet build
