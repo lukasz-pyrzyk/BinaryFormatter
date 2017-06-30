@@ -11,7 +11,7 @@ before_script:
   - chmod -R a+x ./scripts
 script:
   - ./scripts/build.sh
-  - ./scripts/build.sh
+  - ./scripts/runTests.sh
 notifications:
   email:
     on_success: change
