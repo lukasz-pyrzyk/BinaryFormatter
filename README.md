@@ -1,6 +1,12 @@
-# BinaryFormatter  [![Build status](https://ci.appveyor.com/api/projects/status/pklx6d4i71i8lbu4?svg=true)](https://ci.appveyor.com/project/LukaszPyrzyk/binaryformatter)
-
+# BinaryFormatter  [![NuGet version](https://badge.fury.io/nu/BinaryFormatter.svg)](https://badge.fury.io/nu/BinaryFormatter)
 BinaryFormatter is a byte serialized/deserializer for .NET Core, created for Distributed Cache Platform - [Kronos][kronos-url]. After few days of development, [Protobuf-Net][protobuf-net-url] (contract base serializer, fork of Google Protobuf) has announcement  support for .NET Core. 
+
+### Build status
+| Windows |  Linux |
+|:-------:|:------:|
+|  [![Build status](https://ci.appveyor.com/api/projects/status/pklx6d4i71i8lbu4?svg=true)](https://ci.appveyor.com/project/LukaszPyrzyk/binaryformatter) | [![Build Status](https://travis-ci.org/lukasz-pyrzyk/BinaryFormatter.svg?branch=master)](https://travis-ci.org/lukasz-pyrzyk/BinaryFormatter) |
+
+
 
 ### Supported types
   - char
@@ -28,14 +34,14 @@ $ Install-Package BinaryFormatter
 
 ### Serialization
 ```cs
-BinaryConverter converter = new BinaryConverter();
+var converter = new BinaryConverter();
 byte[] byteArray = converter.Serialize(model);
 ```    
 
 ### Deserialization
 ```cs
-BinaryConverter converter = new BinaryConverter();
-TzpeViewModel obj = converter.Deserialize<TzpeViewModel>(byteArray);
+var converter = new BinaryConverter();
+ViewModel obj = converter.Deserialize<ViewModel>(byteArray);
 ```    
 
 License
