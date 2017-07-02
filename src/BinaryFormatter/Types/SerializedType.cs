@@ -17,6 +17,7 @@
         Decimal = 13,
         String = 14,
         Datetime = 15,
-        ByteArray = 16
+        ByteArray = 16,
+        IEnumerable = 17
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using BinaryFormatter.TypeConverter;
 using BinaryFormatter.Types;
+using System.Collections;
 
 namespace BinaryFormatter
 {
@@ -27,16 +28,24 @@ namespace BinaryFormatter
             [typeof(decimal)] = new DecimalConverter(),
             [typeof(string)] = new StringConverter(),
             [typeof(DateTime)] = new DatetimeConverter(),
-            [typeof(byte[])] = new ByteArrayConverter()
+            [typeof(byte[])] = new ByteArrayConverter(),
+            [typeof(IEnumerable)] = new IEnumerableConverter()
         };
 
         public byte[] Serialize(object obj)
         {
             Type t = obj.GetType();
+
             BaseTypeConverter converter;
             if (_converters.TryGetValue(t, out converter))
             {
                 return converter.Serialize(obj);
+            } else if (obj as IEnumerable != null)
+            {
+                if (_converters.TryGetValue(typeof(IEnumerable), out converter))
+                {
+                    return converter.Serialize(obj);
+                }
             }
 
             return SerializeProperties(obj);
@@ -77,11 +86,13 @@ namespace BinaryFormatter
         public T Deserialize<T>(byte[] stream)
         {
             Type type = typeof(T);
+            //var ch = typeof(T).GetInterfaces().Where(t => t.IsGenericType &&
+            //    t.GetGenericTypeDefinition() == typeof(IEnumerable<>)).Any();
 
             BaseTypeConverter converter;
             if (_converters.TryGetValue(type, out converter))
             {
-                return (T)converter.DeserializeToObject(stream);
+                return (T)converter.DeserializeToObject(stream);            
             }
 
             T instance = (T)Activator.CreateInstance(type);
