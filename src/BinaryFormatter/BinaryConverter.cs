@@ -156,18 +156,12 @@ namespace BinaryFormatter
 
                 var prop = property;
                 var listType = typeof(List<>);
-                var genericArgs = prop.PropertyType.GenericTypeArguments;
-                if (genericArgs.Count() > 0)
+                var genericArgs = prop.PropertyType.GenericTypeArguments;                
+                var concreteType = listType.MakeGenericType(genericArgs);
+                data = Activator.CreateInstance(concreteType);
+                foreach (var item in prepearedData)
                 {
-                    var concreteType = listType.MakeGenericType(genericArgs);
-                    data = Activator.CreateInstance(concreteType);
-                    foreach (var item in prepearedData)
-                    {
-                        ((IList)data).Add(item);
-                    }
-                } else
-                {
-                    data = prepearedData;
+                    ((IList)data).Add(item);
                 }
             } else
             {
