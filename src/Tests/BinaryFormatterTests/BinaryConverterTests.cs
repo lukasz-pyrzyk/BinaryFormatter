@@ -2,6 +2,7 @@
 using System.Text;
 using BinaryFormatter;
 using Xunit;
+using System.Collections.Generic;
 
 namespace BinaryFormatterTests
 {
@@ -207,6 +208,20 @@ namespace BinaryFormatterTests
             BinaryConverter converter = new BinaryConverter();
             byte[] bytes = converter.Serialize(value);
             byte[] deserializedValue = converter.Deserialize<byte[]>(bytes);
+
+            Assert.Equal(value, deserializedValue);
+        }
+
+        [Fact]
+        public void CanSerialize_IEnumerable()
+        {
+            List<string> value = new List<string>();
+            value.Add("lorem ipsum");
+            value.Add("Кто не ходит, тот и не падает.");
+
+            BinaryConverter converter = new BinaryConverter();
+            byte[] bytes = converter.Serialize(value);
+            List<string> deserializedValue = converter.Deserialize<List<string>>(bytes);
 
             Assert.Equal(value, deserializedValue);
         }
