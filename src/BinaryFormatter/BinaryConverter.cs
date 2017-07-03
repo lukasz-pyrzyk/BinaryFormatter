@@ -100,18 +100,17 @@ namespace BinaryFormatter
             {
                 if (_converters.TryGetValue(typeof(IEnumerable), out converter))
                 {
-                    //var DeserializedValue = converter.DeserializeToObject(stream) as IEnumerable;
+                    var prepearedData = converter.DeserializeToObject(stream) as IEnumerable;
 
-                    ////DeserializedValue.
-
-                    //T resultValue = (T)Activator.CreateInstance(typeof(T));
-                    //foreach (var item in DeserializedValue)
-                    //{
-                    //    //resultValue
-                    //}
-
-                    //return resultValue;
-                    return (T)converter.DeserializeToObject(stream);
+                    var listType = typeof(List<>);
+                    var genericArgs = type.GenericTypeArguments;
+                    var concreteType = listType.MakeGenericType(genericArgs);
+                    var data = Activator.CreateInstance(concreteType);
+                    foreach (var item in prepearedData)
+                    {
+                        ((IList)data).Add(item);
+                    }
+                    return (T)data;
                 }
             }
 
