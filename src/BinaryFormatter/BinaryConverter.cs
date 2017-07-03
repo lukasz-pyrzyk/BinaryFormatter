@@ -72,13 +72,18 @@ namespace BinaryFormatter
             if (element == null) return new byte[0];
 
             Type t = element.GetType();
+            BaseTypeConverter converter;
             if (_converters.ContainsKey(t))
             {
-                BaseTypeConverter converter = _converters[t];
+                converter = _converters[t];
                 return converter.Serialize(element);
+            } else if (element as IEnumerable != null)
+            {
+                if (_converters.TryGetValue(typeof(IEnumerable), out converter))
+                {
+                    return converter.Serialize(element);
+                }
             }
-
-            // TODO serialize if IEnumerable
 
             return SerializeProperties(element);
         }
@@ -86,13 +91,28 @@ namespace BinaryFormatter
         public T Deserialize<T>(byte[] stream)
         {
             Type type = typeof(T);
-            //var ch = typeof(T).GetInterfaces().Where(t => t.IsGenericType &&
-            //    t.GetGenericTypeDefinition() == typeof(IEnumerable<>)).Any();
 
             BaseTypeConverter converter;
             if (_converters.TryGetValue(type, out converter))
             {
                 return (T)converter.DeserializeToObject(stream);            
+            } else if (Activator.CreateInstance(type) as IEnumerable != null)
+            {
+                if (_converters.TryGetValue(typeof(IEnumerable), out converter))
+                {
+                    //var DeserializedValue = converter.DeserializeToObject(stream) as IEnumerable;
+
+                    ////DeserializedValue.
+
+                    //T resultValue = (T)Activator.CreateInstance(typeof(T));
+                    //foreach (var item in DeserializedValue)
+                    //{
+                    //    //resultValue
+                    //}
+
+                    //return resultValue;
+                    return (T)converter.DeserializeToObject(stream);
+                }
             }
 
             T instance = (T)Activator.CreateInstance(type);
@@ -127,8 +147,25 @@ namespace BinaryFormatter
             offset += sizeof(short);
 
             BaseTypeConverter converter = _converters.First(x => x.Value.Type == type).Value;
-            object data = converter.DeserializeToObject(stream, ref offset);
-            property.SetValue(instance, data);
+            object data;
+            if (type == SerializedType.IEnumerable)
+            {
+                var prepearedData = converter.DeserializeToObject(stream, ref offset) as IEnumerable;
+
+                var prop = property;
+                var listType = typeof(List<>);
+                var genericArgs = prop.PropertyType.GenericTypeArguments;
+                var concreteType = listType.MakeGenericType(genericArgs);
+                data = Activator.CreateInstance(concreteType);
+                foreach (var item in prepearedData)
+                {
+                    ((IList)data).Add(item);
+                }
+            } else
+            {
+                data = converter.DeserializeToObject(stream, ref offset);
+            }
+            property.SetValue(instance, data, property.GetIndexParameters());
         }
     }
 }

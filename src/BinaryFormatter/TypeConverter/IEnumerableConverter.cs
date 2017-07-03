@@ -16,12 +16,27 @@ namespace BinaryFormatter.TypeConverter
             var objAsIEnumerable = (obj as IEnumerable<object>);
             if (objAsIEnumerable != null)
             {
-                BinaryConverter converter = new BinaryConverter();
+                BinaryConverter converter = new BinaryConverter();        
                 List<byte> listAsArray = new List<byte>();
-                foreach (var elementValue in objAsIEnumerable)
+
+                foreach (var sourceElementValue in objAsIEnumerable)
                 {
-                    if (elementValue == null)
+                    if (sourceElementValue == null)
                         continue;
+
+                    object elementValue = (sourceElementValue as IEnumerable<object>);
+                    if(elementValue == null)
+                    {
+                        elementValue = sourceElementValue;
+                    } else
+                    {
+                        List<object> collectionOfObjects = new List<object>();
+                        foreach (var item in (elementValue as IEnumerable<object>))
+                        {
+                            collectionOfObjects.Add(item);
+                        }
+                        elementValue = collectionOfObjects as IEnumerable<object>;
+                    }
 
                     Type elementType = elementValue.GetType();
                     byte[] typeInfo = Encoding.UTF8.GetBytes(elementType.AssemblyQualifiedName);
@@ -53,13 +68,14 @@ namespace BinaryFormatter.TypeConverter
 
         protected override object ProcessDeserialize(byte[] stream, ref int offset)
         {
-            List<object> deserializedCollection = new List<object>();
+            List<object> deserializedCollection = null;
 
             if (stream.Length > 0)
             {
                 BinaryConverter converter = new BinaryConverter();
+                deserializedCollection = new List<object>();
 
-                while(offset < stream.Length)
+                while (offset < stream.Length)
                 {
                     int sizeTypeInfo = BitConverter.ToInt32(stream, offset);
                     offset += sizeof(int);

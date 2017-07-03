@@ -1,5 +1,6 @@
 ﻿using BinaryFormatter.TypeConverter;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -42,7 +43,14 @@ namespace BinaryFormatterTests.TypeConverter
             {
                 Name = "John",
                 Age = 60,
-                Birthday = DateTime.Now.AddYears(-60)
+                Birthday = DateTime.Now.AddYears(-60),
+                Friends = new List<string>()
+                {
+                    "Joe",
+                    "Linus",
+                    "Bill",
+                    "Andrew"
+                }
             });
             complexCollection.Add(
                 new List<string>()
@@ -52,7 +60,17 @@ namespace BinaryFormatterTests.TypeConverter
                 }    
             );
             byte[] bytesComplexCollection = converter.Serialize(complexCollection);
-            var valueFromBytesComplexCollection = converter.Deserialize(bytesComplexCollection);
+            List<object> valueFromBytesComplexCollection = (List<object>)converter.Deserialize(bytesComplexCollection);
+
+            var objectFromCollection_before = (WithTestProperties)complexCollection[0];
+            var objectFromCollection_after = (WithTestProperties)valueFromBytesComplexCollection[0];
+            Assert.Equal(objectFromCollection_before.Name, objectFromCollection_after.Name);
+            Assert.Equal(objectFromCollection_before.Age, objectFromCollection_after.Age);
+            Assert.Equal(objectFromCollection_before.Birthday, objectFromCollection_after.Birthday);
+
+            var listFromCollection_before = complexCollection[1] as IEnumerable;
+            var listFromCollection_after = valueFromBytesComplexCollection[1] as IEnumerable;
+            Assert.Equal(listFromCollection_before, listFromCollection_after);
         }
 
         class WithTestProperties
@@ -60,6 +78,7 @@ namespace BinaryFormatterTests.TypeConverter
             public string Name { get; set; }
             public int Age { get; set; }
             public DateTime Birthday { get; set; }
+            public List<string> Friends { get; set; }
         }
     }
 }
