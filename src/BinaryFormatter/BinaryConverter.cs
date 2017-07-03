@@ -92,14 +92,17 @@ namespace BinaryFormatter
         {
             Type type = typeof(T);
 
+            bool isEnumerableType = type.GetTypeInfo().ImplementedInterfaces
+                .Where(t => t == typeof(IEnumerable)).Count() > 0;
+
             BaseTypeConverter converter;
             if (_converters.TryGetValue(type, out converter))
             {
                 return (T)converter.DeserializeToObject(stream);            
-            } else if (Activator.CreateInstance(type) as IEnumerable != null)
+            } else if (isEnumerableType)
             {
                 if (_converters.TryGetValue(typeof(IEnumerable), out converter))
-                {
+                {                    
                     var prepearedData = converter.DeserializeToObject(stream) as IEnumerable;
 
                     var listType = typeof(List<>);
@@ -154,11 +157,17 @@ namespace BinaryFormatter
                 var prop = property;
                 var listType = typeof(List<>);
                 var genericArgs = prop.PropertyType.GenericTypeArguments;
-                var concreteType = listType.MakeGenericType(genericArgs);
-                data = Activator.CreateInstance(concreteType);
-                foreach (var item in prepearedData)
+                if (genericArgs.Count() > 0)
                 {
-                    ((IList)data).Add(item);
+                    var concreteType = listType.MakeGenericType(genericArgs);
+                    data = Activator.CreateInstance(concreteType);
+                    foreach (var item in prepearedData)
+                    {
+                        ((IList)data).Add(item);
+                    }
+                } else
+                {
+                    data = prepearedData;
                 }
             } else
             {
