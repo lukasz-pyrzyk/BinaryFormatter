@@ -21,9 +21,9 @@ BinaryFormatter is a byte serialized/deserializer for .NET Core, created for Dis
   - DateTime
   - byte[]
   - classes
+  - collections
 
  ### Not supported types
-  - Collections
   - structures
 
 
