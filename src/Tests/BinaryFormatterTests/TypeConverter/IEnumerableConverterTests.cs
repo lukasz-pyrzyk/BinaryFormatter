@@ -11,7 +11,7 @@ namespace BinaryFormatterTests.TypeConverter
     public class IEnumerableConverterTests
     {
         [Fact]
-        public void CanSerializeAndDeserialize()
+        public void CanSerializeAndDeserialize_SimpleCollection()
         {
             IEnumerableConverter converter = new IEnumerableConverter();
 
@@ -37,6 +37,12 @@ namespace BinaryFormatterTests.TypeConverter
             byte[] bytesSimpleCollection = converter.Serialize(simpleCollection);
             var valueFromBytesSimpleCollection = converter.Deserialize(bytesSimpleCollection);
             Assert.Equal(valueFromBytesSimpleCollection, simpleCollection);
+        }
+
+        [Fact]
+        public void CanSerializeAndDeserialize_ComplexCollection()
+        {
+            IEnumerableConverter converter = new IEnumerableConverter();
 
             List<object> complexCollection = new List<object>();
             complexCollection.Add(new WithTestProperties()
@@ -57,7 +63,7 @@ namespace BinaryFormatterTests.TypeConverter
                 {
                     "lorem ipsum",
                     "Кто не ходит, тот и не падает."
-                }    
+                }
             );
             byte[] bytesComplexCollection = converter.Serialize(complexCollection);
             List<object> valueFromBytesComplexCollection = (List<object>)converter.Deserialize(bytesComplexCollection);
