@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using BinaryFormatter.TypeConverter;
 using BinaryFormatter.Types;
+using System.Collections;
 
 namespace BinaryFormatter
 {
@@ -27,16 +28,24 @@ namespace BinaryFormatter
             [typeof(decimal)] = new DecimalConverter(),
             [typeof(string)] = new StringConverter(),
             [typeof(DateTime)] = new DatetimeConverter(),
-            [typeof(byte[])] = new ByteArrayConverter()
+            [typeof(byte[])] = new ByteArrayConverter(),
+            [typeof(IEnumerable)] = new IEnumerableConverter()
         };
 
         public byte[] Serialize(object obj)
         {
             Type t = obj.GetType();
+
             BaseTypeConverter converter;
             if (_converters.TryGetValue(t, out converter))
             {
                 return converter.Serialize(obj);
+            } else if (obj is IEnumerable)
+            {
+                if (_converters.TryGetValue(typeof(IEnumerable), out converter))
+                {
+                    return converter.Serialize(obj);
+                }
             }
 
             return SerializeProperties(obj);
@@ -63,13 +72,18 @@ namespace BinaryFormatter
             if (element == null) return new byte[0];
 
             Type t = element.GetType();
+            BaseTypeConverter converter;
             if (_converters.ContainsKey(t))
             {
-                BaseTypeConverter converter = _converters[t];
+                converter = _converters[t];
                 return converter.Serialize(element);
+            } else if (element is IEnumerable)
+            {
+                if (_converters.TryGetValue(typeof(IEnumerable), out converter))
+                {
+                    return converter.Serialize(element);
+                }
             }
-
-            // TODO serialize if IEnumerable
 
             return SerializeProperties(element);
         }
@@ -78,10 +92,29 @@ namespace BinaryFormatter
         {
             Type type = typeof(T);
 
+            bool isEnumerableType = type.GetTypeInfo().ImplementedInterfaces
+                .Where(t => t == typeof(IEnumerable)).Count() > 0;
+
             BaseTypeConverter converter;
             if (_converters.TryGetValue(type, out converter))
             {
-                return (T)converter.DeserializeToObject(stream);
+                return (T)converter.DeserializeToObject(stream);            
+            } else if (isEnumerableType)
+            {
+                if (_converters.TryGetValue(typeof(IEnumerable), out converter))
+                {                    
+                    var prepearedData = converter.DeserializeToObject(stream) as IEnumerable;
+
+                    var listType = typeof(List<>);
+                    var genericArgs = type.GenericTypeArguments;
+                    var concreteType = listType.MakeGenericType(genericArgs);
+                    var data = Activator.CreateInstance(concreteType);
+                    foreach (var item in prepearedData)
+                    {
+                        ((IList)data).Add(item);
+                    }
+                    return (T)data;
+                }
             }
 
             T instance = (T)Activator.CreateInstance(type);
@@ -116,8 +149,25 @@ namespace BinaryFormatter
             offset += sizeof(short);
 
             BaseTypeConverter converter = _converters.First(x => x.Value.Type == type).Value;
-            object data = converter.DeserializeToObject(stream, ref offset);
-            property.SetValue(instance, data);
+            object data;
+            if (type == SerializedType.IEnumerable)
+            {
+                var prepearedData = converter.DeserializeToObject(stream, ref offset) as IEnumerable;
+
+                var prop = property;
+                var listType = typeof(List<>);
+                var genericArgs = prop.PropertyType.GenericTypeArguments;                
+                var concreteType = listType.MakeGenericType(genericArgs);
+                data = Activator.CreateInstance(concreteType);
+                foreach (var item in prepearedData)
+                {
+                    ((IList)data).Add(item);
+                }
+            } else
+            {
+                data = converter.DeserializeToObject(stream, ref offset);
+            }
+            property.SetValue(instance, data, property.GetIndexParameters());
         }
     }
 }

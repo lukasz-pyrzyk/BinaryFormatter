@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <Description>BinaryFormatter - easy and light binary serializer</Description>
-    <Copyright>Lukasz Pyrzyk</Copyright>
-    <VersionPrefix>1.0.1</VersionPrefix>
-    <Authors>Lukasz Pyrzyk</Authors>
+    <Copyright>Łukasz Pyrzyk</Copyright>
+    <VersionPrefix>1.0.3</VersionPrefix>
+    <Authors>Łukasz Pyrzyk</Authors>
     <TargetFrameworks>netstandard1.1</TargetFrameworks>
     <AssemblyName>BinaryFormatter</AssemblyName>
     <PackageId>BinaryFormatter</PackageId>
@@ -12,7 +12,6 @@
     <PackageIconUrl>https://raw.githubusercontent.com/lukasz-pyrzyk/BinaryFormatter/master/Nuget/nuget-icon.png</PackageIconUrl>
     <PackageProjectUrl>https://raw.githubusercontent.com/lukasz-pyrzyk/BinaryFormatter/</PackageProjectUrl>
     <PackageLicenseUrl>https://raw.githubusercontent.com/lukasz-pyrzyk/BinaryFormatter/master/License.txt</PackageLicenseUrl>
-    <NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
