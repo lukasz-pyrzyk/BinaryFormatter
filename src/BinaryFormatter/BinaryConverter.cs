@@ -40,7 +40,7 @@ namespace BinaryFormatter
             if (_converters.TryGetValue(t, out converter))
             {
                 return converter.Serialize(obj);
-            } else if (obj as IEnumerable != null)
+            } else if (obj is IEnumerable)
             {
                 if (_converters.TryGetValue(typeof(IEnumerable), out converter))
                 {
@@ -77,7 +77,7 @@ namespace BinaryFormatter
             {
                 converter = _converters[t];
                 return converter.Serialize(element);
-            } else if (element as IEnumerable != null)
+            } else if (element is IEnumerable)
             {
                 if (_converters.TryGetValue(typeof(IEnumerable), out converter))
                 {
