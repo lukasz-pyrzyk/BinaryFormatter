@@ -1,8 +1,10 @@
 version: 1.1.{build}
-build_script:
-- cmd: >-
-    dotnet restore
+image: Visual Studio 2017
 
-    dotnet build
+environment:
+  CYG_ROOT: C:\cygwin64
+
+build_script:
+  - '%CYG_ROOT%/bin/bash -lc "cd $APPVEYOR_BUILD_FOLDER; ./scripts/build.sh"'
 test_script:
-- cmd: dotnet test .\tests\BinaryFormatterTests\BinaryFormatterTests.csproj
+  - '%CYG_ROOT%/bin/bash -lc "cd $APPVEYOR_BUILD_FOLDER; ./scripts/runTests.sh"'
