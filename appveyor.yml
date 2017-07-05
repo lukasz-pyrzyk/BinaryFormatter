@@ -5,6 +5,6 @@ environment:
   CYG_ROOT: C:\cygwin64
 
 build_script:
-  - call %CYG_ROOT%\bin\bash.exe -l ./scripts/build.sh
+  - "%CYG_ROOT%/bin/bash -l ./scripts/build.sh"
 test_script:
-  - call %CYG_ROOT%\bin\bash.exe -l ./scripts/runTests.sh
+  - "%CYG_ROOT%/bin/bash -l ./scripts/runTests.sh"
