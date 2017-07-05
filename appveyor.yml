@@ -5,6 +5,6 @@ environment:
   CYG_ROOT: C:\cygwin64
 
 build_script:
-  - "%CYG_ROOT%/bin/bash ls"
+  - '%CYG_ROOT%/bin/bash -lc "$APPVEYOR_BUILD_FOLDER/scripts/build.sh"'
 test_script:
-  - "%CYG_ROOT%/bin/bash -l ./scripts/runTests.sh"
+  - '%CYG_ROOT%/bin/bash -lc "$APPVEYOR_BUILD_FOLDER/scripts/runTests.sh"'
