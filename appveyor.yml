@@ -5,4 +5,4 @@ build_script:
 
     dotnet build
 test_script:
-- cmd: dotnet test .\src\Tests\BinaryFormatterTests\BinaryFormatterTests.csproj
+- cmd: dotnet test .\tests\BinaryFormatterTests\BinaryFormatterTests.csproj
