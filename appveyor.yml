@@ -1,8 +1,5 @@
 version: 1.1.{build}
 build_script:
-- cmd: >-
-    dotnet restore
-
-    dotnet build
+- sh: ./scripts/build.sh
 test_script:
-- cmd: dotnet test .\tests\BinaryFormatterTests\BinaryFormatterTests.csproj
+- sh: ./scripts/runTests.sh
