@@ -1,16 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.6
+VisualStudioVersion = 15.0.26430.12
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4FDCDFA3-665B-4347-8157-1157ADE65859}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{B80CCA93-FD29-458E-BEFA-6BB248089C6B}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BinaryFormatter", "src\BinaryFormatter\BinaryFormatter.csproj", "{05B6E943-30A4-4AFA-9329-A11128445055}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BinaryFormatterTests", "src\Tests\BinaryFormatterTests\BinaryFormatterTests.csproj", "{9A4B6B9F-4B87-4CF1-BE65-BA757A6803E3}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{81E2A4D1-96F7-4B85-A3B3-9DF3F3B1604F}"
 	ProjectSection(SolutionItems) = preProject
 		.travis.yml = .travis.yml
@@ -22,27 +14,26 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{0F2C
 		scripts\runTests.sh = scripts\runTests.sh
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BinaryFormatter", "src\BinaryFormatter\BinaryFormatter.csproj", "{16D9DF6C-9D2C-45AD-83A5-FD2C0CA46F47}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BinaryFormatterTests", "tests\BinaryFormatterTests\BinaryFormatterTests.csproj", "{27150F43-8733-4A7E-983D-83173D825FA9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{05B6E943-30A4-4AFA-9329-A11128445055}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{05B6E943-30A4-4AFA-9329-A11128445055}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{05B6E943-30A4-4AFA-9329-A11128445055}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{05B6E943-30A4-4AFA-9329-A11128445055}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9A4B6B9F-4B87-4CF1-BE65-BA757A6803E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9A4B6B9F-4B87-4CF1-BE65-BA757A6803E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9A4B6B9F-4B87-4CF1-BE65-BA757A6803E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9A4B6B9F-4B87-4CF1-BE65-BA757A6803E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16D9DF6C-9D2C-45AD-83A5-FD2C0CA46F47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16D9DF6C-9D2C-45AD-83A5-FD2C0CA46F47}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16D9DF6C-9D2C-45AD-83A5-FD2C0CA46F47}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16D9DF6C-9D2C-45AD-83A5-FD2C0CA46F47}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27150F43-8733-4A7E-983D-83173D825FA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27150F43-8733-4A7E-983D-83173D825FA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27150F43-8733-4A7E-983D-83173D825FA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27150F43-8733-4A7E-983D-83173D825FA9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{B80CCA93-FD29-458E-BEFA-6BB248089C6B} = {4FDCDFA3-665B-4347-8157-1157ADE65859}
-		{05B6E943-30A4-4AFA-9329-A11128445055} = {4FDCDFA3-665B-4347-8157-1157ADE65859}
-		{9A4B6B9F-4B87-4CF1-BE65-BA757A6803E3} = {B80CCA93-FD29-458E-BEFA-6BB248089C6B}
 	EndGlobalSection
 EndGlobal
