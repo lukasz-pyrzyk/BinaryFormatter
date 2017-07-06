@@ -120,34 +120,36 @@ namespace BinaryFormatter
             T instance = (T)Activator.CreateInstance(type);
 
             int offset = 0;
-            DeserializeObject(stream, instance, ref offset);
+            DeserializeObject(stream, ref instance, ref offset);
 
             return instance;
         }
 
-        private void DeserializeObject<T>(byte[] stream, T instance, ref int offset)
+        private void DeserializeObject<T>(byte[] stream, ref T instance, ref int offset)
         {
             foreach (PropertyInfo property in instance.GetType().GetTypeInfo().DeclaredProperties)
             {
-                DeserializeProperty(property, instance, stream, ref offset);
+                DeserializeProperty(property, ref instance, stream, ref offset);
                 if (offset == stream.Length)
                     return;
             }
         }
 
-        private void DeserializeProperty<T>(PropertyInfo property, T instance, byte[] stream, ref int offset)
+        private void DeserializeProperty<T>(PropertyInfo property, ref T instance, byte[] stream, ref int offset)
         {
             if (!excludedDlls.Any(x => property.PropertyType.AssemblyQualifiedName.Contains(x)))
             {
                 object propertyValue = Activator.CreateInstance(property.PropertyType);
                 property.SetValue(instance, propertyValue);
-                DeserializeObject(stream, propertyValue, ref offset);
+                DeserializeObject(stream, ref propertyValue, ref offset);
                 return;
             }
 
+            Type instanceType = typeof(T);
+            TypeInfo instanceTypeInfo = instanceType.GetTypeInfo();
             SerializedType type = (SerializedType)BitConverter.ToInt16(stream, offset);
             offset += sizeof(short);
-
+            
             BaseTypeConverter converter = _converters.First(x => x.Value.Type == type).Value;
             object data;
             if (type == SerializedType.IEnumerable)
@@ -167,7 +169,17 @@ namespace BinaryFormatter
             {
                 data = converter.DeserializeToObject(stream, ref offset);
             }
-            property.SetValue(instance, data, property.GetIndexParameters());
+
+            if (instanceTypeInfo.IsValueType && !instanceTypeInfo.IsPrimitive)
+            {
+                object boxedInstance = (object)instance;
+                property.SetValue(boxedInstance, data, property.GetIndexParameters());
+                instance = (T)boxedInstance;
+            }
+            else
+            {
+                property.SetValue(instance, data, property.GetIndexParameters());
+            }
         }
     }
 }
