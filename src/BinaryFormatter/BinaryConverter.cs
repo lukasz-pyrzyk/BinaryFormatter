@@ -27,25 +27,29 @@ namespace BinaryFormatter
             if (obj == null) return;
 
             BaseTypeConverter converter = _selector.SelectConverter(obj);
-            var serializedObject = converter != null ? converter.Serialize(obj) : SerializeProperties(obj);
+            if (converter != null)
+            {
+                byte[] serializedObject = converter.Serialize(obj);
+                stream.Write(serializedObject);
+            }
+            else
+            {
+                SerializePropertiesToStream(obj, stream);
+            }
 
-            stream.Write(serializedObject);
         }
 
-        private byte[] SerializeProperties(object obj)
+        private void SerializePropertiesToStream(object obj, Stream stream)
         {
             Type t = obj.GetType();
             ICollection<PropertyInfo> properties = t.GetTypeInfo().DeclaredProperties.ToArray();
 
-            List<byte> serializedObject = new List<byte>();
             foreach (PropertyInfo property in properties)
             {
                 object prop = property.GetValue(obj);
-                byte[] elementBytes = Serialize(prop);
-                serializedObject.AddRange(elementBytes);
+                byte[] serializedObject = Serialize(prop);
+                stream.Write(serializedObject);
             }
-
-            return serializedObject.ToArray();
         }
 
         public T Deserialize<T>(byte[] stream)
