@@ -47,8 +47,7 @@ namespace BinaryFormatter
             foreach (PropertyInfo property in properties)
             {
                 object prop = property.GetValue(obj);
-                byte[] serializedObject = Serialize(prop);
-                stream.Write(serializedObject);
+                Serialize(prop, stream);
             }
         }
 
