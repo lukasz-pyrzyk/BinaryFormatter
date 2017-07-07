@@ -40,7 +40,8 @@ namespace BinaryFormatter
             if (_converters.TryGetValue(t, out converter))
             {
                 return converter.Serialize(obj);
-            } else if (obj is IEnumerable)
+            }
+            if (obj is IEnumerable)
             {
                 if (_converters.TryGetValue(typeof(IEnumerable), out converter))
                 {
@@ -77,7 +78,8 @@ namespace BinaryFormatter
             {
                 converter = _converters[t];
                 return converter.Serialize(element);
-            } else if (element is IEnumerable)
+            }
+            if (element is IEnumerable)
             {
                 if (_converters.TryGetValue(typeof(IEnumerable), out converter))
                 {
@@ -92,14 +94,14 @@ namespace BinaryFormatter
         {
             Type type = typeof(T);
 
-            bool isEnumerableType = type.GetTypeInfo().ImplementedInterfaces
-                .Where(t => t == typeof(IEnumerable)).Count() > 0;
+            bool isEnumerableType = type.GetTypeInfo().ImplementedInterfaces.Any(t => t == typeof(IEnumerable));
 
             BaseTypeConverter converter;
             if (_converters.TryGetValue(type, out converter))
             {
                 return (T)converter.DeserializeToObject(stream);            
-            } else if (isEnumerableType)
+            }
+            if (isEnumerableType)
             {
                 if (_converters.TryGetValue(typeof(IEnumerable), out converter))
                 {                    
