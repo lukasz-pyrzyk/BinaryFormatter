@@ -5,13 +5,15 @@ using System.Reflection;
 using BinaryFormatter.TypeConverter;
 using BinaryFormatter.Types;
 using System.Collections;
+using System.IO;
+using BinaryFormatter.Utils;
 
 namespace BinaryFormatter
 {
     public class BinaryConverter
     {
         private static readonly List<string> excludedDlls = new List<string> { "CoreLib", "mscorlib" };
-        private static readonly IDictionary<Type, BaseTypeConverter> _converters = new Dictionary<Type, BaseTypeConverter>
+        private static readonly Dictionary<Type, BaseTypeConverter> _converters = new Dictionary<Type, BaseTypeConverter>
         {
             [typeof(byte)] = new ByteConverter(),
             [typeof(sbyte)] = new SByteConverter(),
@@ -32,24 +34,24 @@ namespace BinaryFormatter
             [typeof(IEnumerable)] = new IEnumerableConverter()
         };
 
+        private static readonly ConvertersSelector _selector = new ConvertersSelector();
+
+
         public byte[] Serialize(object obj)
         {
-            Type t = obj.GetType();
+            var stream = new MemoryStream();
+            Serialize(obj, stream);
+            return stream.ToArray();
+        }
 
-            BaseTypeConverter converter;
-            if (_converters.TryGetValue(t, out converter))
-            {
-                return converter.Serialize(obj);
-            }
-            if (obj is IEnumerable)
-            {
-                if (_converters.TryGetValue(typeof(IEnumerable), out converter))
-                {
-                    return converter.Serialize(obj);
-                }
-            }
+        public void Serialize(object obj, Stream stream)
+        {
+            if (obj == null) return;
 
-            return SerializeProperties(obj);
+            BaseTypeConverter converter = _selector.SelectConverter(obj);
+            var serializedObject = converter != null ? converter.Serialize(obj) : SerializeProperties(obj);
+            
+            stream.Write(serializedObject);
         }
 
         private byte[] SerializeProperties(object obj)
@@ -61,33 +63,11 @@ namespace BinaryFormatter
             foreach (PropertyInfo property in properties)
             {
                 object prop = property.GetValue(obj);
-                byte[] elementBytes = GetBytesFromProperty(prop);
+                byte[] elementBytes = Serialize(prop);
                 serializedObject.AddRange(elementBytes);
             }
 
             return serializedObject.ToArray();
-        }
-
-        private byte[] GetBytesFromProperty(object element)
-        {
-            if (element == null) return new byte[0];
-
-            Type t = element.GetType();
-            BaseTypeConverter converter;
-            if (_converters.ContainsKey(t))
-            {
-                converter = _converters[t];
-                return converter.Serialize(element);
-            }
-            if (element is IEnumerable)
-            {
-                if (_converters.TryGetValue(typeof(IEnumerable), out converter))
-                {
-                    return converter.Serialize(element);
-                }
-            }
-
-            return SerializeProperties(element);
         }
 
         public T Deserialize<T>(byte[] stream)
