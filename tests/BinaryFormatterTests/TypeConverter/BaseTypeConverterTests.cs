@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using BinaryFormatter.TypeConverter;
 using BinaryFormatter.Types;
+using BinaryFormatter.Utils;
 using Xunit;
 
 namespace BinaryFormatterTests.TypeConverter
@@ -34,9 +35,10 @@ namespace BinaryFormatterTests.TypeConverter
                 return Message.Length;
             }
 
-            protected override byte[] ProcessSerialize(string obj)
+            protected override void WriteObjectToStream(string obj, Stream stream)
             {
-                return Encoding.UTF8.GetBytes(obj);
+                var data = Encoding.UTF8.GetBytes(obj);
+                stream.Write(data);
             }
 
             protected override string ProcessDeserialize(byte[] stream, ref int offset)

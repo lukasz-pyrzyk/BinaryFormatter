@@ -1,6 +1,8 @@
 ﻿using System;
+using System.IO;
 using System.Text;
 using BinaryFormatter.Types;
+using BinaryFormatter.Utils;
 
 namespace BinaryFormatter.TypeConverter
 {
@@ -8,18 +10,14 @@ namespace BinaryFormatter.TypeConverter
     {
         private int Size { get; set; }
 
-        protected override byte[] ProcessSerialize(string obj)
+        protected override void WriteObjectToStream(string obj, Stream stream)
         {
             byte[] objBytes = Encoding.UTF8.GetBytes(obj);
             byte[] sizeBytes = BitConverter.GetBytes(objBytes.Length);
             Size = objBytes.Length;
 
-            byte[] serializedStringWithSize = new byte[sizeof(int) + objBytes.Length];
-
-            Array.ConstrainedCopy(sizeBytes, 0, serializedStringWithSize, 0, sizeBytes.Length);
-            Array.ConstrainedCopy(objBytes, 0, serializedStringWithSize, sizeBytes.Length, objBytes.Length);
-
-            return serializedStringWithSize;
+            stream.Write(sizeBytes);
+            stream.Write(objBytes);
         }
 
         protected override string ProcessDeserialize(byte[] stream, ref int offset)

@@ -11,11 +11,10 @@ namespace BinaryFormatter.TypeConverter
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
 
-            byte[] objectBytes = ProcessSerialize(obj);
             byte[] objectType = BitConverter.GetBytes((ushort)Type);
-
             stream.Write(objectType);
-            stream.Write(objectBytes);
+
+            WriteObjectToStream(obj, stream);
         }
 
         public override void Serialize(object obj, Stream stream)
@@ -49,7 +48,7 @@ namespace BinaryFormatter.TypeConverter
         }
 
         protected abstract int GetTypeSize();
-        protected abstract byte[] ProcessSerialize(T obj);
+        protected abstract void WriteObjectToStream(T obj, Stream stream);
         protected abstract T ProcessDeserialize(byte[] stream, ref int offset);
 
         protected virtual SerializedType GetPackageType(byte[] stream, ref int offset)

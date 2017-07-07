@@ -1,8 +1,10 @@
 ﻿using System;
 using BinaryFormatter.Types;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Reflection;
+using BinaryFormatter.Utils;
 
 namespace BinaryFormatter.TypeConverter
 {
@@ -10,13 +12,12 @@ namespace BinaryFormatter.TypeConverter
     {
         private int Size { get; set; }
 
-        protected override byte[] ProcessSerialize(object obj)
+        protected override void WriteObjectToStream(object obj, Stream stream)
         {
-            byte[] collectionAsByteArray = null;
-            var objAsIEnumerable = (obj as IEnumerable<object>);
+            var objAsIEnumerable = obj as IEnumerable<object>;
             if (objAsIEnumerable != null)
             {
-                BinaryConverter converter = new BinaryConverter();        
+                BinaryConverter converter = new BinaryConverter();
                 List<byte> listAsArray = new List<byte>();
 
                 foreach (var sourceElementValue in objAsIEnumerable)
@@ -25,17 +26,19 @@ namespace BinaryFormatter.TypeConverter
                         continue;
 
                     object elementValue = (sourceElementValue as IEnumerable<object>);
-                    if(elementValue == null)
+                    if (elementValue == null)
                     {
                         elementValue = sourceElementValue;
-                    } else
+                    }
+                    else
                     {
                         List<object> collectionOfObjects = new List<object>();
-                        foreach (var item in (elementValue as IEnumerable<object>))
+                        foreach (var item in (IEnumerable<object>)elementValue)
                         {
                             collectionOfObjects.Add(item);
                         }
-                        elementValue = collectionOfObjects as IEnumerable<object>;
+
+                        elementValue = collectionOfObjects;
                     }
 
                     Type elementType = elementValue.GetType();
@@ -59,11 +62,10 @@ namespace BinaryFormatter.TypeConverter
                     listAsArray.AddRange(elementAsBytes);
                 }
 
-                collectionAsByteArray = listAsArray.ToArray();
+                byte[] collectionAsByteArray = listAsArray.ToArray();
                 Size = collectionAsByteArray.Length;
+                stream.Write(collectionAsByteArray);
             }
-
-            return collectionAsByteArray;
         }
 
         protected override object ProcessDeserialize(byte[] stream, ref int offset)
@@ -79,7 +81,7 @@ namespace BinaryFormatter.TypeConverter
                 {
                     int sizeTypeInfo = BitConverter.ToInt32(stream, offset);
                     offset += sizeof(int);
-                    if(sizeTypeInfo == 0)
+                    if (sizeTypeInfo == 0)
                     {
                         continue;
                     }

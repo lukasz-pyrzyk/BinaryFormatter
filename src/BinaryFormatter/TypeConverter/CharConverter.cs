@@ -1,13 +1,16 @@
 ﻿using System;
+using System.IO;
 using BinaryFormatter.Types;
+using BinaryFormatter.Utils;
 
 namespace BinaryFormatter.TypeConverter
 {
     internal class CharConverter : BaseTypeConverter<char>
     {
-        protected override byte[] ProcessSerialize(char obj)
+        protected override void WriteObjectToStream(char obj, Stream stream)
         {
-            return BitConverter.GetBytes(obj);
+            byte[] data = BitConverter.GetBytes(obj);
+            stream.Write(data);
         }
 
         protected override char ProcessDeserialize(byte[] stream, ref int offset)

@@ -1,7 +1,5 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
-using System.Text;
 using BinaryFormatter.Types;
 
 namespace BinaryFormatter.TypeConverter
@@ -10,14 +8,12 @@ namespace BinaryFormatter.TypeConverter
     {
         private int Size { get; set; } = 0;
 
-        protected override byte[] ProcessSerialize(decimal obj)
+        protected override void WriteObjectToStream(decimal obj, Stream stream)
         {
             string sdecimal = obj.ToString("F");
             Size = sdecimal.Length;
-            var ms = new MemoryStream();
 
-            new StringConverter().Serialize(sdecimal, ms);
-            return ms.ToArray();
+            new StringConverter().Serialize(sdecimal, stream);
         }
 
         protected override decimal ProcessDeserialize(byte[] stream, ref int offset)
