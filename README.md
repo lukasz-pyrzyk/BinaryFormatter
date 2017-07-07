@@ -22,10 +22,11 @@ BinaryFormatter is a byte serialized/deserializer for .NET Core, created for Dis
   - byte[]
   - classes
   - collections
-
- ### Not supported types
   - structures
 
+ ### Not supported types
+- IDictionary collections
+- anonymous types
 
 ### Installation
 ```powershell
