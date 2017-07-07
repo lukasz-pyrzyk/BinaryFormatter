@@ -12,7 +12,7 @@ namespace BinaryFormatterTests
         public void ReturnsNull_WhenObjIsNull()
         {
             var selector = new ConvertersSelector();
-            var converter = selector.SelectConverter(null);
+            var converter = selector.SelectConverter((object)null);
             Assert.Null(converter);
         }
 

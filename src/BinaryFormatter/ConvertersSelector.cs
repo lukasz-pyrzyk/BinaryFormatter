@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using BinaryFormatter.TypeConverter;
 
 namespace BinaryFormatter
@@ -31,15 +33,20 @@ namespace BinaryFormatter
         public BaseTypeConverter SelectConverter(object obj)
         {
             if(obj == null) return null;
-            Type t = obj.GetType();
+            Type type = obj.GetType();
+            return SelectConverter(type);
+        }
 
+        public BaseTypeConverter SelectConverter(Type type)
+        {
             BaseTypeConverter converter;
-            if (_converters.TryGetValue(t, out converter))
+            if (_converters.TryGetValue(type, out converter))
             {
                 return converter;
             }
 
-            if (obj is IEnumerable)
+            bool isEnumerableType = type.GetTypeInfo().ImplementedInterfaces.Any(t => t == typeof(IEnumerable));
+            if (isEnumerableType)
             {
                 if (_converters.TryGetValue(typeof(IEnumerable), out converter))
                 {
