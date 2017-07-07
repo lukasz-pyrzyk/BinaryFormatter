@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.6
+VisualStudioVersion = 15.0.26430.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{81E2A4D1-96F7-4B85-A3B3-9DF3F3B1604F}"
 	ProjectSection(SolutionItems) = preProject
@@ -12,6 +12,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{0F2CAD1A-85DE-49DF-83ED-D53FD463EC2A}"
 	ProjectSection(SolutionItems) = preProject
 		scripts\build.sh = scripts\build.sh
+		scripts\createNugetPackages.sh = scripts\createNugetPackages.sh
 		scripts\runTests.sh = scripts\runTests.sh
 	EndProjectSection
 EndProject
@@ -19,7 +20,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BinaryFormatter", "src\Bina
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BinaryFormatterTests", "tests\BinaryFormatterTests\BinaryFormatterTests.csproj", "{27150F43-8733-4A7E-983D-83173D825FA9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchmark", "src\Benchmark\Benchmark.csproj", "{5D1354AE-0EB1-4AE5-B769-E42C636FAC32}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Benchmark", "src\Benchmark\Benchmark.csproj", "{5D1354AE-0EB1-4AE5-B769-E42C636FAC32}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
