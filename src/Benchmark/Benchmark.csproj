@@ -10,8 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Configs\" />
-    <Folder Include="Types\" />
+    <ProjectReference Include="..\BinaryFormatter\BinaryFormatter.csproj" />
   </ItemGroup>
 
 </Project>

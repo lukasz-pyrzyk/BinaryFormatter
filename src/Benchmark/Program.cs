@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Benchmark.Types;
+using BenchmarkDotNet.Running;
 
 namespace Benchmark
 {
@@ -6,7 +7,13 @@ namespace Benchmark
     {
         public static void Main(string[] args)
         {
-            Console.WriteLine("Hello World from benchmark!");
+            var switcher = BenchmarkSwitcher.FromTypes(new[]
+            {
+                typeof(SerializerBenchmark),
+                typeof(BoolBenchmark)
+            });
+
+            switcher.Run(args);
         }
     }
 }
