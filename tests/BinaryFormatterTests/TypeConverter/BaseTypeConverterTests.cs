@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Text;
 using BinaryFormatter.TypeConverter;
 using BinaryFormatter.Types;
@@ -15,7 +16,7 @@ namespace BinaryFormatterTests.TypeConverter
         {
             Fake fake = new Fake();
 
-            Assert.ThrowsAny<ArgumentNullException>(() => fake.Serialize(null));
+            Assert.ThrowsAny<ArgumentNullException>(() => fake.Serialize(null, new MemoryStream()));
         }
 
         [Fact]
@@ -23,7 +24,7 @@ namespace BinaryFormatterTests.TypeConverter
         {
             Fake fake = new Fake();
 
-            Assert.ThrowsAny<ArgumentNullException>(() => fake.Serialize((object)null));
+            Assert.ThrowsAny<ArgumentNullException>(() => fake.Serialize((object)null, new MemoryStream()));
         }
 
         internal class Fake : BaseTypeConverter<string>

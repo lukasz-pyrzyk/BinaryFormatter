@@ -6,7 +6,6 @@ using BinaryFormatter.TypeConverter;
 using BinaryFormatter.Types;
 using System.Collections;
 using System.IO;
-using BinaryFormatter.Utils;
 
 namespace BinaryFormatter
 {
@@ -29,14 +28,12 @@ namespace BinaryFormatter
             BaseTypeConverter converter = _selector.SelectConverter(obj);
             if (converter != null)
             {
-                byte[] serializedObject = converter.Serialize(obj);
-                stream.Write(serializedObject);
+                converter.Serialize(obj, stream);
             }
             else
             {
                 SerializePropertiesToStream(obj, stream);
             }
-
         }
 
         private void SerializePropertiesToStream(object obj, Stream stream)

@@ -1,4 +1,4 @@
-﻿using BinaryFormatter.TypeConverter;
+﻿using BinaryFormatter;
 using Xunit;
 
 namespace BinaryFormatterTests.TypeConverter
@@ -9,10 +9,10 @@ namespace BinaryFormatterTests.TypeConverter
         public void CanSerializeAndDeserialize()
         {
             ulong value = ulong.MaxValue;
-            ULongConverter converter = new ULongConverter();
+            var converter = new BinaryConverter();
             byte[] bytes = converter.Serialize(value);
 
-            ulong valueFromBytes = converter.Deserialize(bytes);
+            ulong valueFromBytes = converter.Deserialize<ulong>(bytes);
 
             Assert.Equal(valueFromBytes, value);
         }
