@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using BinaryFormatter.TypeConverter;
+using BinaryFormatter.Types;
 
 namespace BinaryFormatter
 {
@@ -55,6 +56,11 @@ namespace BinaryFormatter
             }
 
             return null;
+        }
+
+        public BaseTypeConverter ForSerializedType(SerializedType type)
+        {
+            return _converters.First(x => x.Value.Type == type).Value;
         }
     }
 }

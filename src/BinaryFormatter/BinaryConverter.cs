@@ -13,29 +13,7 @@ namespace BinaryFormatter
     public class BinaryConverter
     {
         private static readonly List<string> excludedDlls = new List<string> { "CoreLib", "mscorlib" };
-        private static readonly Dictionary<Type, BaseTypeConverter> _converters = new Dictionary<Type, BaseTypeConverter>
-        {
-            [typeof(byte)] = new ByteConverter(),
-            [typeof(sbyte)] = new SByteConverter(),
-            [typeof(char)] = new CharConverter(),
-            [typeof(short)] = new ShortConverter(),
-            [typeof(ushort)] = new UShortConverter(),
-            [typeof(int)] = new IntConverter(),
-            [typeof(uint)] = new UIntConverter(),
-            [typeof(long)] = new LongConverter(),
-            [typeof(ulong)] = new ULongConverter(),
-            [typeof(float)] = new FloatConverter(),
-            [typeof(double)] = new DoubleConverter(),
-            [typeof(bool)] = new BoolConverter(),
-            [typeof(decimal)] = new DecimalConverter(),
-            [typeof(string)] = new StringConverter(),
-            [typeof(DateTime)] = new DatetimeConverter(),
-            [typeof(byte[])] = new ByteArrayConverter(),
-            [typeof(IEnumerable)] = new IEnumerableConverter()
-        };
-
         private static readonly ConvertersSelector _selector = new ConvertersSelector();
-
 
         public byte[] Serialize(object obj)
         {
@@ -128,7 +106,7 @@ namespace BinaryFormatter
             SerializedType type = (SerializedType)BitConverter.ToInt16(stream, offset);
             offset += sizeof(short);
 
-            BaseTypeConverter converter = _converters.First(x => x.Value.Type == type).Value;
+            BaseTypeConverter converter = _selector.ForSerializedType(type);
             object data;
             if (type == SerializedType.IEnumerable)
             {

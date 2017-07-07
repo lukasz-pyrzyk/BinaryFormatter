@@ -21,8 +21,11 @@ namespace BinaryFormatterTests
         public void CorrectlyMapsTypesToConverters(object obj, Type expectedType)
         {
             var selector = new ConvertersSelector();
-            var converter = selector.SelectConverter(obj);
-            Assert.Equal(converter.GetType(), expectedType);
+            var fromType = selector.SelectConverter(obj);
+            var fromSerializedType = selector.ForSerializedType(fromType.Type);
+
+            Assert.Equal(fromType, fromSerializedType);
+            Assert.Equal(fromType.GetType(), expectedType);
         }
 
         public static IEnumerable<object[]> TestCases()
