@@ -14,14 +14,8 @@ namespace BinaryFormatter.TypeConverter
             byte[] objectBytes = ProcessSerialize(obj);
             byte[] objectType = BitConverter.GetBytes((ushort)Type);
 
-            byte[] final = new byte[objectType.Length + objectBytes.Length];
-
-            int offset = 0;
-            Array.Copy(objectType, 0, final, offset, objectType.Length);
-            offset += objectType.Length;
-            Array.Copy(objectBytes, 0, final, offset, objectBytes.Length);
-            
-            stream.Write(final);
+            stream.Write(objectType);
+            stream.Write(objectBytes);
         }
 
         public override void Serialize(object obj, Stream stream)
