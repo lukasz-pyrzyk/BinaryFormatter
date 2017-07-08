@@ -3,18 +3,14 @@ using Xunit;
 
 namespace BinaryFormatterTests.TypeConverter
 {
-    public class StringConverterTests
+    public class StringConverterTests : ConverterTest<string>
     {
         [Fact]
         public void CanSerializeAndDeserialize()
         {
-            string value = "Lorem ipsum";
-            var converter = new BinaryConverter();
-            byte[] bytes = converter.Serialize(value);
-
-            string valueFromBytes = converter.Deserialize<string>(bytes);
-
-            Assert.Equal(valueFromBytes, value);
+            RunTest();
         }
+
+        public override string Value => "lorem ipsum";
     }
 }
