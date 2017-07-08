@@ -1,4 +1,4 @@
-﻿using BinaryFormatter.TypeConverter;
+﻿using BinaryFormatter;
 using Xunit;
 
 namespace BinaryFormatterTests.TypeConverter
@@ -9,10 +9,10 @@ namespace BinaryFormatterTests.TypeConverter
         public void CanSerializeAndDeserialize()
         {
             bool value = false;
-            BoolConverter converter = new BoolConverter();
+            var converter = new BinaryConverter();
             byte[] bytes = converter.Serialize(value);
 
-            bool valueFromBytes = converter.Deserialize(bytes);
+            bool valueFromBytes = converter.Deserialize<bool>(bytes);
 
             Assert.Equal(value, valueFromBytes);
         }
