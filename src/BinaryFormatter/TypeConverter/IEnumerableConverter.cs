@@ -41,15 +41,10 @@ namespace BinaryFormatter.TypeConverter
 
                     Type elementType = elementValue.GetType();
                     byte[] typeInfo = Encoding.UTF8.GetBytes(elementType.AssemblyQualifiedName);
-                    byte[] sizeTypeInfo = BitConverter.GetBytes(typeInfo.Length);
-                    stream.Write(sizeTypeInfo);
-                    stream.Write(typeInfo);
+                    stream.WriteWithLengthPrefix(typeInfo);
 
                     byte[] data = converter.Serialize(elementValue);
-                    byte[] sizeData = BitConverter.GetBytes(data.Length);
-
-                    stream.Write(sizeData);
-                    stream.Write(data);
+                    stream.WriteWithLengthPrefix(data);
 
                     Size += data.Length;
                 }
