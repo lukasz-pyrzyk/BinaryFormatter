@@ -3,18 +3,23 @@ using Xunit;
 
 namespace BinaryFormatterTests.TypeConverter
 {
-    public class BoolConverterTests
+    public class BoolConverterTests : BaseTest<bool>
     {
+        public override bool Value => true;
+    }
+
+    public abstract class BaseTest<T>
+    {
+        public abstract T Value { get; }
+
         [Fact]
         public void CanSerializeAndDeserialize()
         {
-            bool value = false;
             var converter = new BinaryConverter();
-            byte[] bytes = converter.Serialize(value);
+            byte[] bytes = converter.Serialize(Value);
 
-            bool valueFromBytes = converter.Deserialize<bool>(bytes);
-
-            Assert.Equal(value, valueFromBytes);
+            T after = converter.Deserialize<T>(bytes);
+            Assert.Equal(Value, after);
         }
     }
 }
