@@ -1,13 +1,16 @@
 ﻿using System;
+using System.IO;
 using BinaryFormatter.Types;
+using BinaryFormatter.Utils;
 
 namespace BinaryFormatter.TypeConverter
 {
     internal class DatetimeConverter : BaseTypeConverter<DateTime>
     {
-        protected override byte[] ProcessSerialize(DateTime obj)
+        protected override void WriteObjectToStream(DateTime obj, Stream stream)
         {
-            return BitConverter.GetBytes(obj.Ticks);
+            byte[] data = BitConverter.GetBytes(obj.Ticks);
+            stream.Write(data);
         }
 
         protected override DateTime ProcessDeserialize(byte[] stream, ref int offset)

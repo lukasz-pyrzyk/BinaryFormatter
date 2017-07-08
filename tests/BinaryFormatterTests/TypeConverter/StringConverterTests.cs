@@ -1,4 +1,4 @@
-﻿using BinaryFormatter.TypeConverter;
+﻿using BinaryFormatter;
 using Xunit;
 
 namespace BinaryFormatterTests.TypeConverter
@@ -9,10 +9,10 @@ namespace BinaryFormatterTests.TypeConverter
         public void CanSerializeAndDeserialize()
         {
             string value = "Lorem ipsum";
-            StringConverter converter = new StringConverter();
+            var converter = new BinaryConverter();
             byte[] bytes = converter.Serialize(value);
 
-            string valueFromBytes = converter.Deserialize(bytes);
+            string valueFromBytes = converter.Deserialize<string>(bytes);
 
             Assert.Equal(valueFromBytes, value);
         }

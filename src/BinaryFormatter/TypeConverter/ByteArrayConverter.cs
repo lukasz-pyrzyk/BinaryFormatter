@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IO;
 using BinaryFormatter.Types;
+using BinaryFormatter.Utils;
 
 namespace BinaryFormatter.TypeConverter
 {
@@ -7,16 +9,13 @@ namespace BinaryFormatter.TypeConverter
     {
         private int Size { get; set; }
 
-        protected override byte[] ProcessSerialize(byte[] obj)
+        protected override void WriteObjectToStream(byte[] obj, Stream stream)
         {
             Size = obj.Length;
             byte[] lengthBytes = BitConverter.GetBytes(Size);
 
-            byte[] serializedStringWithSize = new byte[sizeof(int) + Size];
-            Array.Copy(lengthBytes, 0, serializedStringWithSize, 0, lengthBytes.Length);
-            Array.Copy(obj, 0, serializedStringWithSize, lengthBytes.Length, obj.Length);
-
-            return serializedStringWithSize;
+            stream.Write(lengthBytes);
+            stream.Write(obj);
         }
 
         protected override byte[] ProcessDeserialize(byte[] stream, ref int offset)

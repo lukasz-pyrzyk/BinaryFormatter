@@ -1,9 +1,8 @@
-﻿using BinaryFormatter.TypeConverter;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
+using BinaryFormatter;
 using Xunit;
 
 namespace BinaryFormatterTests.TypeConverter
@@ -13,7 +12,7 @@ namespace BinaryFormatterTests.TypeConverter
         [Fact]
         public void CanSerializeAndDeserialize_SimpleCollection()
         {
-            IEnumerableConverter converter = new IEnumerableConverter();
+            var converter = new BinaryConverter();
 
             List<object> simpleCollection = new List<object>();
             simpleCollection.Add(true);
@@ -35,14 +34,14 @@ namespace BinaryFormatterTests.TypeConverter
             simpleCollection.Add(ushort.MaxValue);
 
             byte[] bytesSimpleCollection = converter.Serialize(simpleCollection);
-            var valueFromBytesSimpleCollection = converter.Deserialize(bytesSimpleCollection);
+            var valueFromBytesSimpleCollection = converter.Deserialize<List<object>>(bytesSimpleCollection);
             Assert.Equal(valueFromBytesSimpleCollection, simpleCollection);
         }
 
         [Fact]
         public void CanSerializeAndDeserialize_ComplexCollection()
         {
-            IEnumerableConverter converter = new IEnumerableConverter();
+            var converter = new BinaryConverter();
 
             List<object> complexCollection = new List<object>();
             complexCollection.Add(new WithTestProperties()
@@ -66,7 +65,7 @@ namespace BinaryFormatterTests.TypeConverter
                 }
             );
             byte[] bytesComplexCollection = converter.Serialize(complexCollection);
-            List<object> valueFromBytesComplexCollection = (List<object>)converter.Deserialize(bytesComplexCollection);
+            List<object> valueFromBytesComplexCollection = converter.Deserialize<List<object>>(bytesComplexCollection);
 
             var objectFromCollection_before = (WithTestProperties)complexCollection[0];
             var objectFromCollection_after = (WithTestProperties)valueFromBytesComplexCollection[0];

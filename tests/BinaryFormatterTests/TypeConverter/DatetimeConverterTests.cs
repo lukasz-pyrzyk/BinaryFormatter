@@ -1,5 +1,5 @@
 ﻿using System;
-using BinaryFormatter.TypeConverter;
+using BinaryFormatter;
 using Xunit;
 
 namespace BinaryFormatterTests.TypeConverter
@@ -10,10 +10,10 @@ namespace BinaryFormatterTests.TypeConverter
         public void CanSerializeAndDeserialize()
         {
             DateTime value = DateTime.MaxValue;
-            DatetimeConverter converter = new DatetimeConverter();
+            var converter = new BinaryConverter();
             byte[] bytes = converter.Serialize(value);
 
-            DateTime valueFromBytes = converter.Deserialize(bytes);
+            DateTime valueFromBytes = converter.Deserialize<DateTime>(bytes);
             
             Assert.Equal(valueFromBytes, value);
         }

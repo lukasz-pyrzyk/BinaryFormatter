@@ -1,32 +1,27 @@
 ﻿using System;
+using System.IO;
 using BinaryFormatter.Types;
+using BinaryFormatter.Utils;
 
 namespace BinaryFormatter.TypeConverter
 {
     internal abstract class BaseTypeConverter<T> : BaseTypeConverter
     {
-        public byte[] Serialize(T obj)
+        public void Serialize(T obj, Stream stream)
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
 
-            byte[] objectBytes = ProcessSerialize(obj);
             byte[] objectType = BitConverter.GetBytes((ushort)Type);
+            stream.Write(objectType);
 
-            byte[] final = new byte[objectType.Length + objectBytes.Length];
-
-            int offset = 0;
-            Array.Copy(objectType, 0, final, offset, objectType.Length);
-            offset += objectType.Length;
-            Array.Copy(objectBytes, 0, final, offset, objectBytes.Length);
-
-            return final;
+            WriteObjectToStream(obj, stream);
         }
 
-        public override byte[] Serialize(object obj)
+        public override void Serialize(object obj, Stream stream)
         {
             if (obj == null) throw new ArgumentNullException(nameof(obj));
 
-            return Serialize((T)obj);
+            Serialize((T)obj, stream);
         }
 
         public T Deserialize(byte[] stream)
@@ -53,7 +48,7 @@ namespace BinaryFormatter.TypeConverter
         }
 
         protected abstract int GetTypeSize();
-        protected abstract byte[] ProcessSerialize(T obj);
+        protected abstract void WriteObjectToStream(T obj, Stream stream);
         protected abstract T ProcessDeserialize(byte[] stream, ref int offset);
 
         protected virtual SerializedType GetPackageType(byte[] stream, ref int offset)
@@ -66,7 +61,7 @@ namespace BinaryFormatter.TypeConverter
 
     internal abstract class BaseTypeConverter
     {
-        public abstract byte[] Serialize(object obj);
+        public abstract void Serialize(object obj, Stream stream);
         public abstract object DeserializeToObject(byte[] stream);
         public abstract object DeserializeToObject(byte[] stream, ref int offset);
         public abstract SerializedType Type { get; }
