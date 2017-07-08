@@ -18,8 +18,6 @@ namespace BinaryFormatter.TypeConverter
             if (objAsIEnumerable != null)
             {
                 BinaryConverter converter = new BinaryConverter();
-                List<byte> listAsArray = new List<byte>();
-
                 foreach (var sourceElementValue in objAsIEnumerable)
                 {
                     if (sourceElementValue == null)
@@ -43,28 +41,13 @@ namespace BinaryFormatter.TypeConverter
 
                     Type elementType = elementValue.GetType();
                     byte[] typeInfo = Encoding.UTF8.GetBytes(elementType.AssemblyQualifiedName);
-                    byte[] sizeTypeInfo = BitConverter.GetBytes(typeInfo.Length);
+                    stream.WriteWithLengthPrefix(typeInfo);
 
                     byte[] data = converter.Serialize(elementValue);
-                    byte[] sizeData = BitConverter.GetBytes(data.Length);
-                    int elementAsBytesLength =
-                            sizeTypeInfo.Length +
-                            typeInfo.Length +
-                            sizeData.Length +
-                            data.Length;
+                    stream.WriteWithLengthPrefix(data);
 
-                    byte[] elementAsBytes = new byte[elementAsBytesLength];
-                    Array.Copy(sizeTypeInfo, 0, elementAsBytes, 0, sizeTypeInfo.Length);
-                    Array.Copy(typeInfo, 0, elementAsBytes, sizeTypeInfo.Length, typeInfo.Length);
-                    Array.Copy(sizeData, 0, elementAsBytes, sizeTypeInfo.Length + typeInfo.Length, sizeData.Length);
-                    Array.Copy(data, 0, elementAsBytes, sizeTypeInfo.Length + typeInfo.Length + sizeData.Length, data.Length);
-
-                    listAsArray.AddRange(elementAsBytes);
+                    Size += data.Length;
                 }
-
-                byte[] collectionAsByteArray = listAsArray.ToArray();
-                Size = collectionAsByteArray.Length;
-                stream.Write(collectionAsByteArray);
             }
         }
 
