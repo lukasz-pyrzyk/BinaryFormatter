@@ -12,10 +12,8 @@ namespace BinaryFormatter.TypeConverter
         protected override void WriteObjectToStream(byte[] obj, Stream stream)
         {
             Size = obj.Length;
-            byte[] lengthBytes = BitConverter.GetBytes(Size);
 
-            stream.Write(lengthBytes);
-            stream.Write(obj);
+            stream.WriteWithLengthPrefix(obj);
         }
 
         protected override byte[] ProcessDeserialize(byte[] stream, ref int offset)
