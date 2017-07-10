@@ -1,20 +1,17 @@
-﻿using BinaryFormatter;
+﻿using System.Text;
+using BinaryFormatter;
 using Xunit;
 
 namespace BinaryFormatterTests.TypeConverter
 {
-    public class CharConverterTests
+    public class CharConverterTests : ConverterTest<char>
     {
         [Fact]
         public void CanSerializeAndDeserialize()
         {
-            char value = char.MaxValue;
-            var converter = new BinaryConverter();
-            byte[] bytes = converter.Serialize(value);
-
-            char valueFromBytes = converter.Deserialize<char>(bytes);
-
-            Assert.Equal(valueFromBytes, value);
+            RunTest();
         }
+
+        public override char Value => char.MaxValue;
     }
 }
