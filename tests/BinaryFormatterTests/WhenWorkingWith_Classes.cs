@@ -15,53 +15,34 @@ namespace BinaryFormatterTests
             public string String { get; set; }
         }
 
-        class WithCtor
-        {
-            public WithCtor(int i, double d, string s)
-            {
-                Int = i;
-                Double = d;
-                String = s;
-            }
-
-            public int Int { get; set; }
-            public double Double { get; set; }
-            public string String { get; set; }
-        }
-
         abstract class WithVirtualProperties
         {
-            protected static List<WithVirtualProperties_Element> _elements = new List<WithVirtualProperties_Element>();
-            public static IReadOnlyCollection<WithVirtualProperties_Element> AllElements
-            {
-                get
-                {
-                    return _elements as IReadOnlyCollection<WithVirtualProperties_Element>;
-                }
-            }
+            protected static readonly List<WithVirtualProperties_Element> _elements = new List<WithVirtualProperties_Element>();
+
+            protected static IReadOnlyCollection<WithVirtualProperties_Element> AllElements => _elements;
+
             public static IReadOnlyCollection<WithVirtualProperties_Group> AllGroups
             {
                 get
                 {
-                    return _elements.Select(gr => gr.Group)
-                        .Distinct()
-                        .ToList() as IReadOnlyCollection<WithVirtualProperties_Group>;
+                    return _elements.Select(gr => gr.Group).Distinct().ToList();
                 }
             }
 
             public string Name { get; set; }
 
-            public WithVirtualProperties()
+            protected WithVirtualProperties()
             {
             }
-            public WithVirtualProperties(string Name)
+
+            protected WithVirtualProperties(string Name)
             {
                 this.Name = Name;
             }
 
             public override string ToString()
             {
-                return this.Name;
+                return Name;
             }
         }
 
@@ -71,8 +52,8 @@ namespace BinaryFormatterTests
 
             public WithVirtualProperties_Element()
             {
-
             }
+
             public WithVirtualProperties_Element(string Name, WithVirtualProperties_Group Group):base(Name)
             {
                 this.Group = Group;
@@ -82,11 +63,11 @@ namespace BinaryFormatterTests
             public virtual IEnumerable<WithVirtualProperties_Group> Groups {
                 get
                 {
-                    return WithVirtualProperties.AllElements
+                    return AllElements
                         .Where(el => el == this)
                         .Select(gr => gr.Group)
                         .Distinct()
-                        .ToList() as IEnumerable<WithVirtualProperties_Group>;
+                        .ToList();
                 }
             }
 
@@ -100,8 +81,8 @@ namespace BinaryFormatterTests
         {
             public WithVirtualProperties_Group()
             {
-
             }
+
             public WithVirtualProperties_Group(string Name) : base(Name)
             {
             }
@@ -109,10 +90,10 @@ namespace BinaryFormatterTests
             public virtual IEnumerable<WithVirtualProperties_Element> Elements {
                 get {
 
-                    return WithVirtualProperties.AllElements
+                    return AllElements
                         .Where(el => el.Group == this)
                         .Select(el => el)
-                        .ToList() as IEnumerable<WithVirtualProperties_Element>;
+                        .ToList();
                 }
             }
         }
@@ -126,21 +107,6 @@ namespace BinaryFormatterTests
             byte[] data = formatter.Serialize(before);
 
             var after = formatter.Deserialize<WithoutCtor>(data);
-
-            Assert.Equal(before.String, after.String);
-            Assert.Equal(before.Int, after.Int);
-            Assert.Equal(before.Double, after.Double);
-        }
-
-        [Fact(Skip = "Work in progress")]
-        public void CanWorkWith_ClasseWithCustomCtor_WithProperties_WithPublicSetter()
-        {
-            var before = new WithCtor(1, 1, "lorem ipsum");
-
-            var formatter = new BinaryConverter();
-            byte[] data = formatter.Serialize(before);
-
-            var after = formatter.Deserialize<WithCtor>(data);
 
             Assert.Equal(before.String, after.String);
             Assert.Equal(before.Int, after.Int);
