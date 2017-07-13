@@ -6,6 +6,7 @@ using BinaryFormatter.TypeConverter;
 using BinaryFormatter.Types;
 using System.Collections;
 using System.IO;
+using BinaryFormatter.Utils;
 
 namespace BinaryFormatter
 {
@@ -39,10 +40,14 @@ namespace BinaryFormatter
         private void SerializePropertiesToStream(object obj, Stream stream)
         {
             Type t = obj.GetType();
-            ICollection<PropertyInfo> properties = t.GetTypeInfo().DeclaredProperties.ToArray();
+
+            ICollection<PropertyInfo> properties = t.GetTypeInfo().GetAllProperties().ToArray();
 
             foreach (PropertyInfo property in properties)
             {
+                if (!property.CanWrite || property.GetMethod.IsVirtual || property.GetMethod.IsStatic)
+                    continue;
+
                 object prop = property.GetValue(obj);
                 Serialize(prop, stream);
             }
@@ -83,8 +88,11 @@ namespace BinaryFormatter
 
         private void DeserializeObject<T>(byte[] stream, ref T instance, ref int offset)
         {
-            foreach (PropertyInfo property in instance.GetType().GetTypeInfo().DeclaredProperties)
+            foreach (PropertyInfo property in instance.GetType().GetTypeInfo().GetAllProperties())
             {
+                if (!property.CanWrite)
+                    continue;
+
                 DeserializeProperty(property, ref instance, stream, ref offset);
                 if (offset == stream.Length)
                     return;
@@ -134,7 +142,7 @@ namespace BinaryFormatter
                 instance = (T)boxedInstance;
             }
             else
-            {
+            {                
                 property.SetValue(instance, data, property.GetIndexParameters());
             }
         }
