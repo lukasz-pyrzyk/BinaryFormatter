@@ -46,7 +46,7 @@ namespace BinaryFormatterTests
             }
         }
 
-        class WithVirtualProperties_Element : WithVirtualProperties, IDisposable
+        class WithVirtualProperties_Element : WithVirtualProperties
         {
             public WithVirtualProperties_Group Group { get; set; }
 
@@ -69,11 +69,6 @@ namespace BinaryFormatterTests
                         .Distinct()
                         .ToList();
                 }
-            }
-
-            public void Dispose()
-            {
-                _elements.Remove(this);
             }
         }
 
@@ -114,7 +109,7 @@ namespace BinaryFormatterTests
         }
 
         [Fact]
-        public void CanWorkWith_ClassesWithoutCustomCtor_WithVirtualProperties_WithPublicSetter()
+        public void CanWorkWith_Classes_WithVirtualProperties()
         {
             for (int iGroup = 1; iGroup <= 5; iGroup++)
             {
