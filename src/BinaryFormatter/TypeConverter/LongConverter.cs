@@ -13,7 +13,7 @@ namespace BinaryFormatter.TypeConverter
             stream.Write(data);
         }
 
-        protected override long ProcessDeserialize(byte[] stream, ref int offset)
+        protected override long ProcessDeserialize(byte[] stream, Type sourceType, ref int offset)
         {
             return BitConverter.ToInt64(stream, offset);
         }

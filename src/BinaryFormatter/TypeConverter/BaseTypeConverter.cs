@@ -2,37 +2,53 @@
 using System.IO;
 using BinaryFormatter.Types;
 using BinaryFormatter.Utils;
+using System.Text;
 
 namespace BinaryFormatter.TypeConverter
 {
     internal abstract class BaseTypeConverter<T> : BaseTypeConverter
     {
         public void Serialize(T obj, Stream stream)
-        {
-            if (obj == null) throw new ArgumentNullException(nameof(obj));
-
+        {                       
             byte[] objectType = BitConverter.GetBytes((ushort)Type);
             stream.Write(objectType);
 
-            WriteObjectToStream(obj, stream);
+            if (obj == null)
+            {
+
+            }
+            else
+            {
+                byte[] typeInfo = Encoding.UTF8.GetBytes(obj.GetType().AssemblyQualifiedName);
+                stream.WriteWithLengthPrefix(typeInfo);
+
+                WriteObjectToStream(obj, stream);
+            }
         }
 
         public override void Serialize(object obj, Stream stream)
         {
-            if (obj == null) throw new ArgumentNullException(nameof(obj));
-
             Serialize((T)obj, stream);
         }
 
         public T Deserialize(byte[] stream)
         {
             int offset = sizeof (short);
-            return ProcessDeserialize(stream, ref offset);
+
+            int typeInfoSize = BitConverter.ToInt32(stream, offset);
+            offset += sizeof(int);
+            byte[] typeInfo = new byte[typeInfoSize];
+            Array.Copy(stream, offset, typeInfo, 0, typeInfo.Length);
+            string typeFullName = Encoding.UTF8.GetString(typeInfo, 0, typeInfo.Length);
+            Type sourceType = System.Type.GetType(typeFullName);
+            offset += typeInfoSize;
+
+            return ProcessDeserialize(stream, sourceType, ref offset);
         }
 
         public T Deserialize(byte[] stream, ref int offset)
         {
-            T obj = ProcessDeserialize(stream, ref offset);
+            T obj = ProcessDeserialize(stream, typeof(T), ref offset);
             offset += GetTypeSize();
             return obj;
         }
@@ -49,7 +65,7 @@ namespace BinaryFormatter.TypeConverter
 
         protected abstract int GetTypeSize();
         protected abstract void WriteObjectToStream(T obj, Stream stream);
-        protected abstract T ProcessDeserialize(byte[] stream, ref int offset);
+        protected abstract T ProcessDeserialize(byte[] stream, Type sourceType, ref int offset);
 
         protected virtual SerializedType GetPackageType(byte[] stream, ref int offset)
         {

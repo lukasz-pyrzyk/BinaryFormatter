@@ -1,6 +1,7 @@
 ﻿using System;
 using BinaryFormatter.Types;
 using System.Collections.Generic;
+using System.Collections;
 using System.IO;
 using System.Text;
 using System.Reflection;
@@ -14,44 +15,40 @@ namespace BinaryFormatter.TypeConverter
 
         protected override void WriteObjectToStream(object obj, Stream stream)
         {
-            var objAsIEnumerable = obj as IEnumerable<object>;
-            if (objAsIEnumerable != null)
+            var objectAsCollection = (IList)obj;
+
+            byte[] collectionSize = BitConverter.GetBytes(objectAsCollection.Count);
+            stream.Write(collectionSize);
+
+            BinaryConverter converter = new BinaryConverter();
+            foreach (var sourceElementValue in objectAsCollection)
             {
-                BinaryConverter converter = new BinaryConverter();
-                foreach (var sourceElementValue in objAsIEnumerable)
+                if (sourceElementValue == null)
+                    continue;
+
+                object elementValue = (sourceElementValue as IEnumerable<object>);
+                if (elementValue == null)
                 {
-                    if (sourceElementValue == null)
-                        continue;
-
-                    object elementValue = (sourceElementValue as IEnumerable<object>);
-                    if (elementValue == null)
-                    {
-                        elementValue = sourceElementValue;
-                    }
-                    else
-                    {
-                        List<object> collectionOfObjects = new List<object>();
-                        foreach (var item in (IEnumerable<object>)elementValue)
-                        {
-                            collectionOfObjects.Add(item);
-                        }
-
-                        elementValue = collectionOfObjects;
-                    }
-
-                    Type elementType = elementValue.GetType();
-                    byte[] typeInfo = Encoding.UTF8.GetBytes(elementType.AssemblyQualifiedName);
-                    stream.WriteWithLengthPrefix(typeInfo);
-
-                    byte[] data = converter.Serialize(elementValue);
-                    stream.WriteWithLengthPrefix(data);
-
-                    Size += data.Length;
+                    elementValue = sourceElementValue;
                 }
+                else
+                {
+                    List<object> collectionOfObjects = new List<object>();
+                    foreach (var item in (IList)elementValue)
+                    {
+                        collectionOfObjects.Add(item);
+                    }
+                    elementValue = collectionOfObjects;
+                }
+
+                byte[] data = converter.Serialize(elementValue);
+                stream.WriteWithLengthPrefix(data);
+
+                Size += data.Length;
             }
         }
 
-        protected override object ProcessDeserialize(byte[] stream, ref int offset)
+        protected override object ProcessDeserialize(byte[] stream, Type sourceType, ref int offset)
         {
             List<object> deserializedCollection = null;
 
@@ -60,20 +57,23 @@ namespace BinaryFormatter.TypeConverter
                 BinaryConverter converter = new BinaryConverter();
                 deserializedCollection = new List<object>();
 
-                while (offset < stream.Length)
-                {
-                    int sizeTypeInfo = BitConverter.ToInt32(stream, offset);
-                    offset += sizeof(int);
-                    if (sizeTypeInfo == 0)
-                    {
-                        continue;
-                    }
+                int sizeCollection = BitConverter.ToInt32(stream, offset);
+                offset += sizeof(int);
 
-                    byte[] typeInfo = new byte[sizeTypeInfo];
-                    Array.Copy(stream, offset, typeInfo, 0, sizeTypeInfo);
-                    string typeFullName = Encoding.UTF8.GetString(typeInfo, 0, sizeTypeInfo);
-                    Type valueType = System.Type.GetType(typeFullName);
-                    offset += sizeTypeInfo;
+                for (int i = 0; i < sizeCollection; i++)
+                {
+                    //int sizeTypeInfo = BitConverter.ToInt32(stream, offset);
+                    //offset += sizeof(int);
+                    //if (sizeTypeInfo == 0)
+                    //{
+                    //    continue;
+                    //}
+
+                    //byte[] typeInfo = new byte[sizeTypeInfo];
+                    //Array.Copy(stream, offset, typeInfo, 0, sizeTypeInfo);
+                    //string typeFullName = Encoding.UTF8.GetString(typeInfo, 0, sizeTypeInfo);
+                    //Type valueType = System.Type.GetType(typeFullName);
+                    //offset += sizeTypeInfo;
 
                     int sizeData = BitConverter.ToInt32(stream, offset);
                     offset += sizeof(int);
@@ -83,8 +83,15 @@ namespace BinaryFormatter.TypeConverter
                     }
                     byte[] dataValue = new byte[sizeData];
                     Array.Copy(stream, offset, dataValue, 0, sizeData);
+
+                    //int typeInfoSize = BitConverter.ToInt32(dataValue, offset + sizeof(int));
+                    //byte[] typeInfo = new byte[typeInfoSize];
+                    //Array.Copy(stream, offset, typeInfo, 0, typeInfo.Length);
+                    //string typeFullName = Encoding.UTF8.GetString(typeInfo, 0, typeInfo.Length);
+                    //Type sourceType111 = System.Type.GetType(typeFullName);
+
                     MethodInfo method = typeof(BinaryConverter).GetRuntimeMethod("Deserialize", new System.Type[] { typeof(byte[]) });
-                    method = method.MakeGenericMethod(valueType);
+                    method = method.MakeGenericMethod(typeof(object));                                        
                     object deserializeItem = method.Invoke(converter, new object[] { dataValue });
                     offset += sizeData;
 

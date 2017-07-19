@@ -9,20 +9,18 @@ namespace BinaryFormatterTests
     public class ConvertersSelectorTests
     {
         [Fact]
-        public void ReturnsNull_WhenObjIsNull()
+        public void ReturnsNullConverter_WhenObjIsNull()
         {
-            var selector = new ConvertersSelector();
-            var converter = selector.SelectConverter((object)null);
-            Assert.Null(converter);
+            var converter = ConvertersSelector.SelectConverter(null);
+            Assert.True(converter is NullConverter);
         }
 
         [Theory]
         [MemberData(nameof(TestCases))]
         public void CorrectlyMapsTypesToConverters(object obj, Type expectedType)
         {
-            var selector = new ConvertersSelector();
-            var fromType = selector.SelectConverter(obj);
-            var fromSerializedType = selector.ForSerializedType(fromType.Type);
+            var fromType = ConvertersSelector.SelectConverter(obj);
+            var fromSerializedType = ConvertersSelector.ForSerializedType(fromType.Type);
 
             Assert.Equal(fromType, fromSerializedType);
             Assert.Equal(fromType.GetType(), expectedType);

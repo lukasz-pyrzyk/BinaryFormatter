@@ -201,6 +201,18 @@ namespace BinaryFormatterTests
         }
 
         [Fact]
+        public void CanSerialize_Null()
+        {
+            object value = null;
+
+            BinaryConverter converter = new BinaryConverter();
+            byte[] bytes = converter.Serialize(value);
+            object deserializedValue = converter.Deserialize<object>(bytes);
+
+            Assert.Equal(value, deserializedValue);
+        }
+
+        [Fact]
         public void CanSerialize_ByteArray()
         {
             byte[] value = Encoding.UTF8.GetBytes("lorem ipsum");

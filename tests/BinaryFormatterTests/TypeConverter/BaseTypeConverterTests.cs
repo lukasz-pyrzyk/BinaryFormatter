@@ -12,22 +12,6 @@ namespace BinaryFormatterTests.TypeConverter
     {
         public const string Message = "Lorem ipsum";
         
-        [Fact]
-        public void ThrowsWhenObjIsNull()
-        {
-            Fake fake = new Fake();
-
-            Assert.ThrowsAny<ArgumentNullException>(() => fake.Serialize(null, new MemoryStream()));
-        }
-
-        [Fact]
-        public void ThrowsWhenObjIsNullWithCasting()
-        {
-            Fake fake = new Fake();
-
-            Assert.ThrowsAny<ArgumentNullException>(() => fake.Serialize((object)null, new MemoryStream()));
-        }
-
         internal class Fake : BaseTypeConverter<string>
         {
             protected override int GetTypeSize()
@@ -41,7 +25,7 @@ namespace BinaryFormatterTests.TypeConverter
                 stream.Write(data);
             }
 
-            protected override string ProcessDeserialize(byte[] stream, ref int offset)
+            protected override string ProcessDeserialize(byte[] stream, Type sourceType, ref int offset)
             {
                 int size = BitConverter.ToInt32(stream, offset);
                 offset += sizeof (int);
