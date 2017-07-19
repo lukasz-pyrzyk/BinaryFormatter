@@ -46,11 +46,6 @@ namespace BinaryFormatter
             offset += typeInfoSize;
 
             BaseTypeConverter converter = ConvertersSelector.SelectConverter(sourceType);
-            if (converter == null)
-            {
-                converter = ConvertersSelector.ForSerializedType(SerializedType.CustomObject);
-            }
-
             if (converter is IEnumerableConverter)
             {
                 var prepearedData = converter.DeserializeToObject(stream) as IEnumerable;

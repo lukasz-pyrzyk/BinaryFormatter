@@ -56,18 +56,31 @@ namespace BinaryFormatter.TypeConverter
 
         private void DeserializeProperty<T>(PropertyInfo property, ref T instance, byte[] stream, ref int offset)
         {
-            if (!excludedDlls.Any(x => property.PropertyType.AssemblyQualifiedName.Contains(x)))
-            {
-                object propertyValue = Activator.CreateInstance(property.PropertyType);
-                property.SetValue(instance, propertyValue);
-                DeserializeObject(stream, ref propertyValue, ref offset);
-                return;
-            }
-
             Type instanceType = typeof(T);
             TypeInfo instanceTypeInfo = instanceType.GetTypeInfo();
             SerializedType type = (SerializedType)BitConverter.ToInt16(stream, offset);
             offset += sizeof(short);
+
+            if (!excludedDlls.Any(x => property.PropertyType.AssemblyQualifiedName.Contains(x)))
+            {
+                if (type == SerializedType.Null)
+                {
+                    property.SetValue(instance, null);
+                }
+                else
+                {
+                    object propertyValue = Activator.CreateInstance(property.PropertyType);
+                    property.SetValue(instance, propertyValue);
+                    DeserializeObject(stream, ref propertyValue, ref offset);
+                }
+                return;
+            }            
+
+            if(type == SerializedType.Null)
+            {
+                property.SetValue(instance, null, property.GetIndexParameters());
+                return;
+            }
 
             int typeInfoSize = BitConverter.ToInt32(stream, offset);
             offset += sizeof(int);
@@ -78,8 +91,11 @@ namespace BinaryFormatter.TypeConverter
             offset += typeInfoSize;
 
             BaseTypeConverter converter = ConvertersSelector.ForSerializedType(type);
-            object data;
-            if (type == SerializedType.IEnumerable)
+            object data;            
+            if (type == SerializedType.Null)
+            {
+                data = null;
+            } else if (type == SerializedType.IEnumerable)
             {
                 var prepearedData = converter.DeserializeToObject(stream, ref offset) as IEnumerable;
 
@@ -112,6 +128,14 @@ namespace BinaryFormatter.TypeConverter
 
         private void DeserializeObject<T>(byte[] stream, ref T instance, ref int offset)
         {
+            int typeInfoSize = BitConverter.ToInt32(stream, offset);
+            offset += sizeof(int);
+            byte[] typeInfo = new byte[typeInfoSize];
+            Array.Copy(stream, offset, typeInfo, 0, typeInfo.Length);
+            string typeFullName = Encoding.UTF8.GetString(typeInfo, 0, typeInfo.Length);
+            Type sourceType = System.Type.GetType(typeFullName);
+            offset += typeInfoSize;
+
             foreach (PropertyInfo property in instance.GetType().GetTypeInfo().GetAllProperties())
             {
                 if (!property.CanWrite)

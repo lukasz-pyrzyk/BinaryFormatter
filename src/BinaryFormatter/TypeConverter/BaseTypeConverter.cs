@@ -13,11 +13,7 @@ namespace BinaryFormatter.TypeConverter
             byte[] objectType = BitConverter.GetBytes((ushort)Type);
             stream.Write(objectType);
 
-            if (obj == null)
-            {
-
-            }
-            else
+            if (obj != null)
             {
                 byte[] typeInfo = Encoding.UTF8.GetBytes(obj.GetType().AssemblyQualifiedName);
                 stream.WriteWithLengthPrefix(typeInfo);

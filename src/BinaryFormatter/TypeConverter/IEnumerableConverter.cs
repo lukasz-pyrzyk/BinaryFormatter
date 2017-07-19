@@ -50,7 +50,7 @@ namespace BinaryFormatter.TypeConverter
 
         protected override object ProcessDeserialize(byte[] stream, Type sourceType, ref int offset)
         {
-            List<object> deserializedCollection = null;
+            List<object> deserializedCollection = null;            
 
             if (stream.Length > 0)
             {
@@ -62,19 +62,6 @@ namespace BinaryFormatter.TypeConverter
 
                 for (int i = 0; i < sizeCollection; i++)
                 {
-                    //int sizeTypeInfo = BitConverter.ToInt32(stream, offset);
-                    //offset += sizeof(int);
-                    //if (sizeTypeInfo == 0)
-                    //{
-                    //    continue;
-                    //}
-
-                    //byte[] typeInfo = new byte[sizeTypeInfo];
-                    //Array.Copy(stream, offset, typeInfo, 0, sizeTypeInfo);
-                    //string typeFullName = Encoding.UTF8.GetString(typeInfo, 0, sizeTypeInfo);
-                    //Type valueType = System.Type.GetType(typeFullName);
-                    //offset += sizeTypeInfo;
-
                     int sizeData = BitConverter.ToInt32(stream, offset);
                     offset += sizeof(int);
                     if (sizeData == 0)
@@ -83,12 +70,6 @@ namespace BinaryFormatter.TypeConverter
                     }
                     byte[] dataValue = new byte[sizeData];
                     Array.Copy(stream, offset, dataValue, 0, sizeData);
-
-                    //int typeInfoSize = BitConverter.ToInt32(dataValue, offset + sizeof(int));
-                    //byte[] typeInfo = new byte[typeInfoSize];
-                    //Array.Copy(stream, offset, typeInfo, 0, typeInfo.Length);
-                    //string typeFullName = Encoding.UTF8.GetString(typeInfo, 0, typeInfo.Length);
-                    //Type sourceType111 = System.Type.GetType(typeFullName);
 
                     MethodInfo method = typeof(BinaryConverter).GetRuntimeMethod("Deserialize", new System.Type[] { typeof(byte[]) });
                     method = method.MakeGenericMethod(typeof(object));                                        
@@ -99,6 +80,7 @@ namespace BinaryFormatter.TypeConverter
                 }
             }
 
+            Size = 0;
             return deserializedCollection;
         }
 
