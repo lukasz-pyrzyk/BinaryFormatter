@@ -50,8 +50,9 @@ namespace BinaryFormatter.TypeConverter
 
         protected override object ProcessDeserialize(byte[] stream, Type sourceType, ref int offset)
         {
+            int beforeOffset = offset;
             List<object> deserializedCollection = null;            
-
+            
             if (stream.Length > 0)
             {
                 BinaryConverter converter = new BinaryConverter();
@@ -80,7 +81,9 @@ namespace BinaryFormatter.TypeConverter
                 }
             }
 
-            Size = 0;
+            Size = offset - beforeOffset;
+            offset = beforeOffset;
+
             return deserializedCollection;
         }
 
