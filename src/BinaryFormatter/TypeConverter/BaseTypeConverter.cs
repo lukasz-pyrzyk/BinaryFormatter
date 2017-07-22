@@ -3,20 +3,25 @@ using System.IO;
 using BinaryFormatter.Types;
 using BinaryFormatter.Utils;
 using System.Text;
+using System.Reflection;
 
 namespace BinaryFormatter.TypeConverter
 {
     internal abstract class BaseTypeConverter<T> : BaseTypeConverter
     {
         public void Serialize(T obj, Stream stream)
-        {                       
+        {
+            Type destinationnType = typeof(T);
             byte[] objectType = BitConverter.GetBytes((ushort)Type);
             stream.Write(objectType);
 
             if (obj != null)
             {
-                byte[] typeInfo = Encoding.UTF8.GetBytes(obj.GetType().AssemblyQualifiedName);
-                stream.WriteWithLengthPrefix(typeInfo);
+                if (!destinationnType.GetTypeInfo().IsBaseType())
+                {
+                    byte[] typeInfo = Encoding.UTF8.GetBytes(obj.GetType().AssemblyQualifiedName);
+                    stream.WriteWithLengthPrefix(typeInfo);
+                }
 
                 WriteObjectToStream(obj, stream);
             }
@@ -28,16 +33,21 @@ namespace BinaryFormatter.TypeConverter
         }
 
         public T Deserialize(byte[] stream)
-        {
+        {            
+            SerializedType deserializedType = (SerializedType)BitConverter.ToInt16(stream, 0);
+            Type sourceType = deserializedType.GetBaseType();
             int offset = sizeof (short);
 
-            int typeInfoSize = BitConverter.ToInt32(stream, offset);
-            offset += sizeof(int);
-            byte[] typeInfo = new byte[typeInfoSize];
-            Array.Copy(stream, offset, typeInfo, 0, typeInfo.Length);
-            string typeFullName = Encoding.UTF8.GetString(typeInfo, 0, typeInfo.Length);
-            Type sourceType = System.Type.GetType(typeFullName);
-            offset += typeInfoSize;
+            if (sourceType == null)
+            {
+                int typeInfoSize = BitConverter.ToInt32(stream, offset);
+                offset += sizeof(int);
+                byte[] typeInfo = new byte[typeInfoSize];
+                Array.Copy(stream, offset, typeInfo, 0, typeInfo.Length);
+                string typeFullName = Encoding.UTF8.GetString(typeInfo, 0, typeInfo.Length);
+                sourceType = System.Type.GetType(typeFullName);
+                offset += typeInfoSize;
+            }
 
             return ProcessDeserialize(stream, sourceType, ref offset);
         }

@@ -6,6 +6,7 @@ using System.IO;
 using System.Text;
 using System.Reflection;
 using BinaryFormatter.Utils;
+using System.Linq;
 
 namespace BinaryFormatter.TypeConverter
 {
@@ -16,7 +17,7 @@ namespace BinaryFormatter.TypeConverter
         protected override void WriteObjectToStream(object obj, Stream stream)
         {
             var objectAsCollection = (IList)obj;
-
+            
             byte[] collectionSize = BitConverter.GetBytes(objectAsCollection.Count);
             stream.Write(collectionSize);
 
@@ -73,7 +74,13 @@ namespace BinaryFormatter.TypeConverter
                     Array.Copy(stream, offset, dataValue, 0, sizeData);
 
                     MethodInfo method = typeof(BinaryConverter).GetRuntimeMethod("Deserialize", new System.Type[] { typeof(byte[]) });
-                    method = method.MakeGenericMethod(typeof(object));                                        
+                    if (sourceType.GenericTypeArguments.Length > 0)
+                    {
+                        method = method.MakeGenericMethod(sourceType.GenericTypeArguments);
+                    } else
+                    {
+                        method = method.MakeGenericMethod(typeof(object));
+                    }
                     object deserializeItem = method.Invoke(converter, new object[] { dataValue });
                     offset += sizeData;
 
