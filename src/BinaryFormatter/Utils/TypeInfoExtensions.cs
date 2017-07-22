@@ -24,7 +24,8 @@ namespace BinaryFormatter.Utils
             typeof(decimal).GetTypeInfo(),
             typeof(string).GetTypeInfo(),
             typeof(DateTime).GetTypeInfo(),
-            typeof(byte[]).GetTypeInfo()
+            typeof(byte[]).GetTypeInfo(),
+            typeof(Guid).GetTypeInfo()
         };
 
         public static IEnumerable<ConstructorInfo> GetAllConstructors(this TypeInfo typeInfo)

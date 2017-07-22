@@ -32,6 +32,7 @@ namespace BinaryFormatterTests.TypeConverter
             simpleCollection.Add(uint.MaxValue);
             simpleCollection.Add(ulong.MaxValue);
             simpleCollection.Add(ushort.MaxValue);
+            simpleCollection.Add(Guid.NewGuid());
 
             byte[] bytesSimpleCollection = converter.Serialize(simpleCollection);
             var valueFromBytesSimpleCollection = converter.Deserialize<List<object>>(bytesSimpleCollection);

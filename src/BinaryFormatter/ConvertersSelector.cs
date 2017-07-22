@@ -29,7 +29,8 @@ namespace BinaryFormatter
             [typeof(DateTime)] = new DatetimeConverter(),
             [typeof(byte[])] = new ByteArrayConverter(),
             [typeof(IEnumerable)] = new IEnumerableConverter(),
-            [typeof(object)] = new CustomObjectConverter()
+            [typeof(object)] = new CustomObjectConverter(),
+            [typeof(Guid)] = new GuidConverter()
         };
         private static readonly BaseTypeConverter NullConverter = new NullConverter();
 

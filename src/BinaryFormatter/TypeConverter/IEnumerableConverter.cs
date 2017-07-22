@@ -3,10 +3,8 @@ using BinaryFormatter.Types;
 using System.Collections.Generic;
 using System.Collections;
 using System.IO;
-using System.Text;
 using System.Reflection;
 using BinaryFormatter.Utils;
-using System.Linq;
 
 namespace BinaryFormatter.TypeConverter
 {

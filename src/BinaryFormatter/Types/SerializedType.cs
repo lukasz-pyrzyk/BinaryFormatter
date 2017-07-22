@@ -20,6 +20,7 @@
         Datetime = 15,
         ByteArray = 16,
         IEnumerable = 17,
+        Guid = 18,
         CustomObject = 99
     }
 }

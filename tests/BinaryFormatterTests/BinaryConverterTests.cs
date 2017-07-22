@@ -237,5 +237,17 @@ namespace BinaryFormatterTests
 
             Assert.Equal(value, deserializedValue);
         }
+
+        [Fact]
+        public void CanSerialize_Guid()
+        {
+            Guid value = Guid.NewGuid();
+
+            BinaryConverter converter = new BinaryConverter();
+            byte[] bytes = converter.Serialize(value);
+            Guid deserializedValue = converter.Deserialize<Guid>(bytes);
+
+            Assert.Equal(value, deserializedValue);
+        }
     }
 }

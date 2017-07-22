@@ -46,6 +46,8 @@ namespace BinaryFormatter.Utils
                     return typeof(ulong);
                 case SerializedType.UShort:
                     return typeof(ushort);
+                case SerializedType.Guid:
+                    return typeof(Guid);
                 default:
                     return null;
             }
