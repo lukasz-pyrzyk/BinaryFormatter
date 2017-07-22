@@ -13,7 +13,7 @@ namespace BinaryFormatter.TypeConverter
             stream.Write(data);
         }
 
-        protected override bool ProcessDeserialize(byte[] stream, ref int offset)
+        protected override bool ProcessDeserialize(byte[] stream, Type sourceType, ref int offset)
         {
             bool result = BitConverter.ToBoolean(stream, offset);
             return result;

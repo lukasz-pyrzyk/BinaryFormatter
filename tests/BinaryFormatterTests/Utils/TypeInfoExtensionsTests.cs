@@ -96,5 +96,25 @@ namespace BinaryFormatterTests.Utils
 
             Assert.Equal(allProperties.Count(), 2);
         }
+
+        [Fact]
+        public void IsBaseType()
+        {
+            Assert.True((typeof(byte)).GetTypeInfo().IsBaseType());
+            Assert.True((typeof(sbyte)).GetTypeInfo().IsBaseType());
+            Assert.True((typeof(char)).GetTypeInfo().IsBaseType());
+            Assert.True((typeof(short)).GetTypeInfo().IsBaseType());
+            Assert.True((typeof(ushort)).GetTypeInfo().IsBaseType());
+            Assert.True((typeof(int)).GetTypeInfo().IsBaseType());
+            Assert.True((typeof(uint)).GetTypeInfo().IsBaseType());
+            Assert.True((typeof(long)).GetTypeInfo().IsBaseType());
+            Assert.True((typeof(ulong)).GetTypeInfo().IsBaseType());
+            Assert.True((typeof(float)).GetTypeInfo().IsBaseType());
+            Assert.True((typeof(double)).GetTypeInfo().IsBaseType());
+            Assert.True((typeof(decimal)).GetTypeInfo().IsBaseType());
+            Assert.True((typeof(string)).GetTypeInfo().IsBaseType());
+            Assert.True((typeof(DateTime)).GetTypeInfo().IsBaseType());
+            Assert.True((typeof(byte[])).GetTypeInfo().IsBaseType());            
+        }
     }
 }

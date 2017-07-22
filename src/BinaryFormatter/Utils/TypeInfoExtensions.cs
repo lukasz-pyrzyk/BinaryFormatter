@@ -1,11 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Linq;
 
 namespace BinaryFormatter.Utils
 {
     public static class TypeInfoExtensions
     {
+        private static List<TypeInfo> _baseTypes = new List<TypeInfo>()
+        {
+            typeof(byte).GetTypeInfo(),
+            typeof(sbyte).GetTypeInfo(),
+            typeof(char).GetTypeInfo(),
+            typeof(short).GetTypeInfo(),
+            typeof(ushort).GetTypeInfo(),
+            typeof(int).GetTypeInfo(),
+            typeof(uint).GetTypeInfo(),
+            typeof(long).GetTypeInfo(),
+            typeof(ulong).GetTypeInfo(),
+            typeof(float).GetTypeInfo(),
+            typeof(double).GetTypeInfo(),
+            typeof(bool).GetTypeInfo(),
+            typeof(decimal).GetTypeInfo(),
+            typeof(string).GetTypeInfo(),
+            typeof(DateTime).GetTypeInfo(),
+            typeof(byte[]).GetTypeInfo(),
+            typeof(Guid).GetTypeInfo()
+        };
+
         public static IEnumerable<ConstructorInfo> GetAllConstructors(this TypeInfo typeInfo)
             => GetAll(typeInfo, ti => ti.DeclaredConstructors);
 
@@ -38,6 +60,11 @@ namespace BinaryFormatter.Utils
 
                 typeInfo = typeInfo.BaseType?.GetTypeInfo();
             }
+        }
+
+        public static bool IsBaseType(this TypeInfo typeInfo)
+        {
+            return _baseTypes.Where(bt => bt == typeInfo).Any();
         }
     }
 }

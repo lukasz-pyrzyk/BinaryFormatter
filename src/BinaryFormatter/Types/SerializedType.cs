@@ -1,7 +1,8 @@
 ﻿namespace BinaryFormatter.Types
 {
     internal enum SerializedType : ushort
-    {
+    {        
+        Null = 0,
         Byte = 1,
         Sbyte = 2,
         Char = 3,
@@ -18,6 +19,8 @@
         String = 14,
         Datetime = 15,
         ByteArray = 16,
-        IEnumerable = 17
+        IEnumerable = 17,
+        Guid = 18,
+        CustomObject = 99
     }
 }

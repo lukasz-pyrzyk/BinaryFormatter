@@ -19,7 +19,7 @@ namespace BinaryFormatter.TypeConverter
             }
         }
 
-        protected override decimal ProcessDeserialize(byte[] stream, ref int offset)
+        protected override decimal ProcessDeserialize(byte[] stream, Type sourceType, ref int offset)
         {
             var bits = new int[4];
             for (int i = 0; i < 4; i++)

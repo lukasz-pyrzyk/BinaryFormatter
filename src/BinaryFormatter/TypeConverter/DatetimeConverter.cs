@@ -13,7 +13,7 @@ namespace BinaryFormatter.TypeConverter
             stream.Write(data);
         }
 
-        protected override DateTime ProcessDeserialize(byte[] stream, ref int offset)
+        protected override DateTime ProcessDeserialize(byte[] stream, Type sourceType, ref int offset)
         {
             long ticks = BitConverter.ToInt64(stream, offset);
             return DateTime.FromBinary(ticks);
