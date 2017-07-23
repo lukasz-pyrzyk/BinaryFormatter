@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection;
 using System.Text;
 using BinaryFormatter.Utils;
 using Xunit;
