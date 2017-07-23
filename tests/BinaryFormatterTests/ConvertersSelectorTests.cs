@@ -27,7 +27,7 @@ namespace BinaryFormatterTests
         }
 
         public static IEnumerable<object[]> TestCases()
-        {
+        {            
             yield return new[] { (object)default(bool), typeof(BoolConverter) };
             yield return new[] { (object)new byte[0], typeof(ByteArrayConverter) };
             yield return new[] { (object)default(byte), typeof(ByteConverter) };
@@ -44,6 +44,8 @@ namespace BinaryFormatterTests
             yield return new[] { (object)default(uint), typeof(UIntConverter) };
             yield return new[] { (object)default(ulong), typeof(ULongConverter) };
             yield return new[] { (object)default(ushort), typeof(UShortConverter) };
+            yield return new[] { (object)default(Guid), typeof(GuidConverter) };
+            yield return new[] { (object)(new Uri("https://github.com")), typeof(UriConverter) };
         }
     }
 }

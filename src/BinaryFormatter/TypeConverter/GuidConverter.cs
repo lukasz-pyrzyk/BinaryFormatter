@@ -23,7 +23,7 @@ namespace BinaryFormatter.TypeConverter
 
         protected override int GetTypeSize()
         {
-            return sizeof (byte);
+            return 16;
         }
 
         public override SerializedType Type => SerializedType.Guid;

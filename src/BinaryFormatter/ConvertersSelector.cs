@@ -30,7 +30,8 @@ namespace BinaryFormatter
             [typeof(byte[])] = new ByteArrayConverter(),
             [typeof(IEnumerable)] = new IEnumerableConverter(),
             [typeof(object)] = new CustomObjectConverter(),
-            [typeof(Guid)] = new GuidConverter()
+            [typeof(Guid)] = new GuidConverter(),
+            [typeof(Uri)] = new UriConverter()
         };
         private static readonly BaseTypeConverter NullConverter = new NullConverter();
 

@@ -249,5 +249,17 @@ namespace BinaryFormatterTests
 
             Assert.Equal(value, deserializedValue);
         }
+
+        [Fact]
+        public void CanSerialize_Uri()
+        {
+            Uri value = new Uri("https://github.com/lukasz-pyrzyk/BinaryFormatter");
+
+            BinaryConverter converter = new BinaryConverter();
+            byte[] bytes = converter.Serialize(value);
+            Uri deserializedValue = converter.Deserialize<Uri>(bytes);
+
+            Assert.Equal(value, deserializedValue);
+        }
     }
 }

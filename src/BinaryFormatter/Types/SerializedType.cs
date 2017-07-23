@@ -21,6 +21,7 @@
         ByteArray = 16,
         IEnumerable = 17,
         Guid = 18,
+        Uri = 19,
         CustomObject = 99
     }
 }
