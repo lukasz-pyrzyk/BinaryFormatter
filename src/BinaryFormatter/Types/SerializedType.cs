@@ -22,6 +22,7 @@
         IEnumerable = 17,
         Guid = 18,
         Uri = 19,
+        Enum = 20,
         CustomObject = 99
     }
 }

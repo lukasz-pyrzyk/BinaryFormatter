@@ -261,5 +261,17 @@ namespace BinaryFormatterTests
 
             Assert.Equal(value, deserializedValue);
         }
+
+        [Fact]
+        public void CanSerialize_Enum()
+        {
+            Enum value = DayOfWeek.Sunday;
+
+            BinaryConverter converter = new BinaryConverter();
+            byte[] bytes = converter.Serialize(value);
+            Enum deserializedValue = converter.Deserialize<Enum>(bytes);
+
+            Assert.Equal(value, deserializedValue);
+        }
     }
 }
