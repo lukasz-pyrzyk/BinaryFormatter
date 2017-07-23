@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using BinaryFormatter.TypeConverter;
 using BinaryFormatter.Types;
 using System.Collections;
@@ -33,8 +31,7 @@ namespace BinaryFormatter
 
             if (deserializedType == SerializedType.Null)
             {
-                object NullObject = null;
-                return (T)NullObject;
+                return default(T);
             }
             
             Type sourceType = deserializedType.GetBaseType();
@@ -45,20 +42,20 @@ namespace BinaryFormatter
                 byte[] typeInfo = new byte[typeInfoSize];
                 Array.Copy(stream, offset, typeInfo, 0, typeInfo.Length);
                 string typeFullName = Encoding.UTF8.GetString(typeInfo, 0, typeInfo.Length);
-                sourceType = System.Type.GetType(typeFullName);
+                sourceType = Type.GetType(typeFullName);
                 offset += typeInfoSize;
             }
 
             BaseTypeConverter converter = ConvertersSelector.SelectConverter(sourceType);
             if (converter is IEnumerableConverter)
             {
-                var prepearedData = converter.DeserializeToObject(stream) as IEnumerable;
+                var preparedData = converter.DeserializeToObject(stream) as IEnumerable;
 
                 var listType = typeof(List<>);
                 var genericArgs = sourceType.GenericTypeArguments;
                 var concreteType = listType.MakeGenericType(genericArgs);                
                 var data = Activator.CreateInstance(concreteType);
-                foreach (var item in prepearedData)
+                foreach (var item in preparedData)
                 {
                     ((IList)data).Add(item);
                 }
