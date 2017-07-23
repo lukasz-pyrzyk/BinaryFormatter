@@ -5,7 +5,6 @@ using BinaryFormatter.Types;
 using System.Collections;
 using System.IO;
 using BinaryFormatter.Utils;
-using System.Text;
 
 namespace BinaryFormatter
 {
@@ -38,8 +37,7 @@ namespace BinaryFormatter
             if (sourceType == null)
             {
                 byte[] typeInfo = workingStream.ReadBytesWithSizePrefix();
-                string typeFullName = Encoding.UTF8.GetString(typeInfo, 0, typeInfo.Length);
-                sourceType = Type.GetType(typeFullName);
+                sourceType = TypeUtils.FromUTF8Bytes(typeInfo);
             }
 
             BaseTypeConverter converter = ConvertersSelector.SelectConverter(sourceType);
