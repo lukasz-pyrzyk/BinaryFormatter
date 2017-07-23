@@ -33,10 +33,10 @@ namespace BinaryFormatter.TypeConverter
         }
 
         public T Deserialize(byte[] stream)
-        {            
-            SerializedType deserializedType = (SerializedType)BitConverter.ToInt16(stream, 0);
+        {
+            int offset = 0;
+            SerializedType deserializedType = stream.ReadSerializedType(ref offset);
             Type sourceType = deserializedType.GetBaseType();
-            int offset = sizeof (short);
 
             if (sourceType == null)
             {
@@ -72,13 +72,6 @@ namespace BinaryFormatter.TypeConverter
         protected abstract int GetTypeSize();
         protected abstract void WriteObjectToStream(T obj, Stream stream);
         protected abstract T ProcessDeserialize(byte[] stream, Type sourceType, ref int offset);
-
-        protected virtual SerializedType GetPackageType(byte[] stream, ref int offset)
-        {
-            short type = BitConverter.ToInt16(stream, offset);
-            offset += sizeof (short);
-            return (SerializedType)type;
-        }
     }
 
     internal abstract class BaseTypeConverter

@@ -26,8 +26,8 @@ namespace BinaryFormatter
 
         public T Deserialize<T>(byte[] stream)
         {
-            SerializedType deserializedType = (SerializedType)BitConverter.ToInt16(stream, 0);
-            int offset = sizeof(short);
+            int offset = 0;
+            SerializedType deserializedType = stream.ReadSerializedType(ref offset);
 
             if (deserializedType == SerializedType.Null)
             {

@@ -58,8 +58,7 @@ namespace BinaryFormatter.TypeConverter
         {
             Type instanceType = typeof(T);
             TypeInfo instanceTypeInfo = instanceType.GetTypeInfo();
-            SerializedType type = (SerializedType)BitConverter.ToInt16(stream, offset);
-            offset += sizeof(short);
+            SerializedType type = stream.ReadSerializedType(ref offset);
 
             if (!excludedDlls.Any(x => property.PropertyType.AssemblyQualifiedName.Contains(x)))
             {
@@ -74,9 +73,9 @@ namespace BinaryFormatter.TypeConverter
                     DeserializeObject(stream, ref propertyValue, ref offset);
                 }
                 return;
-            }            
+            }
 
-            if(type == SerializedType.Null)
+            if (type == SerializedType.Null)
             {
                 property.SetValue(instance, null, property.GetIndexParameters());
                 return;
@@ -94,11 +93,12 @@ namespace BinaryFormatter.TypeConverter
             }
 
             BaseTypeConverter converter = ConvertersSelector.ForSerializedType(type);
-            object data;            
+            object data;
             if (type == SerializedType.Null)
             {
                 data = null;
-            } else if (type == SerializedType.IEnumerable)
+            }
+            else if (type == SerializedType.IEnumerable)
             {
                 var prepearedData = converter.DeserializeToObject(stream, ref offset) as IEnumerable;
 
