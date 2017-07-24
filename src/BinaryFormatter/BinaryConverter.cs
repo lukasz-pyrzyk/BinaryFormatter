@@ -5,7 +5,6 @@ using BinaryFormatter.Types;
 using System.Collections;
 using System.IO;
 using BinaryFormatter.Utils;
-using System.Text;
 
 namespace BinaryFormatter
 {
@@ -20,30 +19,25 @@ namespace BinaryFormatter
 
         public void Serialize(object obj, Stream stream)
         {
-            BaseTypeConverter converter = ConvertersSelector.SelectConverter(obj);            
+            BaseTypeConverter converter = ConvertersSelector.SelectConverter(obj);
             converter.Serialize(obj, stream);
         }
 
         public T Deserialize<T>(byte[] stream)
         {
-            int offset = 0;
-            SerializedType deserializedType = stream.ReadSerializedType(ref offset);
+            var workingStream = new WorkingStream(stream);
 
+            SerializedType deserializedType = workingStream.ReadSerializedType();
             if (deserializedType == SerializedType.Null)
             {
                 return default(T);
             }
-            
+
             Type sourceType = deserializedType.GetBaseType();
             if (sourceType == null)
             {
-                int typeInfoSize = BitConverter.ToInt32(stream, offset);
-                offset += sizeof(int);
-                byte[] typeInfo = new byte[typeInfoSize];
-                Array.Copy(stream, offset, typeInfo, 0, typeInfo.Length);
-                string typeFullName = Encoding.UTF8.GetString(typeInfo, 0, typeInfo.Length);
-                sourceType = Type.GetType(typeFullName);
-                offset += typeInfoSize;
+                byte[] typeInfo = workingStream.ReadBytesWithSizePrefix();
+                sourceType = TypeUtils.FromUTF8Bytes(typeInfo);
             }
 
             BaseTypeConverter converter = ConvertersSelector.SelectConverter(sourceType);
@@ -53,7 +47,7 @@ namespace BinaryFormatter
 
                 var listType = typeof(List<>);
                 var genericArgs = sourceType.GenericTypeArguments;
-                var concreteType = listType.MakeGenericType(genericArgs);                
+                var concreteType = listType.MakeGenericType(genericArgs);
                 var data = Activator.CreateInstance(concreteType);
                 foreach (var item in preparedData)
                 {
