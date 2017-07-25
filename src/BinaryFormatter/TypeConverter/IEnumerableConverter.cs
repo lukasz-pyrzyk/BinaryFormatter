@@ -15,7 +15,7 @@ namespace BinaryFormatter.TypeConverter
         protected override void WriteObjectToStream(object obj, Stream stream)
         {
             var objectAsCollection = (IList)obj;
-            
+
             byte[] collectionSize = BitConverter.GetBytes(objectAsCollection.Count);
             stream.Write(collectionSize);
 
@@ -47,47 +47,47 @@ namespace BinaryFormatter.TypeConverter
             }
         }
 
-        protected override object ProcessDeserialize(byte[] stream, Type sourceType, ref int offset)
+        protected override object ProcessDeserialize(byte[] bytes, Type sourceType, ref int offset)
         {
-            int beforeOffset = offset;
-            List<object> deserializedCollection = null;            
-            
-            if (stream.Length > 0)
+            var stream = new WorkingStream(bytes);
+            stream.ChangeOffset(offset);
+
+            int beforeOffset = stream.Offset;
+            List<object> deserializedCollection = null;
+
+            if (bytes.Length > 0)
             {
                 BinaryConverter converter = new BinaryConverter();
                 deserializedCollection = new List<object>();
 
-                int sizeCollection = BitConverter.ToInt32(stream, offset);
-                offset += sizeof(int);
+                int sizeCollection = stream.ReadInt();
 
                 for (int i = 0; i < sizeCollection; i++)
                 {
-                    int sizeData = BitConverter.ToInt32(stream, offset);
-                    offset += sizeof(int);
+                    int sizeData = stream.ReadInt();
                     if (sizeData == 0)
                     {
                         continue;
                     }
-                    byte[] dataValue = new byte[sizeData];
-                    Array.Copy(stream, offset, dataValue, 0, sizeData);
+                    byte[] dataValue = stream.ReadBytes(sizeData);
 
-                    MethodInfo method = typeof(BinaryConverter).GetRuntimeMethod("Deserialize", new System.Type[] { typeof(byte[]) });
+                    MethodInfo method = typeof(BinaryConverter).GetRuntimeMethod("Deserialize", new[] { typeof(byte[]) });
                     if (sourceType.GenericTypeArguments.Length > 0)
                     {
                         method = method.MakeGenericMethod(sourceType.GenericTypeArguments);
-                    } else
+                    }
+                    else
                     {
                         method = method.MakeGenericMethod(typeof(object));
                     }
                     object deserializeItem = method.Invoke(converter, new object[] { dataValue });
-                    offset += sizeData;
 
                     deserializedCollection.Add(deserializeItem);
                 }
             }
 
-            Size = offset - beforeOffset;
-            offset = beforeOffset;
+            Size = stream.Offset - beforeOffset;
+            stream.ChangeOffset(beforeOffset);
 
             return deserializedCollection;
         }

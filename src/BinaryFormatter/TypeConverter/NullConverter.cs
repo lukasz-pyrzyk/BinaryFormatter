@@ -19,7 +19,7 @@ namespace BinaryFormatter.TypeConverter
             stream.Write(new byte[0]);
         }
 
-        protected override object ProcessDeserialize(byte[] stream, Type sourceType, ref int offset)
+        protected override object ProcessDeserialize(byte[] bytes, Type sourceType, ref int offset)
         {
             return null;
         }

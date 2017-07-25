@@ -13,10 +13,10 @@ namespace BinaryFormatter.TypeConverter
             stream.Write(data);
         }
 
-        protected override Guid ProcessDeserialize(byte[] stream, Type sourceType, ref int offset)
+        protected override Guid ProcessDeserialize(byte[] bytes, Type sourceType, ref int offset)
         {
             byte[] guidData = new byte[16];
-            Array.Copy(stream, offset, guidData, 0, 16);
+            Array.Copy(bytes, offset, guidData, 0, 16);
 
             return new Guid(guidData);
         }

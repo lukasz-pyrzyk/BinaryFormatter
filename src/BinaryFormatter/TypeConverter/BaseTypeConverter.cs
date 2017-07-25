@@ -71,7 +71,7 @@ namespace BinaryFormatter.TypeConverter
 
         protected abstract int GetTypeSize();
         protected abstract void WriteObjectToStream(T obj, Stream stream);
-        protected abstract T ProcessDeserialize(byte[] stream, Type sourceType, ref int offset);
+        protected abstract T ProcessDeserialize(byte[] bytes, Type sourceType, ref int offset);
     }
 
     internal abstract class BaseTypeConverter
