@@ -85,10 +85,6 @@ namespace BinaryFormatter.TypeConverter
             {
                 int typeInfoSize = BitConverter.ToInt32(stream, offset);
                 offset += sizeof(int);
-                byte[] typeInfo = new byte[typeInfoSize];
-                Array.Copy(stream, offset, typeInfo, 0, typeInfo.Length);
-                string typeFullName = Encoding.UTF8.GetString(typeInfo, 0, typeInfo.Length);
-                Type sourceType = System.Type.GetType(typeFullName);
                 offset += typeInfoSize;
             }
 
@@ -100,14 +96,14 @@ namespace BinaryFormatter.TypeConverter
             }
             else if (type == SerializedType.IEnumerable)
             {
-                var prepearedData = converter.DeserializeToObject(stream, ref offset) as IEnumerable;
+                var preparedData = converter.DeserializeToObject(stream, ref offset) as IEnumerable;
 
                 var prop = property;
                 var listType = typeof(List<>);
                 var genericArgs = prop.PropertyType.GenericTypeArguments;
                 var concreteType = listType.MakeGenericType(genericArgs);
                 data = Activator.CreateInstance(concreteType);
-                foreach (var item in prepearedData)
+                foreach (var item in preparedData)
                 {
                     ((IList)data).Add(item);
                 }
@@ -119,7 +115,7 @@ namespace BinaryFormatter.TypeConverter
 
             if (instanceTypeInfo.IsValueType && !instanceTypeInfo.IsPrimitive)
             {
-                object boxedInstance = (object)instance;
+                object boxedInstance = instance;
                 property.SetValue(boxedInstance, data, property.GetIndexParameters());
                 instance = (T)boxedInstance;
             }
