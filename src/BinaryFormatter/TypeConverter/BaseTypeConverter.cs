@@ -41,8 +41,7 @@ namespace BinaryFormatter.TypeConverter
             if (sourceType == null)
             {
                 byte[] typeInfo = stream.ReadBytesWithSizePrefix();
-                string typeFullName = Encoding.UTF8.GetString(typeInfo, 0, typeInfo.Length);
-                sourceType = System.Type.GetType(typeFullName);
+                sourceType = TypeUtils.FromUTF8Bytes(typeInfo);
             }
 
             int offset = stream.Offset;
