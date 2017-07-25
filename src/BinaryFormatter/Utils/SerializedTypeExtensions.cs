@@ -55,6 +55,8 @@ namespace BinaryFormatter.Utils
                     return typeof(ushort);
                 case SerializedType.Guid:
                     return typeof(Guid);
+                case SerializedType.Uri:
+                    return typeof(Uri);
                 default:
                     return null;
             }

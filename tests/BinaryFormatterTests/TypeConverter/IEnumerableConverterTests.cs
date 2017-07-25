@@ -79,6 +79,18 @@ namespace BinaryFormatterTests.TypeConverter
             Assert.Equal(listFromCollection_before, listFromCollection_after);
         }
 
+        [Fact]
+        public void CanSerializeAndDeserialize_ReadOnlyCollection()
+        {
+            var converter = new BinaryConverter();
+
+            IReadOnlyCollection<int> simpleCollection = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            
+            byte[] bytesSimpleCollection = converter.Serialize(simpleCollection);
+            var valueFromBytesSimpleCollection = converter.Deserialize<IReadOnlyCollection<int>>(bytesSimpleCollection);
+            Assert.Equal(valueFromBytesSimpleCollection, simpleCollection);
+        }
+
         class WithTestProperties
         {
             public string Name { get; set; }
