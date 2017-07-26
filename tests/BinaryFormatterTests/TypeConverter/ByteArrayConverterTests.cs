@@ -4,18 +4,14 @@ using Xunit;
 
 namespace BinaryFormatterTests.TypeConverter
 {
-    public class ByteArrayConverterTests
+    public class ByteArrayConverterTests : ConverterTest<byte[]>
     {
         [Fact]
         public void CanSerializeAndDeserialize()
         {
-            byte[] value = Encoding.UTF8.GetBytes("lorem ipsum");
-            var converter = new BinaryConverter();
-            byte[] bytes = converter.Serialize(value);
-
-            byte[] valueFromBytes = converter.Deserialize<byte[]>(bytes);
-            
-            Assert.Equal(valueFromBytes, value);
+            RunTest();
         }
+
+        public override byte[] Value => Encoding.UTF8.GetBytes("lorem ipsum");
     }
 }

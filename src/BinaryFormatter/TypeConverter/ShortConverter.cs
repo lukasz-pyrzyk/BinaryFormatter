@@ -13,9 +13,9 @@ namespace BinaryFormatter.TypeConverter
             stream.Write(data);
         }
 
-        protected override short ProcessDeserialize(byte[] stream, ref int offset)
+        protected override short ProcessDeserialize(byte[] bytes, Type sourceType, ref int offset)
         {
-            return BitConverter.ToInt16(stream, offset);
+            return BitConverter.ToInt16(bytes, offset);
         }
 
         protected override int GetTypeSize()

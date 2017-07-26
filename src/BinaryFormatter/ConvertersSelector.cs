@@ -28,18 +28,30 @@ namespace BinaryFormatter
             [typeof(string)] = new StringConverter(),
             [typeof(DateTime)] = new DatetimeConverter(),
             [typeof(byte[])] = new ByteArrayConverter(),
-            [typeof(IEnumerable)] = new IEnumerableConverter()
+            [typeof(IEnumerable)] = new IEnumerableConverter(),
+            [typeof(object)] = new CustomObjectConverter(),
+            [typeof(Guid)] = new GuidConverter(),
+            [typeof(Uri)] = new UriConverter(),
+            [typeof(Enum)] = new EnumConverter()
         };
+        private static readonly BaseTypeConverter NullConverter = new NullConverter();
 
-        public BaseTypeConverter SelectConverter(object obj)
+        private ConvertersSelector()
         {
-            if(obj == null) return null;
+        }
+
+        public static BaseTypeConverter SelectConverter(object obj)
+        {
+            if (obj == null) return NullConverter;
+
             Type type = obj.GetType();
             return SelectConverter(type);
         }
 
-        public BaseTypeConverter SelectConverter(Type type)
+        public static BaseTypeConverter SelectConverter(Type type)
         {
+            if (type == null) return NullConverter;
+
             BaseTypeConverter converter;
             if (_converters.TryGetValue(type, out converter))
             {
@@ -55,11 +67,23 @@ namespace BinaryFormatter
                 }
             }
 
-            return null;
+            bool isEnumType = type.GetTypeInfo().IsEnum;
+            if (isEnumType)
+            {
+                if (_converters.TryGetValue(typeof(Enum), out converter))
+                {
+                    return converter;
+                }
+            }
+
+            return ForSerializedType(SerializedType.CustomObject);
         }
 
-        public BaseTypeConverter ForSerializedType(SerializedType type)
+        public static BaseTypeConverter ForSerializedType(SerializedType type)
         {
+            if (type == SerializedType.Null)
+                return NullConverter;
+
             return _converters.First(x => x.Value.Type == type).Value;
         }
     }

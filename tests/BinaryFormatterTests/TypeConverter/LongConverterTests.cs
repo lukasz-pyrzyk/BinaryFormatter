@@ -1,20 +1,17 @@
-﻿using BinaryFormatter;
+﻿using System;
+using BinaryFormatter;
 using Xunit;
 
 namespace BinaryFormatterTests.TypeConverter
 {
-    public class LongConverterTests
+    public class LongConverterTests : ConverterTest<long>
     {
         [Fact]
         public void CanSerializeAndDeserialize()
         {
-            long value = long.MaxValue;
-            var converter = new BinaryConverter();
-            byte[] bytes = converter.Serialize(value);
-
-            long valueFromBytes = converter.Deserialize<long>(bytes);
-
-            Assert.Equal(valueFromBytes, value);
+            RunTest();
         }
+
+        public override long Value => long.MaxValue;
     }
 }

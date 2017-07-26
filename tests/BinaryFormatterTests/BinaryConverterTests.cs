@@ -201,6 +201,18 @@ namespace BinaryFormatterTests
         }
 
         [Fact]
+        public void CanSerialize_Null()
+        {
+            object value = null;
+
+            BinaryConverter converter = new BinaryConverter();
+            byte[] bytes = converter.Serialize(value);
+            object deserializedValue = converter.Deserialize<object>(bytes);
+
+            Assert.Equal(value, deserializedValue);
+        }
+
+        [Fact]
         public void CanSerialize_ByteArray()
         {
             byte[] value = Encoding.UTF8.GetBytes("lorem ipsum");
@@ -222,6 +234,42 @@ namespace BinaryFormatterTests
             BinaryConverter converter = new BinaryConverter();
             byte[] bytes = converter.Serialize(value);
             List<string> deserializedValue = converter.Deserialize<List<string>>(bytes);
+
+            Assert.Equal(value, deserializedValue);
+        }
+
+        [Fact]
+        public void CanSerialize_Guid()
+        {
+            Guid value = Guid.NewGuid();
+
+            BinaryConverter converter = new BinaryConverter();
+            byte[] bytes = converter.Serialize(value);
+            Guid deserializedValue = converter.Deserialize<Guid>(bytes);
+
+            Assert.Equal(value, deserializedValue);
+        }
+
+        [Fact]
+        public void CanSerialize_Uri()
+        {
+            Uri value = new Uri("https://github.com/lukasz-pyrzyk/BinaryFormatter");
+
+            BinaryConverter converter = new BinaryConverter();
+            byte[] bytes = converter.Serialize(value);
+            Uri deserializedValue = converter.Deserialize<Uri>(bytes);
+
+            Assert.Equal(value, deserializedValue);
+        }
+
+        [Fact]
+        public void CanSerialize_Enum()
+        {
+            Enum value = DayOfWeek.Sunday;
+
+            BinaryConverter converter = new BinaryConverter();
+            byte[] bytes = converter.Serialize(value);
+            Enum deserializedValue = converter.Deserialize<Enum>(bytes);
 
             Assert.Equal(value, deserializedValue);
         }

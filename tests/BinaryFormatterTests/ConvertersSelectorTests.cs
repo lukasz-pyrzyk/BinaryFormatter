@@ -9,27 +9,25 @@ namespace BinaryFormatterTests
     public class ConvertersSelectorTests
     {
         [Fact]
-        public void ReturnsNull_WhenObjIsNull()
+        public void ReturnsNullConverter_WhenObjIsNull()
         {
-            var selector = new ConvertersSelector();
-            var converter = selector.SelectConverter((object)null);
-            Assert.Null(converter);
+            var converter = ConvertersSelector.SelectConverter(null);
+            Assert.True(converter is NullConverter);
         }
 
         [Theory]
         [MemberData(nameof(TestCases))]
         public void CorrectlyMapsTypesToConverters(object obj, Type expectedType)
         {
-            var selector = new ConvertersSelector();
-            var fromType = selector.SelectConverter(obj);
-            var fromSerializedType = selector.ForSerializedType(fromType.Type);
+            var fromType = ConvertersSelector.SelectConverter(obj);
+            var fromSerializedType = ConvertersSelector.ForSerializedType(fromType.Type);
 
             Assert.Equal(fromType, fromSerializedType);
             Assert.Equal(fromType.GetType(), expectedType);
         }
 
         public static IEnumerable<object[]> TestCases()
-        {
+        {            
             yield return new[] { (object)default(bool), typeof(BoolConverter) };
             yield return new[] { (object)new byte[0], typeof(ByteArrayConverter) };
             yield return new[] { (object)default(byte), typeof(ByteConverter) };
@@ -46,6 +44,9 @@ namespace BinaryFormatterTests
             yield return new[] { (object)default(uint), typeof(UIntConverter) };
             yield return new[] { (object)default(ulong), typeof(ULongConverter) };
             yield return new[] { (object)default(ushort), typeof(UShortConverter) };
+            yield return new[] { (object)default(Guid), typeof(GuidConverter) };
+            yield return new[] { (object)(new Uri("https://github.com")), typeof(UriConverter) };
+            yield return new[] { (object)(DayOfWeek.Thursday), typeof(EnumConverter) };
         }
     }
 }

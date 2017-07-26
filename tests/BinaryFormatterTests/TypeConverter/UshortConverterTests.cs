@@ -3,18 +3,15 @@ using Xunit;
 
 namespace BinaryFormatterTests.TypeConverter
 {
-    public class UShortConverterTests
+    public class UShortConverterTests : ConverterTest<ushort>
+
     {
         [Fact]
         public void CanSerializeAndDeserialize()
         {
-            ushort value = ushort.MaxValue;
-            var converter = new BinaryConverter();
-            byte[] bytes = converter.Serialize(value);
-
-            ushort valueFromBytes = converter.Deserialize<ushort>(bytes);
-
-            Assert.Equal(valueFromBytes, value);
+            RunTest();
         }
+
+        public override ushort Value => ushort.MaxValue;
     }
 }

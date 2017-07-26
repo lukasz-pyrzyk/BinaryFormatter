@@ -1,16 +1,15 @@
-﻿using BinaryFormatter;
-using Xunit;
+﻿using Xunit;
 
 namespace BinaryFormatterTests.TypeConverter
 {
-    public class StringConverterTests : ConverterTest<string>
+    public class NullConverterTests : ConverterTest<object>
     {
+        public override object Value => null;
+
         [Fact]
         public void CanSerializeAndDeserialize()
         {
             RunTest();
         }
-
-        public override string Value => "lorem ipsum";
     }
 }

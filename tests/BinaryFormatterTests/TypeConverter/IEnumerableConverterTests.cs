@@ -32,6 +32,7 @@ namespace BinaryFormatterTests.TypeConverter
             simpleCollection.Add(uint.MaxValue);
             simpleCollection.Add(ulong.MaxValue);
             simpleCollection.Add(ushort.MaxValue);
+            simpleCollection.Add(Guid.NewGuid());
 
             byte[] bytesSimpleCollection = converter.Serialize(simpleCollection);
             var valueFromBytesSimpleCollection = converter.Deserialize<List<object>>(bytesSimpleCollection);
@@ -76,6 +77,18 @@ namespace BinaryFormatterTests.TypeConverter
             var listFromCollection_before = complexCollection[1] as IEnumerable;
             var listFromCollection_after = valueFromBytesComplexCollection[1] as IEnumerable;
             Assert.Equal(listFromCollection_before, listFromCollection_after);
+        }
+
+        [Fact]
+        public void CanSerializeAndDeserialize_ReadOnlyCollection()
+        {
+            var converter = new BinaryConverter();
+
+            IReadOnlyCollection<int> simpleCollection = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            
+            byte[] bytesSimpleCollection = converter.Serialize(simpleCollection);
+            var valueFromBytesSimpleCollection = converter.Deserialize<IReadOnlyCollection<int>>(bytesSimpleCollection);
+            Assert.Equal(valueFromBytesSimpleCollection, simpleCollection);
         }
 
         class WithTestProperties

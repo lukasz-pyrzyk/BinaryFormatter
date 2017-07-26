@@ -1,6 +1,7 @@
-﻿using System.IO;
-using System.Linq;
+﻿using System;
+using System.IO;
 using BinaryFormatter.Types;
+using BinaryFormatter.Utils;
 
 namespace BinaryFormatter.TypeConverter
 {
@@ -10,16 +11,24 @@ namespace BinaryFormatter.TypeConverter
 
         protected override void WriteObjectToStream(decimal obj, Stream stream)
         {
-            string sdecimal = obj.ToString("F");
-            Size = sdecimal.Length;
-
-            new StringConverter().Serialize(sdecimal, stream);
+            int[] bits = decimal.GetBits(obj);
+            foreach (int bit in bits)
+            {
+                byte[] data = BitConverter.GetBytes(bit);
+                stream.Write(data);
+            }
         }
 
-        protected override decimal ProcessDeserialize(byte[] stream, ref int offset)
+        protected override decimal ProcessDeserialize(byte[] bytes, Type sourceType, ref int offset)
         {
-            string sdecimal = new StringConverter().Deserialize(stream.Skip(offset).ToArray());
-            return decimal.Parse(sdecimal);
+            var bits = new int[4];
+            for (int i = 0; i < 4; i++)
+            {
+                bits[i] = BitConverter.ToInt32(bytes, offset);
+                offset += sizeof(int);
+            }
+
+            return new decimal(bits);
         }
 
         protected override int GetTypeSize()
