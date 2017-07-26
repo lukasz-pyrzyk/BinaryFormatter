@@ -4,7 +4,6 @@ using System.Text;
 using BinaryFormatter.TypeConverter;
 using BinaryFormatter.Types;
 using BinaryFormatter.Utils;
-using Xunit;
 
 namespace BinaryFormatterTests.TypeConverter
 {
@@ -25,11 +24,11 @@ namespace BinaryFormatterTests.TypeConverter
                 stream.Write(data);
             }
 
-            protected override string ProcessDeserialize(byte[] stream, Type sourceType, ref int offset)
+            protected override string ProcessDeserialize(byte[] bytes, Type sourceType, ref int offset)
             {
-                int size = BitConverter.ToInt32(stream, offset);
+                int size = BitConverter.ToInt32(bytes, offset);
                 offset += sizeof (int);
-                return Encoding.UTF8.GetString(stream, offset, size);
+                return Encoding.UTF8.GetString(bytes, offset, size);
             }
 
             public override SerializedType Type => SerializedType.String;

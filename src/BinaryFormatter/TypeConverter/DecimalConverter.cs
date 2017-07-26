@@ -19,12 +19,12 @@ namespace BinaryFormatter.TypeConverter
             }
         }
 
-        protected override decimal ProcessDeserialize(byte[] stream, Type sourceType, ref int offset)
+        protected override decimal ProcessDeserialize(byte[] bytes, Type sourceType, ref int offset)
         {
             var bits = new int[4];
             for (int i = 0; i < 4; i++)
             {
-                bits[i] = BitConverter.ToInt32(stream, offset);
+                bits[i] = BitConverter.ToInt32(bytes, offset);
                 offset += sizeof(int);
             }
 

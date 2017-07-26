@@ -32,29 +32,25 @@ namespace BinaryFormatter.TypeConverter
             Serialize((T)obj, stream);
         }
 
-        public T Deserialize(byte[] stream)
+        public T Deserialize(byte[] bytes)
         {
-            int offset = 0;
-            SerializedType deserializedType = stream.ReadSerializedType(ref offset);
+            var stream = new WorkingStream(bytes);
+            SerializedType deserializedType = stream.ReadSerializedType();
             Type sourceType = deserializedType.GetBaseType();
 
             if (sourceType == null)
             {
-                int typeInfoSize = BitConverter.ToInt32(stream, offset);
-                offset += sizeof(int);
-                byte[] typeInfo = new byte[typeInfoSize];
-                Array.Copy(stream, offset, typeInfo, 0, typeInfo.Length);
-                string typeFullName = Encoding.UTF8.GetString(typeInfo, 0, typeInfo.Length);
-                sourceType = System.Type.GetType(typeFullName);
-                offset += typeInfoSize;
+                byte[] typeInfo = stream.ReadBytesWithSizePrefix();
+                sourceType = TypeUtils.FromUTF8Bytes(typeInfo);
             }
 
-            return ProcessDeserialize(stream, sourceType, ref offset);
+            int offset = stream.Offset;
+            return ProcessDeserialize(bytes, sourceType, ref offset);
         }
 
-        public T Deserialize(byte[] stream, ref int offset)
+        public T Deserialize(byte[] bytes, ref int offset)
         {
-            T obj = ProcessDeserialize(stream, typeof(T), ref offset);
+            T obj = ProcessDeserialize(bytes, typeof(T), ref offset);
             offset += GetTypeSize();
             return obj;
         }
@@ -71,7 +67,7 @@ namespace BinaryFormatter.TypeConverter
 
         protected abstract int GetTypeSize();
         protected abstract void WriteObjectToStream(T obj, Stream stream);
-        protected abstract T ProcessDeserialize(byte[] stream, Type sourceType, ref int offset);
+        protected abstract T ProcessDeserialize(byte[] bytes, Type sourceType, ref int offset);
     }
 
     internal abstract class BaseTypeConverter
