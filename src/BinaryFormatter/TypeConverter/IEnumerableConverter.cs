@@ -14,7 +14,14 @@ namespace BinaryFormatter.TypeConverter
 
         protected override void WriteObjectToStream(object obj, Stream stream)
         {
-            var objectAsCollection = (IList)obj;
+            bool isDictionary = obj is IDictionary;
+            bool isList = obj is IList;
+
+            var objectAsCollection = (ICollection)obj;
+            //if (isDictionary)
+            //    objectAsCollection = (IDictionary)obj;
+            //else
+            //    objectAsCollection = (IList)obj;
 
             byte[] collectionSize = BitConverter.GetBytes(objectAsCollection.Count);
             stream.Write(collectionSize);
@@ -53,13 +60,22 @@ namespace BinaryFormatter.TypeConverter
             stream.ChangeOffset(offset);
 
             int beforeOffset = stream.Offset;
-            List<object> deserializedCollection = null;
+            Type collectionType = sourceType;
+            if (collectionType == typeof(object))
+                collectionType = typeof(List<object>);
+
+            var deserializedCollection = Activator.CreateInstance(collectionType);
+            bool isDictionary = deserializedCollection is IDictionary;
+            IList deserializedCollectionAsList = null;
+            IDictionary deserializedCollectionAsDictionary = null;
+            if (isDictionary)
+                deserializedCollectionAsDictionary = (IDictionary)deserializedCollection;
+            else
+                deserializedCollectionAsList = (IList)deserializedCollection;
 
             if (bytes.Length > 0)
             {
                 BinaryConverter converter = new BinaryConverter();
-                deserializedCollection = new List<object>();
-
                 int sizeCollection = stream.ReadInt();
 
                 for (int i = 0; i < sizeCollection; i++)
@@ -74,15 +90,26 @@ namespace BinaryFormatter.TypeConverter
                     MethodInfo method = typeof(BinaryConverter).GetRuntimeMethod("Deserialize", new[] { typeof(byte[]) });
                     if (sourceType.GenericTypeArguments.Length > 0)
                     {
-                        method = method.MakeGenericMethod(sourceType.GenericTypeArguments);
+                        if(isDictionary)
+                        {
+                            Type elementType = typeof(KeyValuePair<,>).MakeGenericType(sourceType.GenericTypeArguments);
+                            method = method.MakeGenericMethod(new System.Type[] { elementType });
+                        }
+                        else
+                            method = method.MakeGenericMethod(sourceType.GenericTypeArguments);
                     }
                     else
                     {
                         method = method.MakeGenericMethod(typeof(object));
                     }
-                    object deserializeItem = method.Invoke(converter, new object[] { dataValue });
+                    var deserializeItem = method.Invoke(converter, new object[] { dataValue });
 
-                    deserializedCollection.Add(deserializeItem);
+                    if (isDictionary)
+                    {
+                        KeyValuePair<object, object> keyValuePairFormObject = TypeHelper.CastFrom(deserializeItem);
+                        deserializedCollectionAsDictionary.Add(keyValuePairFormObject.Key, keyValuePairFormObject.Value);
+                    } else
+                        deserializedCollectionAsList.Add(deserializeItem);
                 }
             }
 

@@ -31,6 +31,7 @@ namespace BinaryFormatterTests.Utils
         [Theory]
         [InlineData(SerializedType.CustomObject)]
         [InlineData(SerializedType.IEnumerable)]
+        [InlineData(SerializedType.KeyValuePair)]
         [InlineData(SerializedType.Null)]
         internal void IsNotBaseType(SerializedType type)
         {

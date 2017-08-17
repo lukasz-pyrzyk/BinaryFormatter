@@ -273,5 +273,17 @@ namespace BinaryFormatterTests
 
             Assert.Equal(value, deserializedValue);
         }
+
+        [Fact]
+        public void CanSerialize_KeyValuePair()
+        {
+            KeyValuePair<int, string> value = new KeyValuePair<int, string>(1, "one");
+
+            BinaryConverter converter = new BinaryConverter();
+            byte[] bytes = converter.Serialize(value);
+            KeyValuePair<int, string> deserializedValue = converter.Deserialize<KeyValuePair<int, string>>(bytes);
+
+            Assert.Equal(value, deserializedValue);
+        }
     }
 }
