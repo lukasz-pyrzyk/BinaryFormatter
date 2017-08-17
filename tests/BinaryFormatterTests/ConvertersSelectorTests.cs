@@ -47,6 +47,7 @@ namespace BinaryFormatterTests
             yield return new[] { (object)default(Guid), typeof(GuidConverter) };
             yield return new[] { (object)(new Uri("https://github.com")), typeof(UriConverter) };
             yield return new[] { (object)(DayOfWeek.Thursday), typeof(EnumConverter) };
+            yield return new[] { (object)(new KeyValuePair<int, string>()), typeof(KeyValuePairConverter) };
         }
     }
 }
