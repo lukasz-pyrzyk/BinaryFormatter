@@ -32,7 +32,8 @@ namespace BinaryFormatter
             [typeof(object)] = new CustomObjectConverter(),
             [typeof(Guid)] = new GuidConverter(),
             [typeof(Uri)] = new UriConverter(),
-            [typeof(Enum)] = new EnumConverter()
+            [typeof(Enum)] = new EnumConverter(),
+            [typeof(KeyValuePair<,>)] = new KeyValuePairConverter()
         };
         private static readonly BaseTypeConverter NullConverter = new NullConverter();
 
@@ -56,6 +57,16 @@ namespace BinaryFormatter
             if (_converters.TryGetValue(type, out converter))
             {
                 return converter;
+            }
+
+            TypeInfo typeInfo = type.GetTypeInfo();
+            bool isKeyValuePair = typeInfo.IsGenericType && type.GetGenericTypeDefinition() == typeof(KeyValuePair<,>);
+            if (isKeyValuePair)
+            {
+                if (_converters.TryGetValue(typeof(KeyValuePair<,>), out converter))
+                {
+                    return converter;
+                }
             }
 
             bool isEnumerableType = type.GetTypeInfo().ImplementedInterfaces.Any(t => t == typeof(IEnumerable));

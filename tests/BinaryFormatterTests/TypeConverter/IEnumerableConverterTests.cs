@@ -33,6 +33,7 @@ namespace BinaryFormatterTests.TypeConverter
             simpleCollection.Add(ulong.MaxValue);
             simpleCollection.Add(ushort.MaxValue);
             simpleCollection.Add(Guid.NewGuid());
+            simpleCollection.Add(new KeyValuePair<int, string>(5, "five"));
 
             byte[] bytesSimpleCollection = converter.Serialize(simpleCollection);
             var valueFromBytesSimpleCollection = converter.Deserialize<List<object>>(bytesSimpleCollection);
@@ -65,6 +66,9 @@ namespace BinaryFormatterTests.TypeConverter
                     "Кто не ходит, тот и не падает."
                 }
             );
+            complexCollection.Add(new KeyValuePair<int, string>(1, "one"));
+            complexCollection.Add(new KeyValuePair<int, string>(2, "two"));
+            complexCollection.Add(new KeyValuePair<int, string>(3, "three"));
             byte[] bytesComplexCollection = converter.Serialize(complexCollection);
             List<object> valueFromBytesComplexCollection = converter.Deserialize<List<object>>(bytesComplexCollection);
 
@@ -77,6 +81,10 @@ namespace BinaryFormatterTests.TypeConverter
             var listFromCollection_before = complexCollection[1] as IEnumerable;
             var listFromCollection_after = valueFromBytesComplexCollection[1] as IEnumerable;
             Assert.Equal(listFromCollection_before, listFromCollection_after);
+
+            Assert.Equal(complexCollection[2], valueFromBytesComplexCollection[2]);
+            Assert.Equal(complexCollection[3], valueFromBytesComplexCollection[3]);
+            Assert.Equal(complexCollection[4], valueFromBytesComplexCollection[4]);
         }
 
         [Fact]
@@ -91,12 +99,34 @@ namespace BinaryFormatterTests.TypeConverter
             Assert.Equal(valueFromBytesSimpleCollection, simpleCollection);
         }
 
+        [Fact]
+        public void CanSerializeAndDeserialize_IDictionaryCollection()
+        {
+            var converter = new BinaryConverter();
+
+            Dictionary<int, string> dictionaryCollection = new Dictionary<int, string>();
+            dictionaryCollection.Add(0, "zero");
+            dictionaryCollection.Add(1, "one");
+            dictionaryCollection.Add(2, "two");
+            dictionaryCollection.Add(3, "three");
+            dictionaryCollection.Add(4, "four");
+            dictionaryCollection.Add(5, "five");
+            dictionaryCollection.Add(6, "six");
+            dictionaryCollection.Add(7, "seven");
+            dictionaryCollection.Add(8, "eight");
+            dictionaryCollection.Add(9, "nine");            
+
+            byte[] bytesDictionaryCollection = converter.Serialize(dictionaryCollection);
+            var valueFromBytesDictionaryCollection = converter.Deserialize<Dictionary<int, string>>(bytesDictionaryCollection);
+            Assert.Equal(valueFromBytesDictionaryCollection, dictionaryCollection);
+        }
+
         class WithTestProperties
         {
             public string Name { get; set; }
             public int Age { get; set; }
             public DateTime Birthday { get; set; }
-            public List<string> Friends { get; set; }
+            public List<string> Friends { get; set; }            
         }
     }
 }

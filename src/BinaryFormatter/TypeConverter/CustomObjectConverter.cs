@@ -55,8 +55,8 @@ namespace BinaryFormatter.TypeConverter
         }
 
         private void DeserializeProperty<T>(PropertyInfo property, ref T instance, byte[] stream, ref int offset)
-        {
-            Type instanceType = typeof(T);
+        {            
+            Type instanceType = property.PropertyType;
             TypeInfo instanceTypeInfo = instanceType.GetTypeInfo();
             SerializedType type = stream.ReadSerializedType(ref offset);
 
@@ -96,7 +96,7 @@ namespace BinaryFormatter.TypeConverter
             }
             else if (type == SerializedType.IEnumerable)
             {
-                var preparedData = converter.DeserializeToObject(stream, ref offset) as IEnumerable;
+                var preparedData = converter.DeserializeToObject(stream, ref offset) as IEnumerable;                                
 
                 var prop = property;
                 var listType = typeof(List<>);

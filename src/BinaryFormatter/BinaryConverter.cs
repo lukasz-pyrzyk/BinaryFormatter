@@ -44,16 +44,19 @@ namespace BinaryFormatter
             if (converter is IEnumerableConverter)
             {
                 var preparedData = converter.DeserializeToObject(stream) as IEnumerable;
-
-                var listType = typeof(List<>);
-                var genericArgs = sourceType.GenericTypeArguments;
-                var concreteType = listType.MakeGenericType(genericArgs);
-                var data = Activator.CreateInstance(concreteType);
-                foreach (var item in preparedData)
+                if (preparedData is IList)
                 {
-                    ((IList)data).Add(item);
-                }
-                return (T)data;
+                    var listType = typeof(List<>);
+                    var genericArgs = sourceType.GenericTypeArguments;
+                    var concreteType = listType.MakeGenericType(genericArgs);
+                    var data = Activator.CreateInstance(concreteType);
+                    foreach (var item in preparedData)
+                    {
+                        ((IList)data).Add(item);
+                    }
+                    return (T)data;
+                } else
+                    return (T)preparedData;
             }
 
             return (T)converter.DeserializeToObject(stream);

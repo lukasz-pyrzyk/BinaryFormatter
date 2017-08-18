@@ -26,7 +26,7 @@ namespace BinaryFormatter.TypeConverter
 
         protected override int GetTypeSize()
         {
-            return Size;
+            return 0;
         }
 
         public override SerializedType Type => SerializedType.Null;

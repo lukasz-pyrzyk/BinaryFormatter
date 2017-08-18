@@ -26,9 +26,9 @@ BinaryFormatter is a byte serialized/deserializer for .NET Core, created for Dis
   - guid
   - uri
   - enum
+  - KeyValuePair
 
  ### Not supported types
-- IDictionary collections
 - anonymous types
 
 ### Installation
