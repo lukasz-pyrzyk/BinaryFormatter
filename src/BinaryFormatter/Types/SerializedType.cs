@@ -24,6 +24,7 @@
         Uri = 19,
         Enum = 20,
         KeyValuePair = 21,
+        Timespan = 22,
         CustomObject = 99
     }
 }
