@@ -33,6 +33,7 @@ namespace BinaryFormatterTests
             yield return new[] { (object)default(byte), typeof(ByteConverter) };
             yield return new[] { (object)default(char), typeof(CharConverter) };
             yield return new[] { (object)default(DateTime), typeof(DatetimeConverter) };
+            yield return new[] { (object)default(TimeSpan), typeof(TimespanConverter) };
             yield return new[] { (object)default(decimal), typeof(DecimalConverter) };
             yield return new[] { (object)default(double), typeof(DoubleConverter) };
             yield return new[] { (object)default(float), typeof(FloatConverter) };
