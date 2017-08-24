@@ -202,6 +202,18 @@ namespace BinaryFormatterTests
         }
 
         [Fact]
+        public void CanSerialize_Timespan()
+        {
+            var value = TimeSpan.MaxValue;
+
+            BinaryConverter converter = new BinaryConverter();
+            byte[] bytes = converter.Serialize(value);
+            TimeSpan deserializedValue = converter.Deserialize<TimeSpan>(bytes);
+
+            Assert.Equal(value, deserializedValue);
+        }
+
+        [Fact]
         public void CanSerialize_Null()
         {
             object value = null;

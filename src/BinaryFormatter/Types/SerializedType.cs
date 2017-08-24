@@ -24,7 +24,11 @@
         Uri = 19,
         Enum = 20,
         KeyValuePair = 21,
+<<<<<<< HEAD
         BitInteger = 22,
+=======
+        Timespan = 22,
+>>>>>>> 1368e8454b750eacfdf468376de8967975ea139c
         CustomObject = 99
     }
 }
