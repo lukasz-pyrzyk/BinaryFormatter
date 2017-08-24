@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Collections;
 using System.IO;
 using System.Reflection;
+using System.Linq;
 using BinaryFormatter.Utils;
+
 
 namespace BinaryFormatter.TypeConverter
 {
@@ -18,11 +20,6 @@ namespace BinaryFormatter.TypeConverter
             bool isList = obj is IList;
 
             var objectAsCollection = (ICollection)obj;
-            //if (isDictionary)
-            //    objectAsCollection = (IDictionary)obj;
-            //else
-            //    objectAsCollection = (IList)obj;
-
             byte[] collectionSize = BitConverter.GetBytes(objectAsCollection.Count);
             stream.Write(collectionSize);
 
@@ -71,7 +68,9 @@ namespace BinaryFormatter.TypeConverter
             if (isDictionary)
                 deserializedCollectionAsDictionary = (IDictionary)deserializedCollection;
             else
+            {
                 deserializedCollectionAsList = (IList)deserializedCollection;
+            }
 
             if (bytes.Length > 0)
             {

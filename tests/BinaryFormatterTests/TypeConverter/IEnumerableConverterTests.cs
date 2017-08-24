@@ -100,7 +100,7 @@ namespace BinaryFormatterTests.TypeConverter
         }
 
         [Fact]
-        public void CanSerializeAndDeserialize_IDictionaryCollection()
+        public void CanSerializeAndDeserialize_SimpleIDictionaryCollection()
         {
             var converter = new BinaryConverter();
 
@@ -119,6 +119,52 @@ namespace BinaryFormatterTests.TypeConverter
             byte[] bytesDictionaryCollection = converter.Serialize(dictionaryCollection);
             var valueFromBytesDictionaryCollection = converter.Deserialize<Dictionary<int, string>>(bytesDictionaryCollection);
             Assert.Equal(valueFromBytesDictionaryCollection, dictionaryCollection);
+        }
+
+        [Fact]
+        public void CanSerializeAndDeserialize_ComplexIDictionaryCollection()
+        {
+            var converter = new BinaryConverter();
+
+            Dictionary<int, object> dictionaryCollection = new Dictionary<int, object>();
+            dictionaryCollection.Add(1, new WithTestProperties() {
+                Name = "Joe",
+                Age = 30,
+                Birthday = DateTime.Now.AddYears(-30),
+                Friends = new List<string>()
+                {
+                    "Jim",
+                    "John",
+                    "Linus"
+                }
+            });
+            var dictionaryForTest = new Dictionary<int, int>();
+            dictionaryForTest.Add(1, 1);
+            dictionaryForTest.Add(2, 2);
+            dictionaryForTest.Add(3, 3);
+            dictionaryCollection.Add(2, dictionaryForTest);
+
+            byte[] bytesDictionaryCollection = converter.Serialize(dictionaryCollection);
+            var valueFromBytesDictionaryCollection = converter.Deserialize<Dictionary<int, object>>(bytesDictionaryCollection);
+
+            // Check first element
+            object valBefore;
+            dictionaryCollection.TryGetValue(1, out valBefore);
+            object valAfter;
+            valueFromBytesDictionaryCollection.TryGetValue(1, out valAfter);
+
+            Assert.Equal(((WithTestProperties)valBefore).Name, ((WithTestProperties)valAfter).Name);
+            Assert.Equal(((WithTestProperties)valBefore).Age, ((WithTestProperties)valAfter).Age);
+            Assert.Equal(((WithTestProperties)valBefore).Birthday, ((WithTestProperties)valAfter).Birthday);
+            Assert.Equal(((WithTestProperties)valBefore).Friends, ((WithTestProperties)valAfter).Friends);
+
+            // Check second element
+            object valDictionaryBefore;
+            dictionaryCollection.TryGetValue(2, out valDictionaryBefore);
+            object valDictionaryAfter;
+            valueFromBytesDictionaryCollection.TryGetValue(2, out valDictionaryAfter);
+
+            Assert.Equal(valDictionaryBefore, valDictionaryAfter);
         }
 
         class WithTestProperties

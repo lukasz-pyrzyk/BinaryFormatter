@@ -23,6 +23,7 @@ namespace BinaryFormatterTests.Utils
         [InlineData(SerializedType.Uint)]
         [InlineData(SerializedType.Ulong)]
         [InlineData(SerializedType.UShort)]
+        [InlineData(SerializedType.BitInteger)]
         internal void IsBaseType(SerializedType type)
         {
             Assert.True(type.IsBaseType());

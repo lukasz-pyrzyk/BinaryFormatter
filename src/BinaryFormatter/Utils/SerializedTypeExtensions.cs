@@ -1,6 +1,7 @@
 ﻿using System;
 using BinaryFormatter.Types;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace BinaryFormatter.Utils
 {
@@ -58,6 +59,8 @@ namespace BinaryFormatter.Utils
                     return typeof(Guid);
                 case SerializedType.Uri:
                     return typeof(Uri);
+                case SerializedType.BitInteger:
+                    return typeof(BigInteger);
                 default:
                     return null;
             }
