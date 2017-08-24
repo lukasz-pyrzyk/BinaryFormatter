@@ -33,6 +33,8 @@ namespace BinaryFormatter.Utils
                     return typeof(char);
                 case SerializedType.Datetime:
                     return typeof(DateTime);
+                case SerializedType.Timespan:
+                    return typeof(TimeSpan);
                 case SerializedType.Decimal:
                     return typeof(decimal);
                 case SerializedType.Double:
