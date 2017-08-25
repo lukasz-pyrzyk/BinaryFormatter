@@ -167,6 +167,43 @@ namespace BinaryFormatterTests.TypeConverter
             Assert.Equal(valDictionaryBefore, valDictionaryAfter);
         }
 
+        [Fact]
+        public void CanSerializeAndDeserialize_SimpleLinkedListCollection()
+        {
+            var converter = new BinaryConverter();
+
+            LinkedList<string> linkedListCollection = new LinkedList<string>();
+            linkedListCollection.AddLast("zero");
+            linkedListCollection.AddLast("one");
+            linkedListCollection.AddLast("two");
+            linkedListCollection.AddLast("three");
+            linkedListCollection.AddLast("four");
+            linkedListCollection.AddLast("five");
+            linkedListCollection.AddLast("six");
+            linkedListCollection.AddLast("seven");
+            linkedListCollection.AddLast("eight");
+            linkedListCollection.AddLast("nine");
+
+            byte[] bytesLinkedListCollection = converter.Serialize(linkedListCollection);
+            var valueFromBytesLinkedListCollection = converter.Deserialize<LinkedList<string>>(bytesLinkedListCollection);
+            Assert.Equal(valueFromBytesLinkedListCollection, linkedListCollection);
+        }
+
+        [Fact]
+        public void CanSerializeAndDeserialize_ComplexLinkedListCollection()
+        {
+            var converter = new BinaryConverter();
+
+            LinkedList<object> linkedListCollection = new LinkedList<object>();
+            linkedListCollection.AddLast("zero");
+            linkedListCollection.AddLast(1);
+            linkedListCollection.AddLast(new List<string>() { "I", "love", "the", ".NET Core" });
+
+            byte[] bytesLinkedListCollection = converter.Serialize(linkedListCollection);
+            var valueFromBytesLinkedListCollection = converter.Deserialize<LinkedList<object>>(bytesLinkedListCollection);
+            Assert.Equal(valueFromBytesLinkedListCollection, linkedListCollection);
+        }
+
         class WithTestProperties
         {
             public string Name { get; set; }
