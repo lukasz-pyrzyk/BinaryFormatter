@@ -4,6 +4,7 @@ using Xunit;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using System.Numerics;
 
 namespace BinaryFormatterTests.Utils
 {
@@ -114,7 +115,9 @@ namespace BinaryFormatterTests.Utils
             Assert.True((typeof(decimal)).GetTypeInfo().IsBaseType());
             Assert.True((typeof(string)).GetTypeInfo().IsBaseType());
             Assert.True((typeof(DateTime)).GetTypeInfo().IsBaseType());
-            Assert.True((typeof(byte[])).GetTypeInfo().IsBaseType());            
+            Assert.True((typeof(TimeSpan)).GetTypeInfo().IsBaseType());
+            Assert.True((typeof(byte[])).GetTypeInfo().IsBaseType());
+            Assert.True((typeof(BigInteger)).GetTypeInfo().IsBaseType());
         }
     }
 }

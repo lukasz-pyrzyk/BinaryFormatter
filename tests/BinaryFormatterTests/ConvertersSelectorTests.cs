@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using BinaryFormatter;
 using BinaryFormatter.TypeConverter;
 using Xunit;
+using System.Numerics;
 
 namespace BinaryFormatterTests
 {
@@ -49,6 +50,7 @@ namespace BinaryFormatterTests
             yield return new[] { (object)(new Uri("https://github.com")), typeof(UriConverter) };
             yield return new[] { (object)(DayOfWeek.Thursday), typeof(EnumConverter) };
             yield return new[] { (object)(new KeyValuePair<int, string>()), typeof(KeyValuePairConverter) };
+            yield return new[] { (object)(BigInteger.Parse("90612345123875509091827560007100099")), typeof(BigIntegerConverter) };
         }
     }
 }

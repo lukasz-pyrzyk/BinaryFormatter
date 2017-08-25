@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using BinaryFormatter.TypeConverter;
 using BinaryFormatter.Types;
+using System.Numerics;
 
 namespace BinaryFormatter
 {
@@ -34,7 +35,8 @@ namespace BinaryFormatter
             [typeof(Guid)] = new GuidConverter(),
             [typeof(Uri)] = new UriConverter(),
             [typeof(Enum)] = new EnumConverter(),
-            [typeof(KeyValuePair<,>)] = new KeyValuePairConverter()
+            [typeof(KeyValuePair<,>)] = new KeyValuePairConverter(),
+            [typeof(BigInteger)] = new BigIntegerConverter()
         };
 
         private static readonly BaseTypeConverter NullConverter = new NullConverter();

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
+using System.Numerics;
 
 namespace BinaryFormatter.Utils
 {
@@ -24,10 +25,12 @@ namespace BinaryFormatter.Utils
             typeof(decimal).GetTypeInfo(),
             typeof(string).GetTypeInfo(),
             typeof(DateTime).GetTypeInfo(),
+            typeof(TimeSpan).GetTypeInfo(),
             typeof(byte[]).GetTypeInfo(),
             typeof(Guid).GetTypeInfo(),
             typeof(Uri).GetTypeInfo(),
-            typeof(KeyValuePair<,>).GetTypeInfo()
+            typeof(KeyValuePair<,>).GetTypeInfo(),
+            typeof(BigInteger).GetTypeInfo()
         };
 
         public static IEnumerable<ConstructorInfo> GetAllConstructors(this TypeInfo typeInfo)

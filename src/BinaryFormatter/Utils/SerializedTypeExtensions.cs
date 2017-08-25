@@ -1,6 +1,7 @@
 ﻿using System;
 using BinaryFormatter.Types;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace BinaryFormatter.Utils
 {
@@ -32,6 +33,8 @@ namespace BinaryFormatter.Utils
                     return typeof(char);
                 case SerializedType.Datetime:
                     return typeof(DateTime);
+                case SerializedType.Timespan:
+                    return typeof(TimeSpan);
                 case SerializedType.Decimal:
                     return typeof(decimal);
                 case SerializedType.Double:
@@ -58,6 +61,8 @@ namespace BinaryFormatter.Utils
                     return typeof(Guid);
                 case SerializedType.Uri:
                     return typeof(Uri);
+                case SerializedType.BitInteger:
+                    return typeof(BigInteger);
                 default:
                     return null;
             }
