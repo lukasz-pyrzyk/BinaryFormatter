@@ -46,10 +46,9 @@ namespace BinaryFormatter.Utils
                 var listType = typeof(LinkedList<>);
                 var constructedListType = listType.MakeGenericType(genericTypes);
                 return HasConversionOperator(obj.GetType(), constructedListType);
-            } else
-            {
-                return false;
-            }          
+            }
+            
+            return false;         
         }
 
         public static bool HasConversionOperator(Type from, Type to)
