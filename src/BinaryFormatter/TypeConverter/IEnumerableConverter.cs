@@ -16,8 +16,8 @@ namespace BinaryFormatter.TypeConverter
 
         protected override void WriteObjectToStream(object obj, Stream stream)
         {
-            bool isDictionary = obj is IDictionary;
-            bool isList = obj is IList;
+            bool isDictionary = TypeHelper.IsDictionary(obj);
+            bool isList = TypeHelper.IsList(obj);
 
             var objectAsCollection = (ICollection)obj;
             byte[] collectionSize = BitConverter.GetBytes(objectAsCollection.Count);
@@ -62,14 +62,22 @@ namespace BinaryFormatter.TypeConverter
                 collectionType = typeof(List<object>);
 
             var deserializedCollection = Activator.CreateInstance(collectionType);
-            bool isDictionary = deserializedCollection is IDictionary;
-            IList deserializedCollectionAsList = null;
+            bool isDictionary = TypeHelper.IsDictionary(deserializedCollection);
+            bool isLinkedList = TypeHelper.IsLinkedList(deserializedCollection);
+            IList deserializedCollectionAsList = null;            
             IDictionary deserializedCollectionAsDictionary = null;
             if (isDictionary)
                 deserializedCollectionAsDictionary = (IDictionary)deserializedCollection;
             else
             {
-                deserializedCollectionAsList = (IList)deserializedCollection;
+                if (isLinkedList)
+                {
+                    Type listType = typeof(List<>).MakeGenericType(sourceType.GenericTypeArguments);
+                    deserializedCollectionAsList = (IList)Activator.CreateInstance(listType);
+                } else
+                {
+                    deserializedCollectionAsList = (IList)deserializedCollection;
+                }
             }
 
             if (bytes.Length > 0)
@@ -114,6 +122,11 @@ namespace BinaryFormatter.TypeConverter
 
             Size = stream.Offset - beforeOffset;
             stream.ChangeOffset(beforeOffset);
+
+            if(isLinkedList)
+            {
+                deserializedCollection = Activator.CreateInstance(collectionType, new object[] { deserializedCollectionAsList });
+            }
 
             return deserializedCollection;
         }
