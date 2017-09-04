@@ -214,6 +214,18 @@ namespace BinaryFormatterTests
         }
 
         [Fact]
+        public void CanSerialize_DateTimeOffset()
+        {
+            var value = DateTimeOffset.Now;
+
+            BinaryConverter converter = new BinaryConverter();
+            byte[] bytes = converter.Serialize(value);
+            DateTimeOffset deserializedValue = converter.Deserialize<DateTimeOffset>(bytes);
+
+            Assert.Equal(value, deserializedValue);
+        }
+
+        [Fact]
         public void CanSerialize_Null()
         {
             object value = null;

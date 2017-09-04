@@ -26,6 +26,7 @@ namespace BinaryFormatter.Utils
             typeof(string).GetTypeInfo(),
             typeof(DateTime).GetTypeInfo(),
             typeof(TimeSpan).GetTypeInfo(),
+            typeof(DateTimeOffset).GetTypeInfo(),
             typeof(byte[]).GetTypeInfo(),
             typeof(Guid).GetTypeInfo(),
             typeof(Uri).GetTypeInfo(),

@@ -26,6 +26,7 @@
         KeyValuePair = 21,        
         Timespan = 22,
         BitInteger = 23,
+        DateTimeOffset = 24,
         CustomObject = 99
     }
 }

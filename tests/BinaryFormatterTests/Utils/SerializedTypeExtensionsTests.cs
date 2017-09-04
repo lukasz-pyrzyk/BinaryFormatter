@@ -13,6 +13,7 @@ namespace BinaryFormatterTests.Utils
         [InlineData(SerializedType.Char)]
         [InlineData(SerializedType.Datetime)]
         [InlineData(SerializedType.Timespan)]
+        [InlineData(SerializedType.DateTimeOffset)]
         [InlineData(SerializedType.Decimal)]
         [InlineData(SerializedType.Double)]
         [InlineData(SerializedType.Float)]

@@ -29,6 +29,7 @@ namespace BinaryFormatter
             [typeof(string)] = new StringConverter(),
             [typeof(DateTime)] = new DatetimeConverter(),
             [typeof(TimeSpan)] = new TimespanConverter(),
+            [typeof(DateTimeOffset)] = new DateTimeOffsetConverter(),
             [typeof(byte[])] = new ByteArrayConverter(),
             [typeof(IEnumerable)] = new IEnumerableConverter(),
             [typeof(object)] = new CustomObjectConverter(),

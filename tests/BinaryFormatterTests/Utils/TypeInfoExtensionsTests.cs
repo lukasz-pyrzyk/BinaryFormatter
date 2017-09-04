@@ -116,6 +116,7 @@ namespace BinaryFormatterTests.Utils
             Assert.True((typeof(string)).GetTypeInfo().IsBaseType());
             Assert.True((typeof(DateTime)).GetTypeInfo().IsBaseType());
             Assert.True((typeof(TimeSpan)).GetTypeInfo().IsBaseType());
+            Assert.True((typeof(DateTimeOffset)).GetTypeInfo().IsBaseType());
             Assert.True((typeof(byte[])).GetTypeInfo().IsBaseType());
             Assert.True((typeof(BigInteger)).GetTypeInfo().IsBaseType());
         }
