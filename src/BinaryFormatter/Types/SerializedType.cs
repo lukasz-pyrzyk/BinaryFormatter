@@ -23,7 +23,9 @@
         Guid = 18,
         Uri = 19,
         Enum = 20,
-        KeyValuePair = 21,
+        KeyValuePair = 21,        
+        Timespan = 22,
+        BitInteger = 23,
         CustomObject = 99
     }
 }

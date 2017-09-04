@@ -3,6 +3,7 @@ using System.Text;
 using BinaryFormatter;
 using Xunit;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace BinaryFormatterTests
 {
@@ -201,6 +202,18 @@ namespace BinaryFormatterTests
         }
 
         [Fact]
+        public void CanSerialize_Timespan()
+        {
+            var value = TimeSpan.MaxValue;
+
+            BinaryConverter converter = new BinaryConverter();
+            byte[] bytes = converter.Serialize(value);
+            TimeSpan deserializedValue = converter.Deserialize<TimeSpan>(bytes);
+
+            Assert.Equal(value, deserializedValue);
+        }
+
+        [Fact]
         public void CanSerialize_Null()
         {
             object value = null;
@@ -282,6 +295,18 @@ namespace BinaryFormatterTests
             BinaryConverter converter = new BinaryConverter();
             byte[] bytes = converter.Serialize(value);
             KeyValuePair<int, string> deserializedValue = converter.Deserialize<KeyValuePair<int, string>>(bytes);
+
+            Assert.Equal(value, deserializedValue);
+        }
+
+        [Fact]
+        public void CanSerialize_BigInteger()
+        {
+            BigInteger value = BigInteger.Parse("90612345123875509091827560007100099");
+
+            BinaryConverter converter = new BinaryConverter();
+            byte[] bytes = converter.Serialize(value);
+            BigInteger deserializedValue = converter.Deserialize<BigInteger>(bytes);
 
             Assert.Equal(value, deserializedValue);
         }

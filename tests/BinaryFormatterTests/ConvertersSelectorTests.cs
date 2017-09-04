@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using BinaryFormatter;
 using BinaryFormatter.TypeConverter;
 using Xunit;
+using System.Numerics;
 
 namespace BinaryFormatterTests
 {
@@ -33,6 +34,7 @@ namespace BinaryFormatterTests
             yield return new[] { (object)default(byte), typeof(ByteConverter) };
             yield return new[] { (object)default(char), typeof(CharConverter) };
             yield return new[] { (object)default(DateTime), typeof(DatetimeConverter) };
+            yield return new[] { (object)default(TimeSpan), typeof(TimespanConverter) };
             yield return new[] { (object)default(decimal), typeof(DecimalConverter) };
             yield return new[] { (object)default(double), typeof(DoubleConverter) };
             yield return new[] { (object)default(float), typeof(FloatConverter) };
@@ -48,6 +50,7 @@ namespace BinaryFormatterTests
             yield return new[] { (object)(new Uri("https://github.com")), typeof(UriConverter) };
             yield return new[] { (object)(DayOfWeek.Thursday), typeof(EnumConverter) };
             yield return new[] { (object)(new KeyValuePair<int, string>()), typeof(KeyValuePairConverter) };
+            yield return new[] { (object)(BigInteger.Parse("90612345123875509091827560007100099")), typeof(BigIntegerConverter) };
         }
     }
 }

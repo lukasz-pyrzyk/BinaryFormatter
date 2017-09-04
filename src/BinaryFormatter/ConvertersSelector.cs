@@ -5,10 +5,11 @@ using System.Linq;
 using System.Reflection;
 using BinaryFormatter.TypeConverter;
 using BinaryFormatter.Types;
+using System.Numerics;
 
 namespace BinaryFormatter
 {
-    internal class ConvertersSelector
+    internal static class ConvertersSelector
     {
         private static readonly Dictionary<Type, BaseTypeConverter> _converters = new Dictionary<Type, BaseTypeConverter>
         {
@@ -27,20 +28,19 @@ namespace BinaryFormatter
             [typeof(decimal)] = new DecimalConverter(),
             [typeof(string)] = new StringConverter(),
             [typeof(DateTime)] = new DatetimeConverter(),
+            [typeof(TimeSpan)] = new TimespanConverter(),
             [typeof(byte[])] = new ByteArrayConverter(),
             [typeof(IEnumerable)] = new IEnumerableConverter(),
             [typeof(object)] = new CustomObjectConverter(),
             [typeof(Guid)] = new GuidConverter(),
             [typeof(Uri)] = new UriConverter(),
             [typeof(Enum)] = new EnumConverter(),
-            [typeof(KeyValuePair<,>)] = new KeyValuePairConverter()
+            [typeof(KeyValuePair<,>)] = new KeyValuePairConverter(),
+            [typeof(BigInteger)] = new BigIntegerConverter()
         };
+
         private static readonly BaseTypeConverter NullConverter = new NullConverter();
-
-        private ConvertersSelector()
-        {
-        }
-
+        
         public static BaseTypeConverter SelectConverter(object obj)
         {
             if (obj == null) return NullConverter;
