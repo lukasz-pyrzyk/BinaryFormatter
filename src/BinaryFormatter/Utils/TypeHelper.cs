@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
+using System.Linq;
 
 namespace BinaryFormatter.Utils
 {
@@ -37,15 +37,31 @@ namespace BinaryFormatter.Utils
             return obj is IList;
         }
 
+        public static bool IsHashSet(object obj)
+        {
+            Type objectType = obj.GetType();
+            Type[] genericTypes = objectType.GenericTypeArguments;
+
+            if (genericTypes.Length == 1)
+            {
+                var listType = typeof(HashSet<>);
+                var constructedListType = listType.MakeGenericType(genericTypes);
+                return HasConversionOperator(objectType, constructedListType);
+            }
+
+            return false;
+        }
+
         public static bool IsLinkedList(object obj)
         {
-            Type[] genericTypes = obj.GetType().GenericTypeArguments;
+            Type objectType = obj.GetType();
+            Type[] genericTypes = objectType.GenericTypeArguments;
 
             if (genericTypes.Length == 1)
             {
                 var listType = typeof(LinkedList<>);
                 var constructedListType = listType.MakeGenericType(genericTypes);
-                return HasConversionOperator(obj.GetType(), constructedListType);
+                return HasConversionOperator(objectType, constructedListType);
             }
             
             return false;         
@@ -64,6 +80,20 @@ namespace BinaryFormatter.Utils
             {
                 return false;
             }
+        }
+
+        public static int GetCollectionCount(IEnumerable source)
+        {
+            ICollection c = source as ICollection;
+            if (c != null)
+                return c.Count;
+
+            int result = 0;
+            IEnumerator enumerator = source.GetEnumerator();
+            while (enumerator.MoveNext())
+                result++;
+            
+            return result;
         }
     }
 }

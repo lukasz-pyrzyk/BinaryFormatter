@@ -204,6 +204,20 @@ namespace BinaryFormatterTests.TypeConverter
             Assert.Equal(valueFromBytesLinkedListCollection, linkedListCollection);
         }
 
+        [Fact]
+        public void CanSerializeAndDeserialize_HashSetCollection()
+        {
+            var converter = new BinaryConverter();
+
+            HashSet<object> valueHashSet = new HashSet<object>();
+            valueHashSet.Add(1);
+            valueHashSet.Add("two");
+
+            byte[] bytesHashSet = converter.Serialize(valueHashSet);
+            var valueFromBytesHashSet = converter.Deserialize<HashSet<object>>(bytesHashSet);
+            Assert.Equal(valueFromBytesHashSet, valueHashSet);
+        }
+
         class WithTestProperties
         {
             public string Name { get; set; }

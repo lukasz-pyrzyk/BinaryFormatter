@@ -16,11 +16,9 @@ namespace BinaryFormatter.TypeConverter
 
         protected override void WriteObjectToStream(object obj, Stream stream)
         {
-            bool isDictionary = TypeHelper.IsDictionary(obj);
-            bool isList = TypeHelper.IsList(obj);
-
-            var objectAsCollection = (ICollection)obj;
-            byte[] collectionSize = BitConverter.GetBytes(objectAsCollection.Count);
+            IEnumerable objectAsCollection = obj as IEnumerable;
+            int count = TypeHelper.GetCollectionCount((IEnumerable)obj);
+            byte[] collectionSize = BitConverter.GetBytes(count);
             stream.Write(collectionSize);
 
             BinaryConverter converter = new BinaryConverter();
@@ -36,7 +34,8 @@ namespace BinaryFormatter.TypeConverter
                 }
                 else
                 {
-                    List<object> collectionOfObjects = new List<object>();
+                    Type listType = typeof(List<>).MakeGenericType(obj.GetType().GenericTypeArguments);
+                    var collectionOfObjects = (IList)Activator.CreateInstance(listType);
                     foreach (var item in (IList)elementValue)
                     {
                         collectionOfObjects.Add(item);
@@ -64,13 +63,16 @@ namespace BinaryFormatter.TypeConverter
             var deserializedCollection = Activator.CreateInstance(collectionType);
             bool isDictionary = TypeHelper.IsDictionary(deserializedCollection);
             bool isLinkedList = TypeHelper.IsLinkedList(deserializedCollection);
+            bool isHashSet = TypeHelper.IsHashSet(deserializedCollection);
+
             IList deserializedCollectionAsList = null;            
             IDictionary deserializedCollectionAsDictionary = null;
+
             if (isDictionary)
                 deserializedCollectionAsDictionary = (IDictionary)deserializedCollection;
             else
             {
-                if (isLinkedList)
+                if (isLinkedList || isHashSet)
                 {
                     Type listType = typeof(List<>).MakeGenericType(sourceType.GenericTypeArguments);
                     deserializedCollectionAsList = (IList)Activator.CreateInstance(listType);
@@ -123,7 +125,7 @@ namespace BinaryFormatter.TypeConverter
             Size = stream.Offset - beforeOffset;
             stream.ChangeOffset(beforeOffset);
 
-            if(isLinkedList)
+            if(isLinkedList || isHashSet)
             {
                 deserializedCollection = Activator.CreateInstance(collectionType, new object[] { deserializedCollectionAsList });
             }
