@@ -27,6 +27,7 @@ BinaryFormatter is a byte serialized/deserializer for .NET Core, created for Dis
     - IEnumarable
     - IDictionary
     - LinkedList
+    - HashSet
   - structures
   - guid
   - uri
@@ -36,7 +37,6 @@ BinaryFormatter is a byte serialized/deserializer for .NET Core, created for Dis
 
  ### Not supported types
 - anonymous types
-- HashSet
 - Array[,], Array[,,], Array[,,,] types
 - Nullable
 
