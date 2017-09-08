@@ -34,11 +34,11 @@ BinaryFormatter is a byte serialized/deserializer for .NET Core, created for Dis
   - enum
   - KeyValuePair
   - BigInteger
+  - Nullable
 
  ### Not supported types
 - anonymous types
 - Array[,], Array[,,], Array[,,,] types
-- Nullable
 
 ### Installation
 ```powershell
