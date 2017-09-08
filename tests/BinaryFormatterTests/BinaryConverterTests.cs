@@ -322,5 +322,29 @@ namespace BinaryFormatterTests
 
             Assert.Equal(value, deserializedValue);
         }
+
+        [Fact]
+        public void CanSerialize_NullableInt_HasValue()
+        {
+            int? value = 12345678;
+
+            BinaryConverter converter = new BinaryConverter();
+            byte[] bytes = converter.Serialize(value);
+            int? deserializedValue = converter.Deserialize<int?>(bytes);
+
+            Assert.Equal(value, deserializedValue);
+        }
+
+        [Fact]
+        public void CanSerialize_NullableInt_HasNull()
+        {
+            int? value = null;
+
+            BinaryConverter converter = new BinaryConverter();
+            byte[] bytes = converter.Serialize(value);
+            int? deserializedValue = converter.Deserialize<int?>(bytes);
+
+            Assert.Equal(value, deserializedValue);
+        }
     }
 }

@@ -3,6 +3,7 @@ using System.Text;
 using BinaryFormatter.Utils;
 using Xunit;
 using System.Collections.Generic;
+using System.Collections;
 
 namespace BinaryFormatterTests.Utils
 {
@@ -65,6 +66,21 @@ namespace BinaryFormatterTests.Utils
         }
 
         [Fact]
+        public void IsHashSet_True()
+        {
+            var valueForCheck = new HashSet<int>();
+            valueForCheck.Add(1);            
+            Assert.True(TypeHelper.IsHashSet(valueForCheck));
+        }
+
+        [Fact]
+        public void IsHashSet_False()
+        {
+            var valueForCheck = "this is not a linked list";
+            Assert.False(TypeHelper.IsHashSet(valueForCheck));
+        }
+
+        [Fact]
         public void HasConversionOperator_True()
         {
             bool hasConversionOperator = TypeHelper.HasConversionOperator(typeof(float), typeof(int));
@@ -76,6 +92,30 @@ namespace BinaryFormatterTests.Utils
         {
             bool hasConversionOperator = TypeHelper.HasConversionOperator(typeof(string), typeof(int));
             Assert.False(hasConversionOperator);
+        }
+
+        [Fact]
+        public void GetCollectionCount_IEnumerable()
+        {
+            IEnumerable<int> collection = new List<int>();
+            ((IList)collection).Add(1);
+            ((IList)collection).Add(2);
+            ((IList)collection).Add(3);
+
+            Assert.Equal(3, TypeHelper.GetCollectionCount(collection));
+        }
+
+        [Fact]
+        public void GetCollectionCount_HashSet()
+        {
+            HashSet<int> collection = new HashSet<int>();
+            collection.Add(1);
+            collection.Add(2);
+            collection.Add(3);
+            collection.Add(4);
+            collection.Add(5);
+
+            Assert.Equal(5, TypeHelper.GetCollectionCount(collection));
         }
     }
 }
