@@ -1,5 +1,4 @@
-﻿using BinaryFormatter;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Xunit;
 
 namespace BinaryFormatterTests
@@ -12,11 +11,8 @@ namespace BinaryFormatterTests
             // Arrange
             var gender = Gender.Male;
 
-            var converter = new BinaryConverter();
-            byte[] serialized = converter.Serialize(gender);
-
             // act
-            var deserialized = converter.Deserialize<Gender>(serialized);
+            var deserialized = TestHelper.SerializeAndDeserialize(gender);
 
             // assert
             deserialized.Should().Be(gender);
@@ -29,11 +25,8 @@ namespace BinaryFormatterTests
             var gender = Gender.Male;
             var obj = new ClassWithEnum { Gender = gender };
 
-            var converter = new BinaryConverter();
-            byte[] serialized = converter.Serialize(obj);
-
             // act
-            var deserialized = converter.Deserialize<ClassWithEnum>(serialized);
+            var deserialized = TestHelper.SerializeAndDeserialize(obj);
 
             // assert
             deserialized.Should().NotBeNull();
@@ -48,11 +41,8 @@ namespace BinaryFormatterTests
             var isAdult = true;
             var obj = new ClassWithEnumAndBool { Gender = gender, IsAdult = isAdult };
 
-            var converter = new BinaryConverter();
-            byte[] serialized = converter.Serialize(obj);
-
             // act
-            var deserialized = converter.Deserialize<ClassWithEnumAndBool>(serialized);
+            var deserialized = TestHelper.SerializeAndDeserialize(obj);
 
             // assert
             deserialized.Should().NotBeNull();

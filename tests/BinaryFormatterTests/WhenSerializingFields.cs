@@ -1,24 +1,20 @@
-﻿using AutoFixture;
-using BinaryFormatter;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Xunit;
 
 namespace BinaryFormatterTests
 {
     public class WhenSerializingFields
     {
-        private static readonly Fixture Fixture = new Fixture();
-
         [Fact]
         public void CanSerializeAndDeserialize()
         {
-            var obj = Fixture.Create<StreamMessage>();
+            // arrange
+            var obj = TestHelper.Create<StreamMessage>();
 
-            var converter = new BinaryConverter();
+            // act
+            var fromBytes = TestHelper.SerializeAndDeserialize(obj);
 
-            byte[] bytes = converter.Serialize(obj);
-            StreamMessage fromBytes = converter.Deserialize<StreamMessage>(bytes);
-
+            // assert
             fromBytes.Should().NotBeNull();
             fromBytes.StreamContent.Should().Be(obj.StreamContent);
             fromBytes.StreamType.Should().Be(obj.StreamType);

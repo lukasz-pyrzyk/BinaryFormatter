@@ -1,5 +1,4 @@
-﻿using BinaryFormatter;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Xunit;
 
 namespace BinaryFormatterTests
@@ -12,11 +11,8 @@ namespace BinaryFormatterTests
             // Arrange
             var age = 23;
 
-            var converter = new BinaryConverter();
-            byte[] serialized = converter.Serialize(age);
-
             // act
-            var deserialized = converter.Deserialize<int>(serialized);
+            var deserialized = TestHelper.SerializeAndDeserialize(age);
 
             // assert
             deserialized.Should().Be(age);
@@ -28,12 +24,9 @@ namespace BinaryFormatterTests
             // Arrange
             var age = 23;
             var obj = new ClassWithEnum { Age = age };
-
-            var converter = new BinaryConverter();
-            byte[] serialized = converter.Serialize(obj);
-
+            
             // act
-            var deserialized = converter.Deserialize<ClassWithEnum>(serialized);
+            var deserialized = TestHelper.SerializeAndDeserialize(obj);
 
             // assert
             deserialized.Should().NotBeNull();
@@ -48,18 +41,15 @@ namespace BinaryFormatterTests
             var isAdult = true;
             var obj = new ClassWithIntAndBool { Age = age, IsAdult = isAdult };
 
-            var converter = new BinaryConverter();
-            byte[] serialized = converter.Serialize(obj);
-
             // act
-            var deserialized = converter.Deserialize<ClassWithIntAndBool>(serialized);
+            var deserialized = TestHelper.SerializeAndDeserialize(obj);
 
             // assert
             deserialized.Should().NotBeNull();
             deserialized.Age.Should().Be(age);
             deserialized.IsAdult.Should().Be(isAdult);
         }
-        
+
 
         private class ClassWithEnum
         {

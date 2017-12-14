@@ -1,5 +1,4 @@
-﻿using BinaryFormatter;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Xunit;
 
 namespace BinaryFormatterTests
@@ -12,11 +11,8 @@ namespace BinaryFormatterTests
             // Arrange
             var person = new Person { Id = 5 };
 
-            var converter = new BinaryConverter();
-            byte[] serialized = converter.Serialize(person);
-
             // act
-            var deserialized = converter.Deserialize<Person>(serialized);
+            var deserialized = TestHelper.SerializeAndDeserialize(person);
 
             // assert
             deserialized.Should().Be(person);
@@ -29,11 +25,8 @@ namespace BinaryFormatterTests
             var person = new Person { Id = 8 };
             var obj = new ClassWithStruct { Person = person };
 
-            var converter = new BinaryConverter();
-            byte[] serialized = converter.Serialize(obj);
-
             // act
-            var deserialized = converter.Deserialize<ClassWithStruct>(serialized);
+            var deserialized = TestHelper.SerializeAndDeserialize(obj);
 
             // assert
             deserialized.Should().NotBeNull();
@@ -47,12 +40,9 @@ namespace BinaryFormatterTests
             var person = new Person { Id = 7 };
             var isAdult = true;
             var obj = new ClassWithStructAndBool { Person = person, IsAdult = isAdult };
-
-            var converter = new BinaryConverter();
-            byte[] serialized = converter.Serialize(obj);
-
+            
             // act
-            var deserialized = converter.Deserialize<ClassWithStructAndBool>(serialized);
+            var deserialized = TestHelper.SerializeAndDeserialize(obj);
 
             // assert
             deserialized.Should().NotBeNull();
