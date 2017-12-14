@@ -28,10 +28,6 @@ namespace BinaryFormatterTests
             public int StreamType;
             public float StreamSize;
             public byte StreamContent;
-
-            public StreamMessage()
-            {
-            }
         }
     }
 }
