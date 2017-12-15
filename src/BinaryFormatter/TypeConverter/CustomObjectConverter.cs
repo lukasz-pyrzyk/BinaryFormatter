@@ -129,10 +129,6 @@ namespace BinaryFormatter.TypeConverter
         {
             int typeInfoSize = BitConverter.ToInt32(stream, offset);
             offset += sizeof(int);
-            byte[] typeInfo = new byte[typeInfoSize];
-            Array.Copy(stream, offset, typeInfo, 0, typeInfo.Length);
-            string typeFullName = Encoding.UTF8.GetString(typeInfo, 0, typeInfo.Length);
-            Type sourceType = System.Type.GetType(typeFullName);
             offset += typeInfoSize;
 
             foreach (PropertyInfo property in instance.GetType().GetTypeInfo().GetAllProperties())
