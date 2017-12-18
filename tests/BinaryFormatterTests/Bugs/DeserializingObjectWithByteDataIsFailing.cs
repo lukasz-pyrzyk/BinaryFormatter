@@ -24,6 +24,7 @@ namespace BinaryFormatterTests.Bugs
             fromBytes.StreamType.Should().Be(obj.StreamType);
             fromBytes.StreamSize.Should().Be(obj.StreamSize);
             fromBytes.StreamContent.Should().Be(obj.StreamContent);
+            fromBytes.Bytes.Should().Equal(obj.Bytes);
         }
 
         [Serializable]
@@ -33,6 +34,7 @@ namespace BinaryFormatterTests.Bugs
             public int StreamType { get; set; }
             public float StreamSize { get; set; }
             public byte StreamContent { get; set; }
+            public byte[] Bytes { get; set; }
 
             public StreamMessage()
             {
