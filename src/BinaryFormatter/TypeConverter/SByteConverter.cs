@@ -9,13 +9,12 @@ namespace BinaryFormatter.TypeConverter
     {
         protected override void WriteObjectToStream(sbyte obj, Stream stream)
         {
-            byte[] data = BitConverter.GetBytes(obj);
-            stream.Write(data);
+            stream.Write((byte)obj);
         }
 
         protected override sbyte ProcessDeserialize(byte[] bytes, Type sourceType, ref int offset)
         {
-            return (sbyte)BitConverter.ToInt16(bytes, offset);
+            return (sbyte) bytes[offset];
         }
 
         protected override int GetTypeSize()
