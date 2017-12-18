@@ -39,8 +39,21 @@ namespace BinaryFormatter
             [typeof(BigInteger)] = new BigIntegerConverter()
         };
 
+        private static readonly Dictionary<SerializedType, BaseTypeConverter> _convertersBySerializedType =
+            new Dictionary<SerializedType, BaseTypeConverter>();
+
+        static ConvertersSelector()
+        {
+            _convertersBySerializedType.Add(SerializedType.Null, NullConverter);
+
+            foreach (var pair in _converters)
+            {
+                _convertersBySerializedType.Add(pair.Value.Type, pair.Value);
+            }
+        }
+
         private static readonly BaseTypeConverter NullConverter = new NullConverter();
-        
+
         public static BaseTypeConverter SelectConverter(object obj)
         {
             if (obj == null) return NullConverter;
@@ -92,10 +105,13 @@ namespace BinaryFormatter
 
         public static BaseTypeConverter ForSerializedType(SerializedType type)
         {
-            if (type == SerializedType.Null)
-                return NullConverter;
+            BaseTypeConverter converter;
+            if (_convertersBySerializedType.TryGetValue(type, out converter))
+            {
+                return converter;
+            }
 
-            return _converters.First(x => x.Value.Type == type).Value;
+            throw new SerializationException($"Unable to find find a converter for type {type}");
         }
     }
 }

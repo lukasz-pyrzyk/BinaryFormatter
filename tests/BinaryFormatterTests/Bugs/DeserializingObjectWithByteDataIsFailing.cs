@@ -20,35 +20,15 @@ namespace BinaryFormatterTests.Bugs
 
             // assert
             fromBytes.Should().NotBeNull();
-            fromBytes.StreamName.Should().Be(obj.StreamName);
-            fromBytes.StreamType.Should().Be(obj.StreamType);
-            fromBytes.StreamSize.Should().Be(obj.StreamSize);
             fromBytes.StreamContent.Should().Be(obj.StreamContent);
+            fromBytes.Bytes.Should().Equal(obj.Bytes);
         }
 
         [Serializable]
-        private class StreamMessage : Message
+        private class StreamMessage
         {
-            public string StreamName { get; set; }
-            public int StreamType { get; set; }
-            public float StreamSize { get; set; }
             public byte StreamContent { get; set; }
-
-            public StreamMessage()
-            {
-                MessageType = 55;
-            }
-        }
-
-        [Serializable]
-        private abstract class Message
-        {
-            public int MessageType;
-
-            public override string ToString()
-            {
-                return string.Format("[Message: Type={0}]", MessageType);
-            }
+            public byte[] Bytes { get; set; }
         }
     }
 }

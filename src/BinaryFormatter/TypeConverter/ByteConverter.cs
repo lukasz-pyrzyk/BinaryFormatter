@@ -9,18 +9,17 @@ namespace BinaryFormatter.TypeConverter
     {
         protected override void WriteObjectToStream(byte obj, Stream stream)
         {
-            byte[] data = BitConverter.GetBytes(obj);
-            stream.Write(data);
+            stream.Write(obj);
         }
 
         protected override byte ProcessDeserialize(byte[] bytes, Type sourceType, ref int offset)
         {
-            return (byte)BitConverter.ToUInt16(bytes, offset);
+            return bytes[offset];
         }
 
         protected override int GetTypeSize()
         {
-            return sizeof (byte);
+            return sizeof(byte);
         }
 
         public override SerializedType Type => SerializedType.Byte;
