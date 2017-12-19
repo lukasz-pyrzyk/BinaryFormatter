@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.3
+VisualStudioVersion = 15.0.27130.2003
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{81E2A4D1-96F7-4B85-A3B3-9DF3F3B1604F}"
 	ProjectSection(SolutionItems) = preProject
@@ -19,7 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{0F2C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BinaryFormatter", "src\BinaryFormatter\BinaryFormatter.csproj", "{16D9DF6C-9D2C-45AD-83A5-FD2C0CA46F47}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BinaryFormatterTests", "tests\BinaryFormatterTests\BinaryFormatterTests.csproj", "{27150F43-8733-4A7E-983D-83173D825FA9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BinaryFormatter.Tests", "tests\BinaryFormatter.Tests\BinaryFormatter.Tests.csproj", "{27150F43-8733-4A7E-983D-83173D825FA9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Benchmark", "src\Benchmark\Benchmark.csproj", "{5D1354AE-0EB1-4AE5-B769-E42C636FAC32}"
 EndProject
