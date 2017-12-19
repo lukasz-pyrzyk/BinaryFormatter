@@ -102,9 +102,7 @@ namespace BinaryFormatter.TypeConverter
             }
             else if (type == SerializedType.IEnumerable)
             {
-                int offset = stream.Offset;
-                var preparedData = converter.DeserializeToObject(stream.RawBytes, ref offset) as IEnumerable;
-                stream.ChangeOffset(offset);
+                var preparedData = converter.DeserializeToObject(stream) as IEnumerable;
 
                 var prop = property;
                 var listType = typeof(List<>);
@@ -118,9 +116,7 @@ namespace BinaryFormatter.TypeConverter
             }
             else
             {
-                int offset = stream.Offset;
-                data = converter.DeserializeToObject(stream.RawBytes, ref offset);
-                stream.ChangeOffset(offset);
+                data = converter.DeserializeToObject(stream);
             }
 
             if (instanceTypeInfo.IsValueType && !instanceTypeInfo.IsPrimitive)
