@@ -1,2 +1,2 @@
 ﻿#!/bin/bash
-dotnet test ./tests/BinaryFormatterTests/BinaryFormatterTests.csproj
+dotnet test ./tests/BinaryFormatter.Tests/BinaryFormatter.Tests.csproj
