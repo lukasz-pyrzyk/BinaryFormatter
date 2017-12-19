@@ -69,7 +69,7 @@ namespace BinaryFormatter.TypeConverter
                 deserializedCollectionAsList = (IList)deserializedCollection;
             }
 
-            if (stream.RawBytes.Length > 0)
+            if (!stream.HasEnded)
             {
                 BinaryConverter converter = new BinaryConverter();
                 int sizeCollection = stream.ReadInt();

@@ -23,6 +23,19 @@ namespace BinaryFormatterTests
         }
 
         [Fact]
+        public void Ends_WhenItsEmpty()
+        {
+            // Arrange
+            var data = new byte[0];
+
+            // Act
+            var stream = new WorkingStream(data);
+
+            // Assert
+            stream.HasEnded.Should().BeTrue();
+        }
+
+        [Fact]
         public void NotEnds_WhenOffsetIsSmallerThanData()
         {
             // Arrange
