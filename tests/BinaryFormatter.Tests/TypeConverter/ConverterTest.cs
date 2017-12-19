@@ -8,10 +8,7 @@ namespace BinaryFormatter.Tests.TypeConverter
 
         protected void RunTest()
         {
-            var converter = new BinaryConverter();
-            byte[] bytes = converter.Serialize(Value);
-
-            T after = converter.Deserialize<T>(bytes);
+            T after = TestHelper.SerializeAndDeserialize(Value);
             Assert.Equal(Value, after);
         }
     }
