@@ -9,6 +9,7 @@ namespace BinaryFormatter
         public bool HasEnded => offset == stream.Length;
 
         public int Offset => offset;
+        public byte[] RawBytes => stream;
 
         private readonly byte[] stream;
         private int offset;
