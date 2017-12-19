@@ -19,7 +19,6 @@ namespace BinaryFormatterTests.TypeConverter
             // Assert
             deserialized.Name.Should().Be(simpleObject.Name);
             deserialized.Age.Should().Be(simpleObject.Age);
-            deserialized.Age.Should().Be(simpleObject.Age);
         }
 
         [Fact]
