@@ -12,7 +12,6 @@ namespace BinaryFormatter.TypeConverter
     internal class CustomObjectConverter : BaseTypeConverter<object>
     {
         private static readonly List<string> excludedDlls = new List<string> { "CoreLib", "mscorlib" };
-        private int Size { get; set; }
 
         protected override void WriteObjectToStream(object obj, Stream stream)
         {
@@ -31,7 +30,7 @@ namespace BinaryFormatter.TypeConverter
             }
         }
 
-        protected override object ProcessDeserialize(byte[] bytes, Type sourceType, ref int offset)
+        protected override object ProcessDeserialize(WorkingStream stream, Type sourceType)
         {
             var instance = Activator.CreateInstance(sourceType);
 
@@ -40,24 +39,19 @@ namespace BinaryFormatter.TypeConverter
                 if (!property.CanWrite)
                     continue;
 
-                DeserializeProperty(property, ref instance, bytes, ref offset);
-                if (offset == bytes.Length)
+                DeserializeProperty(property, ref instance, stream);
+                if (stream.HasEnded)
                     break;
             }
 
             return instance;
         }
 
-        protected override int GetTypeSize()
-        {
-            return Size;
-        }
-
-        private void DeserializeProperty<T>(PropertyInfo property, ref T instance, byte[] stream, ref int offset)
+        private void DeserializeProperty<T>(PropertyInfo property, ref T instance, WorkingStream stream)
         {
             Type instanceType = property.PropertyType;
             TypeInfo instanceTypeInfo = instanceType.GetTypeInfo();
-            SerializedType type = stream.ReadSerializedType(ref offset);
+            SerializedType type = stream.ReadSerializedType();
 
             if (!excludedDlls.Any(x => property.PropertyType.AssemblyQualifiedName.Contains(x)))
             {
@@ -68,13 +62,13 @@ namespace BinaryFormatter.TypeConverter
                 else if (type == SerializedType.Enum)
                 {
                     object propertyValue = Activator.CreateInstance(property.PropertyType);
-                    DeserializeEnum(stream, ref propertyValue, ref offset);
+                    DeserializeEnum(stream, ref propertyValue);
                     property.SetValue(instance, propertyValue);
                 }
                 else
                 {
                     object propertyValue = Activator.CreateInstance(property.PropertyType);
-                    DeserializeObject(stream, ref propertyValue, ref offset);
+                    DeserializeObject(stream, ref propertyValue);
                     property.SetValue(instance, propertyValue);
                 }
                 return;
@@ -88,9 +82,7 @@ namespace BinaryFormatter.TypeConverter
 
             if (!property.PropertyType.GetTypeInfo().IsBaseType())
             {
-                int typeInfoSize = BitConverter.ToInt32(stream, offset);
-                offset += sizeof(int);
-                offset += typeInfoSize;
+                stream.ReadType();
             }
 
             BaseTypeConverter converter = ConvertersSelector.ForSerializedType(type);
@@ -101,7 +93,7 @@ namespace BinaryFormatter.TypeConverter
             }
             else if (type == SerializedType.IEnumerable)
             {
-                var preparedData = converter.DeserializeToObject(stream, ref offset) as IEnumerable;
+                var preparedData = converter.DeserializeToObject(stream) as IEnumerable;
 
                 var prop = property;
                 var listType = typeof(List<>);
@@ -115,7 +107,7 @@ namespace BinaryFormatter.TypeConverter
             }
             else
             {
-                data = converter.DeserializeToObject(stream, ref offset);
+                data = converter.DeserializeToObject(stream);
             }
 
             if (instanceTypeInfo.IsValueType && !instanceTypeInfo.IsPrimitive)
@@ -130,30 +122,24 @@ namespace BinaryFormatter.TypeConverter
             }
         }
 
-        private void DeserializeEnum(byte[] stream, ref object propertyValue, ref int offset)
+        private void DeserializeEnum(WorkingStream stream, ref object propertyValue)
         {
-            var ws = new WorkingStream(stream, offset);
-            Type type = ws.ReadType();
-
+            Type type = stream.ReadType();
             var converter = new EnumConverter();
-            propertyValue = converter.DeserializeInto(ws, type);
-
-            offset = ws.Offset;
+            propertyValue = converter.DeserializeInto(stream, type);
         }
 
-        private void DeserializeObject<T>(byte[] stream, ref T instance, ref int offset)
+        private void DeserializeObject<T>(WorkingStream stream, ref T instance)
         {
-            int typeInfoSize = BitConverter.ToInt32(stream, offset);
-            offset += sizeof(int);
-            offset += typeInfoSize;
+            stream.ReadType();
 
             foreach (PropertyInfo property in instance.GetType().GetTypeInfo().GetAllProperties())
             {
                 if (!property.CanWrite)
                     continue;
 
-                DeserializeProperty(property, ref instance, stream, ref offset);
-                if (offset == stream.Length)
+                DeserializeProperty(property, ref instance, stream);
+                if (stream.HasEnded)
                     return;
             }
         }

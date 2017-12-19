@@ -13,15 +13,9 @@ namespace BinaryFormatter.TypeConverter
             stream.Write(data);
         }
 
-        protected override char ProcessDeserialize(byte[] bytes, Type sourceType, ref int offset)
+        protected override char ProcessDeserialize(WorkingStream stream, Type sourceType)
         {
-            char result = BitConverter.ToChar(bytes, offset);
-            return result;
-        }
-
-        protected override int GetTypeSize()
-        {
-            return sizeof(char);
+            return stream.ReadChar();
         }
 
         public override SerializedType Type => SerializedType.Char;

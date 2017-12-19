@@ -13,14 +13,9 @@ namespace BinaryFormatter.TypeConverter
             stream.Write(data);
         }
 
-        protected override float ProcessDeserialize(byte[] bytes, Type sourceType, ref int offset)
+        protected override float ProcessDeserialize(WorkingStream stream, Type sourceType)
         {
-            return BitConverter.ToSingle(bytes, offset);
-        }
-
-        protected override int GetTypeSize()
-        {
-            return sizeof (float);
+            return stream.ReadFloat();
         }
 
         public override SerializedType Type => SerializedType.Float;

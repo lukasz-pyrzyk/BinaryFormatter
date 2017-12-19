@@ -13,15 +13,10 @@ namespace BinaryFormatter.TypeConverter
             stream.Write(data);
         }
 
-        protected override DateTime ProcessDeserialize(byte[] bytes, Type sourceType, ref int offset)
+        protected override DateTime ProcessDeserialize(WorkingStream stream, Type sourceType)
         {
-            long ticks = BitConverter.ToInt64(bytes, offset);
+            long ticks = stream.ReadLong();
             return DateTime.FromBinary(ticks);
-        }
-
-        protected override int GetTypeSize()
-        {
-            return sizeof (long);
         }
 
         public override SerializedType Type => SerializedType.Datetime;

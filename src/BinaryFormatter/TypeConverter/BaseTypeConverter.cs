@@ -43,14 +43,12 @@ namespace BinaryFormatter.TypeConverter
                 sourceType = stream.ReadType();
             }
 
-            int offset = stream.Offset;
-            return ProcessDeserialize(bytes, sourceType, ref offset);
+            return ProcessDeserialize(stream, sourceType);
         }
 
-        public T Deserialize(byte[] bytes, ref int offset)
+        public T Deserialize(WorkingStream stream)
         {
-            T obj = ProcessDeserialize(bytes, typeof(T), ref offset);
-            offset += GetTypeSize();
+            T obj = ProcessDeserialize(stream, typeof(T));
             return obj;
         }
 
@@ -59,21 +57,20 @@ namespace BinaryFormatter.TypeConverter
             return Deserialize(stream);
         }
 
-        public override object DeserializeToObject(byte[] stream, ref int offset)
+        public override object DeserializeToObject(WorkingStream stream)
         {
-            return Deserialize(stream, ref offset);
+            return Deserialize(stream);
         }
-
-        protected abstract int GetTypeSize();
+        
         protected abstract void WriteObjectToStream(T obj, Stream stream);
-        protected abstract T ProcessDeserialize(byte[] bytes, Type sourceType, ref int offset);
+        protected abstract T ProcessDeserialize(WorkingStream stream, Type sourceType);
     }
 
     internal abstract class BaseTypeConverter
     {
         public abstract void Serialize(object obj, Stream stream);
         public abstract object DeserializeToObject(byte[] stream);
-        public abstract object DeserializeToObject(byte[] stream, ref int offset);
+        public abstract object DeserializeToObject(WorkingStream stream);
         public abstract SerializedType Type { get; }
     }
 }

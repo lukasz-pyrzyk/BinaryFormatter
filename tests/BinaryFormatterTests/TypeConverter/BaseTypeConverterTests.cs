@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using BinaryFormatter;
 using BinaryFormatter.TypeConverter;
 using BinaryFormatter.Types;
 using BinaryFormatter.Utils;
@@ -13,22 +14,15 @@ namespace BinaryFormatterTests.TypeConverter
         
         internal class Fake : BaseTypeConverter<string>
         {
-            protected override int GetTypeSize()
-            {
-                return Message.Length;
-            }
-
             protected override void WriteObjectToStream(string obj, Stream stream)
             {
                 var data = Encoding.UTF8.GetBytes(obj);
-                stream.Write(data);
+                stream.WriteWithLengthPrefix(data);
             }
 
-            protected override string ProcessDeserialize(byte[] bytes, Type sourceType, ref int offset)
+            protected override string ProcessDeserialize(WorkingStream stream, Type sourceType)
             {
-                int size = BitConverter.ToInt32(bytes, offset);
-                offset += sizeof (int);
-                return Encoding.UTF8.GetString(bytes, offset, size);
+                return stream.ReadUTF8WithSizePrefix();
             }
 
             public override SerializedType Type => SerializedType.String;
