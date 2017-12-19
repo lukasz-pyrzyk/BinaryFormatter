@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using BinaryFormatter;
 using FluentAssertions;
 using Xunit;
 
@@ -19,7 +18,7 @@ namespace BinaryFormatter.Tests
             var stream = new WorkingStream(data, data.Length);
 
             // Assert
-            AssertionExtensions.Should((bool) stream.HasEnded).BeTrue();
+            stream.HasEnded.Should().BeTrue();
         }
 
         [Fact]
@@ -32,7 +31,7 @@ namespace BinaryFormatter.Tests
             var stream = new WorkingStream(data);
 
             // Assert
-            AssertionExtensions.Should((bool) stream.HasEnded).BeTrue();
+            stream.HasEnded.Should().BeTrue();
         }
 
         [Fact]
@@ -45,7 +44,7 @@ namespace BinaryFormatter.Tests
             var stream = new WorkingStream(data, data.Length - 1);
 
             // Assert
-            AssertionExtensions.Should((bool) stream.HasEnded).BeFalse();
+            stream.HasEnded.Should().BeFalse();
         }
 
         [Fact]
@@ -60,7 +59,7 @@ namespace BinaryFormatter.Tests
             stream.SetOffset(newIndex);
 
             // Assert
-            AssertionExtensions.Should((int) stream.Offset).Be(newIndex);
+            stream.Offset.Should().Be(newIndex);
         }
 
         [Theory]
@@ -76,8 +75,8 @@ namespace BinaryFormatter.Tests
             var result = stream.ReadBool();
 
             // Assert
-            AssertionExtensions.Should((bool) result).Be(value);
-            AssertionExtensions.Should((int) stream.Offset).Be(sizeof(bool));
+            result.Should().Be(value);
+            stream.Offset.Should().Be(sizeof(bool));
         }
 
         [Theory]
@@ -94,8 +93,8 @@ namespace BinaryFormatter.Tests
             var result = stream.ReadByte();
 
             // Assert
-            AssertionExtensions.Should((byte) result).Be(value);
-            AssertionExtensions.Should((int) stream.Offset).Be(sizeof(byte));
+            result.Should().Be(value);
+            stream.Offset.Should().Be(sizeof(byte));
         }
 
         [Theory]
@@ -113,7 +112,7 @@ namespace BinaryFormatter.Tests
 
             // Assert
             result.Should().Be(value);
-            AssertionExtensions.Should((int) stream.Offset).Be(sizeof(sbyte));
+            stream.Offset.Should().Be(sizeof(sbyte));
         }
 
         [Theory]
@@ -131,7 +130,7 @@ namespace BinaryFormatter.Tests
 
             // Assert
             result.Should().Be(value);
-            AssertionExtensions.Should((int) stream.Offset).Be(sizeof(char));
+            stream.Offset.Should().Be(sizeof(char));
         }
 
         [Theory]
@@ -149,7 +148,7 @@ namespace BinaryFormatter.Tests
 
             // Assert
             result.Should().Be(value);
-            AssertionExtensions.Should((int) stream.Offset).Be(sizeof(ushort));
+            stream.Offset.Should().Be(sizeof(ushort));
         }
 
         [Theory]
@@ -166,8 +165,8 @@ namespace BinaryFormatter.Tests
             var result = stream.ReadShort();
 
             // Assert
-            AssertionExtensions.Should((short) result).Be(value);
-            AssertionExtensions.Should((int) stream.Offset).Be(sizeof(short));
+            result.Should().Be(value);
+            stream.Offset.Should().Be(sizeof(short));
         }
 
         [Theory]
@@ -185,11 +184,11 @@ namespace BinaryFormatter.Tests
 
             // Assert
             result.Should().Be(value);
-            AssertionExtensions.Should((int) stream.Offset).Be(sizeof(uint));
+            stream.Offset.Should().Be(sizeof(uint));
         }
 
         [Theory]
-        [InlineData((int)1)]
+        [InlineData(1)]
         [InlineData(int.MaxValue)]
         [InlineData(int.MinValue)]
         public void IntCanBeReaded(int value)
@@ -202,8 +201,8 @@ namespace BinaryFormatter.Tests
             var result = stream.ReadInt();
 
             // Assert
-            AssertionExtensions.Should((int) result).Be(value);
-            AssertionExtensions.Should((int) stream.Offset).Be(sizeof(int));
+            result.Should().Be(value);
+            stream.Offset.Should().Be(sizeof(int));
         }
 
         [Theory]
@@ -220,8 +219,8 @@ namespace BinaryFormatter.Tests
             var result = stream.ReadFloat();
 
             // Assert
-            AssertionExtensions.Should((float) result).Be(value);
-            AssertionExtensions.Should((int) stream.Offset).Be(sizeof(float));
+            result.Should().Be(value);
+            stream.Offset.Should().Be(sizeof(float));
         }
 
         [Theory]
@@ -238,8 +237,8 @@ namespace BinaryFormatter.Tests
             var result = stream.ReadDouble();
 
             // Assert
-            AssertionExtensions.Should((double) result).Be(value);
-            AssertionExtensions.Should((int) stream.Offset).Be(sizeof(double));
+            result.Should().Be(value);
+            stream.Offset.Should().Be(sizeof(double));
         }
 
         [Theory]
@@ -257,7 +256,7 @@ namespace BinaryFormatter.Tests
 
             // Assert
             result.Should().Be(value);
-            AssertionExtensions.Should((int) stream.Offset).Be(sizeof(ulong));
+            stream.Offset.Should().Be(sizeof(ulong));
         }
 
         [Theory]
@@ -274,8 +273,8 @@ namespace BinaryFormatter.Tests
             var result = stream.ReadLong();
 
             // Assert
-            AssertionExtensions.Should((long) result).Be(value);
-            AssertionExtensions.Should((int) stream.Offset).Be(sizeof(long));
+            result.Should().Be(value);
+            stream.Offset.Should().Be(sizeof(long));
         }
 
         [Fact]
@@ -301,7 +300,7 @@ namespace BinaryFormatter.Tests
 
             // Assert
             result.Should().Equal(data);
-            AssertionExtensions.Should((int) stream.Offset).Be(finalData.Count);
+            stream.Offset.Should().Be(finalData.Count);
         }
 
         [Fact]
@@ -316,7 +315,7 @@ namespace BinaryFormatter.Tests
 
             // Assert
             result.Should().Equal(data);
-            AssertionExtensions.Should((int) stream.Offset).Be(data.Length);
+            stream.Offset.Should().Be(data.Length);
         }
 
         [Fact]
@@ -342,8 +341,8 @@ namespace BinaryFormatter.Tests
             var result = stream.ReadUTF8WithSizePrefix();
 
             // Assert
-            AssertionExtensions.Should((string) result).Be(s);
-            AssertionExtensions.Should((int) stream.Offset).Be(finalData.Count);
+            result.Should().Be(s);
+            stream.Offset.Should().Be(finalData.Count);
         }
 
         [Theory]
@@ -363,7 +362,7 @@ namespace BinaryFormatter.Tests
 
             // Assert
             type.Should().Be(expectedType);
-            AssertionExtensions.Should((int) stream.Offset).Be(data.Length);
+            stream.Offset.Should().Be(data.Length);
         }
     }
 }
