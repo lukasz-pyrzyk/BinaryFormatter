@@ -58,7 +58,9 @@ namespace BinaryFormatter
 
         public ushort ReadUShort()
         {
-            return (ushort)ReadShort();
+            var value = BitConverter.ToUInt16(stream, offset);
+            offset += sizeof(ushort);
+            return value;
         }
 
         public int ReadInt()
@@ -70,7 +72,9 @@ namespace BinaryFormatter
 
         public uint ReadUInt()
         {
-            return (ushort)ReadInt();
+            uint value = BitConverter.ToUInt32(stream, offset);
+            offset += sizeof(uint);
+            return value;
         }
 
         public float ReadFloat()

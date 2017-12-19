@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using BinaryFormatter;
 using FluentAssertions;
@@ -193,28 +194,163 @@ namespace BinaryFormatterTests
         }
 
         [Theory]
-        [InlineData("System.String", typeof(string))]
-        public void CanResolveTypeWithUTF8(string typeName, Type expectedType)
+        [InlineData((float)1)]
+        [InlineData(float.MaxValue)]
+        [InlineData(float.MinValue)]
+        public void FloatCanBeReaded(float value)
         {
-            // arrange
-            byte[] data = WriteTypeWithLengthPrefix(typeName);
-            var stream = new WorkingStream(data);
+            // Arrange
+            var data = BitConverter.GetBytes(value);
 
             // Act
-            Type type = stream.ReadType();
+            var stream = new WorkingStream(data);
+            var result = stream.ReadFloat();
 
             // Assert
-            expectedType.Should().Be(type);
+            result.Should().Be(value);
+            stream.Offset.Should().Be(sizeof(float));
         }
 
-        private static byte[] WriteTypeWithLengthPrefix(string typeName)
+        [Theory]
+        [InlineData((double)1)]
+        [InlineData(double.MaxValue)]
+        [InlineData(double.MinValue)]
+        public void DoubleCanBeReaded(double value)
         {
+            // Arrange
+            var data = BitConverter.GetBytes(value);
+
+            // Act
+            var stream = new WorkingStream(data);
+            var result = stream.ReadDouble();
+
+            // Assert
+            result.Should().Be(value);
+            stream.Offset.Should().Be(sizeof(double));
+        }
+
+        [Theory]
+        [InlineData((ulong)1)]
+        [InlineData(ulong.MaxValue)]
+        [InlineData(ulong.MinValue)]
+        public void ULongCanBeReaded(ulong value)
+        {
+            // Arrange
+            var data = BitConverter.GetBytes(value);
+
+            // Act
+            var stream = new WorkingStream(data);
+            var result = stream.ReadULong();
+
+            // Assert
+            result.Should().Be(value);
+            stream.Offset.Should().Be(sizeof(ulong));
+        }
+
+        [Theory]
+        [InlineData((long)1)]
+        [InlineData(long.MaxValue)]
+        [InlineData(long.MinValue)]
+        public void LongCanBeReaded(long value)
+        {
+            // Arrange
+            var data = BitConverter.GetBytes(value);
+
+            // Act
+            var stream = new WorkingStream(data);
+            var result = stream.ReadLong();
+
+            // Assert
+            result.Should().Be(value);
+            stream.Offset.Should().Be(sizeof(long));
+        }
+
+        [Fact]
+        public void ByteArrayWithLengthPrefixCanBeReaded()
+        {
+            // Arrange
+            var data = Encoding.UTF8.GetBytes("hello world");
+            var size = BitConverter.GetBytes(data.Length);
+            var finalData = new List<byte>();
+            foreach (byte b in size)
+            {
+                finalData.Add(b);
+            }
+
+            foreach (byte b in data)
+            {
+                finalData.Add(b);
+            }
+
+            // Act
+            var stream = new WorkingStream(finalData.ToArray());
+            var result = stream.ReadBytesWithSizePrefix();
+
+            // Assert
+            result.Should().Equal(data);
+            stream.Offset.Should().Be(finalData.Count);
+        }
+
+        [Fact]
+        public void ByteArrayWithoutLengthPrefixCanBeReaded()
+        {
+            // Arrange
+            var data = Encoding.UTF8.GetBytes("hello world");
+
+            // Act
+            var stream = new WorkingStream(data);
+            var result = stream.ReadBytes(data.Length);
+
+            // Assert
+            result.Should().Equal(data);
+            stream.Offset.Should().Be(data.Length);
+        }
+
+        [Fact]
+        public void StringInUTF8CanBeReaded()
+        {
+            // Arrange
+            const string s = "hello world";
+            var data = Encoding.UTF8.GetBytes(s);
+            var size = BitConverter.GetBytes(data.Length);
+            var finalData = new List<byte>();
+            foreach (byte b in size)
+            {
+                finalData.Add(b);
+            }
+
+            foreach (byte b in data)
+            {
+                finalData.Add(b);
+            }
+
+            // Act
+            var stream = new WorkingStream(finalData.ToArray());
+            var result = stream.ReadUTF8WithSizePrefix();
+
+            // Assert
+            result.Should().Be(s);
+            stream.Offset.Should().Be(finalData.Count);
+        }
+
+        [Theory]
+        [InlineData("System.String", typeof(string))]
+        public void TypeCanReaded(string typeName, Type expectedType)
+        {
+            // arrange
             byte[] typeInfo = Encoding.UTF8.GetBytes(typeName);
             byte[] sizeBytes = BitConverter.GetBytes(typeInfo.Length);
             byte[] data = new byte[sizeBytes.Length + typeInfo.Length];
             Array.Copy(sizeBytes, 0, data, 0, sizeBytes.Length);
             Array.Copy(typeInfo, 0, data, sizeBytes.Length, typeInfo.Length);
-            return data;
+
+            // Act
+            var stream = new WorkingStream(data);
+            Type type = stream.ReadType();
+
+            // Assert
+            type.Should().Be(expectedType);
+            stream.Offset.Should().Be(data.Length);
         }
     }
 }
