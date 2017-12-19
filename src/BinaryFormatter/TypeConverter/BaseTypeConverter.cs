@@ -47,10 +47,12 @@ namespace BinaryFormatter.TypeConverter
             return ProcessDeserialize(bytes, sourceType, ref offset);
         }
 
-        public T Deserialize(byte[] bytes, ref int offset)
+        public T Deserialize(WorkingStream stream)
         {
-            T obj = ProcessDeserialize(bytes, typeof(T), ref offset);
+            int offset = stream.Offset;
+            T obj = ProcessDeserialize(stream.RawBytes, typeof(T), ref offset);
             offset += GetTypeSize();
+            stream.ChangeOffset(offset);
             return obj;
         }
 
@@ -61,10 +63,7 @@ namespace BinaryFormatter.TypeConverter
 
         public override object DeserializeToObject(WorkingStream stream)
         {
-            int offset = stream.Offset;
-            object obj = Deserialize(stream.RawBytes, ref offset);
-            stream.ChangeOffset(offset);
-            return obj;
+            return Deserialize(stream);
         }
 
         protected abstract int GetTypeSize();
