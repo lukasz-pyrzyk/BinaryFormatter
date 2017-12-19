@@ -1,5 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using Xunit;
 
@@ -24,40 +24,40 @@ namespace BinaryFormatterTests.TypeConverter
         [Fact]
         public void CanSerializeAndDeserialize_ComplexObject()
         {
-            ComplexObject serializableRow = new ComplexObject();
-            serializableRow.MasterRow = new ComplexObjectRow();
-            serializableRow.MasterRow.Data = new[] { new ComplexObjectColumn { Name = "Key", Value = "12345" } };
-            serializableRow.DetailRows = new[]
+            // Arrange
+            var obj = new ComplexObject();
+            obj.MasterRow = new ComplexObjectRow();
+            obj.MasterRow.Data = new[]
+            {
+                new ComplexObjectColumn { Name = "FirstKey", Value = "12345" },
+                new ComplexObjectColumn { Name = "SecondKey", Value = "98776" }
+            };
+            obj.DetailRows = new[]
             {
                 new ComplexObjectRow
                 {
-                    Data = new[] 
+                    Data = new []
                     {
-                        new ComplexObjectColumn { Name = "TestDetailName0", Value = "TestDetailValue0" },
+                        new ComplexObjectColumn { Name = "FirstColumn", Value = "FirstValue" },
+                        new ComplexObjectColumn { Name = "SecondColumn", Value = "SecondValue" }
                     }
                 }
             };
 
-            var deserialized = TestHelper.SerializeAndDeserialize(serializableRow);
+            // Act
+            var deserialized = TestHelper.SerializeAndDeserialize(obj);
 
-            //TODO Find solution for easiest way to compare of two object
+            // Assert
+            Compare(obj.MasterRow.Data, deserialized.MasterRow.Data);
+            Compare(obj.DetailRows, deserialized.DetailRows);
+        }
 
-            var serializableRow_MasterRow_Data = (IList)serializableRow.MasterRow.Data;
-            var deserializedRow_MasterRow_Data = (IList)deserialized.MasterRow.Data;
-            Assert.Equal(serializableRow_MasterRow_Data.Count, ((IList)deserialized.MasterRow.Data).Count);
-            Assert.Equal((serializableRow_MasterRow_Data[0] as ComplexObjectColumn).Name, (deserializedRow_MasterRow_Data[0] as ComplexObjectColumn).Name);
-            Assert.Equal((serializableRow_MasterRow_Data[0] as ComplexObjectColumn).Value, (deserializedRow_MasterRow_Data[0] as ComplexObjectColumn).Value);
-            Assert.Equal((serializableRow_MasterRow_Data[1] as ComplexObjectColumn).Name, (deserializedRow_MasterRow_Data[1] as ComplexObjectColumn).Name);
-            Assert.Equal((serializableRow_MasterRow_Data[1] as ComplexObjectColumn).Value, (deserializedRow_MasterRow_Data[1] as ComplexObjectColumn).Value);
+        private void Compare<TBefore, TAfter>(IEnumerable<TBefore> columnsBefore, IEnumerable<TAfter> columnsAfter)
+        {
+            var before = columnsBefore.ToArray();
+            var after = columnsAfter?.ToArray();
 
-            var serializableRow_DetailRows = (IList)serializableRow.DetailRows;
-            var derializableRow_DetailRows = (IList)deserialized.DetailRows;
-            Assert.Equal(serializableRow_DetailRows.Count, derializableRow_DetailRows.Count);
-            Assert.Equal(((IList)(serializableRow_DetailRows[0] as ComplexObjectRow).Data).Count, ((IList)(((IList)deserialized.DetailRows)[0] as ComplexObjectRow).Data).Count);
-            Assert.Equal((((IList)(serializableRow_DetailRows[0] as ComplexObjectRow).Data)[0] as ComplexObjectColumn).Name, (((IList)(derializableRow_DetailRows[0] as ComplexObjectRow).Data)[0] as ComplexObjectColumn).Name);
-            Assert.Equal((((IList)(serializableRow_DetailRows[0] as ComplexObjectRow).Data)[0] as ComplexObjectColumn).Value, (((IList)(derializableRow_DetailRows[0] as ComplexObjectRow).Data)[0] as ComplexObjectColumn).Value);
-            Assert.Equal((((IList)(serializableRow_DetailRows[0] as ComplexObjectRow).Data)[1] as ComplexObjectColumn).Name, (((IList)(derializableRow_DetailRows[0] as ComplexObjectRow).Data)[1] as ComplexObjectColumn).Name);
-            Assert.Equal((((IList)(serializableRow_DetailRows[0] as ComplexObjectRow).Data)[1] as ComplexObjectColumn).Value, (((IList)(derializableRow_DetailRows[0] as ComplexObjectRow).Data)[1] as ComplexObjectColumn).Value);
+            after.Should().BeEquivalentTo(before);
         }
 
         private class SimpleObject
