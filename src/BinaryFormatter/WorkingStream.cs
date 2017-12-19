@@ -20,9 +20,10 @@ namespace BinaryFormatter
 
         public WorkingStream(byte[] stream, int position) : this(stream)
         {
-            ChangeOffset(position);
+            SetOffset(position);
         }
-        public void ChangeOffset(int position) => offset = position;
+
+        public void SetOffset(int position) => offset = position;
 
         public bool ReadBool()
         {

@@ -57,7 +57,7 @@ namespace BinaryFormatter.Tests
 
             // Act
             var stream = new WorkingStream(data);
-            stream.ChangeOffset(newIndex);
+            stream.SetOffset(newIndex);
 
             // Assert
             AssertionExtensions.Should((int) stream.Offset).Be(newIndex);
