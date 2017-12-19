@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
+using FluentAssertions;
 using Xunit;
 
 namespace BinaryFormatter.Tests
@@ -145,11 +146,9 @@ namespace BinaryFormatter.Tests
         {
             bool value = false;
 
-            BinaryConverter converter = new BinaryConverter();
-            byte[] bytes = converter.Serialize(value);
-            bool deserializedValue = converter.Deserialize<bool>(bytes);
+            bool deserialized = TestHelper.SerializeAndDeserialize(value);
 
-            Assert.Equal(value, deserializedValue);
+            deserialized.Should().Be(value);
         }
 
         [Fact]

@@ -23,30 +23,30 @@ namespace BinaryFormatter
             converter.Serialize(obj, stream);
         }
 
-        public T Deserialize<T>(byte[] stream)
+        public T Deserialize<T>(byte[] bytes)
         {
-            var workingStream = new WorkingStream(stream);
+            var stream = new WorkingStream(bytes);
 
-            SerializedType deserializedType = workingStream.ReadSerializedType();
+            SerializedType deserializedType = stream.ReadSerializedType();
             if (deserializedType == SerializedType.Null)
             {
                 return default(T);
             }
 
-            Type sourceType = deserializedType.GetBaseType();
-            if (sourceType == null)
+            Type type = deserializedType.GetBaseType();
+            if (type == null)
             {
-                sourceType = workingStream.ReadType();
+                type = stream.ReadType();
             }
 
-            BaseTypeConverter converter = ConvertersSelector.SelectConverter(sourceType);
+            BaseTypeConverter converter = ConvertersSelector.SelectConverter(type);
             if (converter is IEnumerableConverter)
             {
-                var preparedData = converter.DeserializeToObject(stream) as IEnumerable;
+                var preparedData = converter.DeserializeToObject(stream, type) as IEnumerable;
                 if (preparedData is IList)
                 {
                     var listType = typeof(List<>);
-                    var genericArgs = sourceType.GenericTypeArguments;
+                    var genericArgs = type.GenericTypeArguments;
                     var concreteType = listType.MakeGenericType(genericArgs);
                     var data = Activator.CreateInstance(concreteType);
                     foreach (var item in preparedData)
@@ -59,7 +59,7 @@ namespace BinaryFormatter
                 return (T)preparedData;
             }
 
-            return (T)converter.DeserializeToObject(stream);
+            return (T)converter.DeserializeToObject(stream, type);
         }
     }
 }
