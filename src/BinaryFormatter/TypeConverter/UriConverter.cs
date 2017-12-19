@@ -18,14 +18,10 @@ namespace BinaryFormatter.TypeConverter
             Size = data.Length;
         }
 
-        protected override Uri ProcessDeserialize(byte[] stream, Type sourceType, ref int offset)
+        protected override Uri ProcessDeserialize(WorkingStream stream, Type sourceType)
         {
-            int dataSize = BitConverter.ToInt32(stream, offset);
-            offset += sizeof(int);
-
-            string AbsoluteUri = Encoding.UTF8.GetString(stream, offset, dataSize);
-
-            return new Uri(AbsoluteUri);
+            string absoluteUri = stream.ReadUTF8WithSizePrefix();
+            return new Uri(absoluteUri);
         }
 
         protected override int GetTypeSize()

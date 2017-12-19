@@ -23,7 +23,7 @@ namespace BinaryFormatter
         {
             ChangeOffset(position);
         }
-        
+
         public void AddOffset(int count) => offset += count;
         public void ChangeOffset(int position) => offset = position;
 
@@ -36,9 +36,12 @@ namespace BinaryFormatter
 
         public byte ReadByte()
         {
-            var value = (byte)BitConverter.ToUInt16(stream, offset);
-            offset += sizeof(byte);
-            return value;
+            return stream[offset++];
+        }
+
+        public sbyte ReadSByte()
+        {
+            return (sbyte)ReadByte();
         }
 
         public char ReadChar()
@@ -57,7 +60,7 @@ namespace BinaryFormatter
 
         public ushort ReadUShort()
         {
-            var value =  BitConverter.ToUInt16(stream, offset);
+            var value = BitConverter.ToUInt16(stream, offset);
             offset += sizeof(ushort);
             return value;
         }
@@ -115,21 +118,19 @@ namespace BinaryFormatter
         public byte[] ReadBytesWithSizePrefix()
         {
             int size = ReadInt();
-            
+
             return ReadBytes(size);
         }
 
         public string ReadUTF8WithSizePrefix()
         {
-            int size = ReadInt();
-            return Encoding.UTF8.GetString(stream, offset, size);
+            byte[] data = ReadBytesWithSizePrefix();
+            return Encoding.UTF8.GetString(data, 0, data.Length);
         }
 
         public Type ReadType()
         {
-            byte[] bytes = ReadBytesWithSizePrefix();
-
-            string typeFullName = Encoding.UTF8.GetString(bytes, 0, bytes.Length);
+            string typeFullName = ReadUTF8WithSizePrefix();
             return Type.GetType(typeFullName);
         }
 
@@ -138,6 +139,17 @@ namespace BinaryFormatter
             short type = BitConverter.ToInt16(stream, offset);
             offset += sizeof(SerializedType);
             return (SerializedType)type;
+        }
+
+        public decimal ReadDecimal()
+        {
+            var bits = new int[4];
+            for (int i = 0; i < bits.Length; i++)
+            {
+                bits[i] = ReadInt();
+            }
+
+            return new decimal(bits);
         }
     }
 }

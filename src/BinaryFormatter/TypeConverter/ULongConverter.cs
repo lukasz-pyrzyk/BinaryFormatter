@@ -13,9 +13,9 @@ namespace BinaryFormatter.TypeConverter
             stream.Write(data);
         }
 
-        protected override ulong ProcessDeserialize(byte[] bytes, Type sourceType, ref int offset)
+        protected override ulong ProcessDeserialize(WorkingStream stream, Type sourceType)
         {
-            return BitConverter.ToUInt64(bytes, offset);
+            return stream.ReadULong();
         }
 
         protected override int GetTypeSize()

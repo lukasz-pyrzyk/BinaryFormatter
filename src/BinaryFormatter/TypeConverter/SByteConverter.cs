@@ -12,9 +12,9 @@ namespace BinaryFormatter.TypeConverter
             stream.Write((byte)obj);
         }
 
-        protected override sbyte ProcessDeserialize(byte[] bytes, Type sourceType, ref int offset)
+        protected override sbyte ProcessDeserialize(WorkingStream stream, Type sourceType)
         {
-            return (sbyte) bytes[offset];
+            return stream.ReadSByte();
         }
 
         protected override int GetTypeSize()

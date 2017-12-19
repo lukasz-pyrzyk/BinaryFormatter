@@ -1,19 +1,11 @@
 ﻿using System;
 using BinaryFormatter.Types;
-using System.Collections.Generic;
 using System.Numerics;
 
 namespace BinaryFormatter.Utils
 {
     public static class SerializedTypeExtensions
     {
-        internal static SerializedType ReadSerializedType(this byte[] bytes, ref int offset)
-        {
-            short type = BitConverter.ToInt16(bytes, offset);
-            offset += sizeof(short);
-            return (SerializedType)type;
-        }
-
         internal static bool IsBaseType(this SerializedType serializedType)
         {
             return serializedType.GetBaseType() != null;

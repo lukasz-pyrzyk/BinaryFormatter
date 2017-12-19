@@ -21,12 +21,9 @@ namespace BinaryFormatter.TypeConverter
             Size = data.Length;
         }
 
-        protected override Enum ProcessDeserialize(byte[] stream, Type sourceType, ref int offset)
+        protected override Enum ProcessDeserialize(WorkingStream stream, Type sourceType)
         {
-            var ws = new WorkingStream(stream, offset);
-            Enum result = DeserializeInto(ws, sourceType);
-            offset = ws.Offset;
-
+            Enum result = DeserializeInto(stream, sourceType);
             return result;
         }
 

@@ -18,13 +18,9 @@ namespace BinaryFormatter.TypeConverter
             Size = data.Length;
         }
 
-        protected override BigInteger ProcessDeserialize(byte[] bytes, Type sourceType, ref int offset)
+        protected override BigInteger ProcessDeserialize(WorkingStream stream, Type sourceType)
         {
-            int dataSize = BitConverter.ToInt32(bytes, offset);
-            offset += sizeof(int);
-
-            byte[] bigIntegerData = new byte[dataSize];
-            Array.Copy(bytes, offset, bigIntegerData, 0, dataSize);
+            byte[] bigIntegerData = stream.ReadBytesWithSizePrefix();
 
             return new BigInteger(bigIntegerData);
         }

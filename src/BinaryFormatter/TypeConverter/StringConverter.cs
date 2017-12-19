@@ -18,13 +18,9 @@ namespace BinaryFormatter.TypeConverter
             stream.WriteWithLengthPrefix(objBytes);
         }
 
-        protected override string ProcessDeserialize(byte[] bytes, Type sourceType, ref int offset)
+        protected override string ProcessDeserialize(WorkingStream stream, Type sourceType)
         {
-
-            Size = BitConverter.ToInt32(bytes, offset);
-            offset += sizeof (int);
-
-            return Encoding.UTF8.GetString(bytes, offset, Size);
+            return stream.ReadUTF8WithSizePrefix();
         }
 
         protected override int GetTypeSize()

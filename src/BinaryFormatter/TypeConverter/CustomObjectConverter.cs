@@ -32,9 +32,8 @@ namespace BinaryFormatter.TypeConverter
             }
         }
 
-        protected override object ProcessDeserialize(byte[] bytes, Type sourceType, ref int offset)
+        protected override object ProcessDeserialize(WorkingStream stream, Type sourceType)
         {
-            var stream = new WorkingStream(bytes, offset);
             var instance = Activator.CreateInstance(sourceType);
 
             foreach (PropertyInfo property in sourceType.GetTypeInfo().GetAllProperties())
@@ -43,11 +42,10 @@ namespace BinaryFormatter.TypeConverter
                     continue;
 
                 DeserializeProperty(property, ref instance, stream);
-                if (offset == bytes.Length)
+                if (stream.HasEnded)
                     break;
             }
 
-            offset = stream.Offset;
             return instance;
         }
 

@@ -51,11 +51,8 @@ namespace BinaryFormatter.TypeConverter
             }
         }
 
-        protected override object ProcessDeserialize(byte[] bytes, Type sourceType, ref int offset)
+        protected override object ProcessDeserialize(WorkingStream stream, Type sourceType)
         {
-            var stream = new WorkingStream(bytes);
-            stream.ChangeOffset(offset);
-
             int beforeOffset = stream.Offset;
             Type collectionType = sourceType;
             if (collectionType == typeof(object))
@@ -80,7 +77,7 @@ namespace BinaryFormatter.TypeConverter
                 }
             }
 
-            if (bytes.Length > 0)
+            if (stream.RawBytes.Length > 0)
             {
                 BinaryConverter converter = new BinaryConverter();
                 int sizeCollection = stream.ReadInt();

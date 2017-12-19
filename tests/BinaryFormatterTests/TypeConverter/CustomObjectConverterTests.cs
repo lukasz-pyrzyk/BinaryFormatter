@@ -12,7 +12,7 @@ namespace BinaryFormatterTests.TypeConverter
         {
             var converter = new BinaryConverter();
 
-            SimpleObject simpleObject = new SimpleObject() { Name = "John", Age = 50 };
+            SimpleObject simpleObject = new SimpleObject { Name = "John", Age = 50 };
 
             byte[] bytesSimpleObject = converter.Serialize(simpleObject);
             var valueFromBytesSimpleObject = converter.Deserialize<SimpleObject>(bytesSimpleObject);
@@ -39,6 +39,7 @@ namespace BinaryFormatterTests.TypeConverter
                     Value = "TestMasterValue0"
                 }
             };
+            serializableRow.MasterRow.Data = new ComplexObjectColumn[0];
             serializableRow.DetailRows = new[]
             {
                 new ComplexObjectRow
@@ -54,7 +55,7 @@ namespace BinaryFormatterTests.TypeConverter
             var rowBytes = converter.Serialize(serializableRow);
             var deserializedRow = converter.Deserialize<ComplexObject>(rowBytes);
 
-            // TODO Find solution for easiest way to compare of two object
+            //TODO Find solution for easiest way to compare of two object
 
             var serializableRow_MasterRow_Data = (IList)serializableRow.MasterRow.Data;
             var deserializedRow_MasterRow_Data = (IList)deserializedRow.MasterRow.Data;

@@ -17,13 +17,9 @@ namespace BinaryFormatter.TypeConverter
             Size = data.Length;
         }
 
-        protected override Guid ProcessDeserialize(byte[] bytes, Type sourceType, ref int offset)
+        protected override Guid ProcessDeserialize(WorkingStream stream, Type sourceType)
         {
-            int dataSize = BitConverter.ToInt32(bytes, offset);
-            offset += sizeof(int);
-
-            byte[] guidData = new byte[dataSize];
-            Array.Copy(bytes, offset, guidData, 0, dataSize);
+            byte[] guidData = stream.ReadBytesWithSizePrefix();
 
             return new Guid(guidData);
         }

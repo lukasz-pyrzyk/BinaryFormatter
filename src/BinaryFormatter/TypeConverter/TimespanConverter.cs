@@ -13,9 +13,9 @@ namespace BinaryFormatter.TypeConverter
             stream.Write(data);
         }
 
-        protected override TimeSpan ProcessDeserialize(byte[] bytes, Type sourceType, ref int offset)
+        protected override TimeSpan ProcessDeserialize(WorkingStream stream, Type sourceType)
         {
-            long ticks = BitConverter.ToInt64(bytes, offset);
+            long ticks = stream.ReadLong();
             return TimeSpan.FromTicks(ticks);
         }
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Text;
 using BinaryFormatter.Types;
 using BinaryFormatter.Utils;
 using System.Collections.Generic;
@@ -29,23 +28,15 @@ namespace BinaryFormatter.TypeConverter
             Size = dataKey.Length + dataValue.Length;
         }
 
-        protected override object ProcessDeserialize(byte[] stream, Type sourceType, ref int offset)
+        protected override object ProcessDeserialize(WorkingStream stream, Type sourceType)
         {
-            BinaryConverter converter = new BinaryConverter();      
+            BinaryConverter converter = new BinaryConverter();
 
-            int dataKeySize = BitConverter.ToInt32(stream, offset);
-            offset += sizeof(int);
-            byte[] keyData = new byte[dataKeySize];
-            Array.Copy(stream, offset, keyData, 0, dataKeySize);
+            byte[] keyData = stream.ReadBytesWithSizePrefix();
             var deserializedKey = converter.Deserialize<object>(keyData);
-            offset += keyData.Length;
 
-            int dataValueSize = BitConverter.ToInt32(stream, offset);
-            offset += sizeof(int);
-            byte[] valueData = new byte[dataValueSize];
-            Array.Copy(stream, offset, valueData, 0, dataValueSize);
+            byte[] valueData = stream.ReadBytesWithSizePrefix();
             var deserializedValue = converter.Deserialize<object>(valueData);
-            offset += keyData.Length;
 
             var newKeyValuePair = Activator.CreateInstance(sourceType, new[] { deserializedKey, deserializedValue });            
             return newKeyValuePair;

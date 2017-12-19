@@ -13,15 +13,14 @@ namespace BinaryFormatter.TypeConverter
             stream.Write(data);
         }
 
-        protected override bool ProcessDeserialize(byte[] bytes, Type sourceType, ref int offset)
+        protected override bool ProcessDeserialize(WorkingStream stream, Type sourceType)
         {
-            bool result = BitConverter.ToBoolean(bytes, offset);
-            return result;
+            return stream.ReadBool();
         }
 
         protected override int GetTypeSize()
         {
-            return sizeof (bool);
+            return sizeof(bool);
         }
 
         public override SerializedType Type => SerializedType.Bool;
