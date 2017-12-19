@@ -11,13 +11,13 @@ namespace BinaryFormatter.TypeConverter
     {
         public void Serialize(T obj, Stream stream)
         {
-            Type destinationnType = typeof(T);
+            Type destinationType = typeof(T);
             byte[] objectType = BitConverter.GetBytes((ushort)Type);
             stream.Write(objectType);
 
             if (obj != null)
             {
-                if (!destinationnType.GetTypeInfo().IsBaseType())
+                if (!destinationType.GetTypeInfo().IsBaseType())
                 {
                     byte[] typeInfo = Encoding.UTF8.GetBytes(obj.GetType().AssemblyQualifiedName);
                     stream.WriteWithLengthPrefix(typeInfo);
@@ -46,20 +46,14 @@ namespace BinaryFormatter.TypeConverter
             return ProcessDeserialize(stream, sourceType);
         }
 
-        public T Deserialize(WorkingStream stream)
+        public override object DeserializeToObject(byte[] bytes)
         {
-            T obj = ProcessDeserialize(stream, typeof(T));
-            return obj;
-        }
-
-        public override object DeserializeToObject(byte[] stream)
-        {
-            return Deserialize(stream);
+            return Deserialize(bytes);
         }
 
         public override object DeserializeToObject(WorkingStream stream)
         {
-            return Deserialize(stream);
+            return ProcessDeserialize(stream, typeof(T));
         }
         
         protected abstract void WriteObjectToStream(T obj, Stream stream);
@@ -69,7 +63,7 @@ namespace BinaryFormatter.TypeConverter
     internal abstract class BaseTypeConverter
     {
         public abstract void Serialize(object obj, Stream stream);
-        public abstract object DeserializeToObject(byte[] stream);
+        public abstract object DeserializeToObject(byte[] bytes);
         public abstract object DeserializeToObject(WorkingStream stream);
         public abstract SerializedType Type { get; }
     }
