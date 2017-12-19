@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using Xunit;
 
 namespace BinaryFormatter.Tests.TypeConverter
 {
@@ -8,8 +8,11 @@ namespace BinaryFormatter.Tests.TypeConverter
 
         protected void RunTest()
         {
-            T deserialized = TestHelper.SerializeAndDeserialize(Value);
-            deserialized.Should().Be(Value);
+            var converter = new BinaryConverter();
+            byte[] bytes = converter.Serialize(Value);
+
+            T after = converter.Deserialize<T>(bytes);
+            Assert.Equal(Value, after);
         }
     }
 }
