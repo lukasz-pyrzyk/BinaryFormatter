@@ -133,8 +133,7 @@ namespace BinaryFormatter.TypeConverter
         private void DeserializeEnum(byte[] stream, ref object propertyValue, ref int offset)
         {
             var ws = new WorkingStream(stream, offset);
-            byte[] typeBytes = ws.ReadBytesWithSizePrefix();
-            Type type = TypeUtils.FromUTF8Bytes(typeBytes);
+            Type type = ws.ReadType();
 
             var converter = new EnumConverter();
             propertyValue = converter.DeserializeInto(ws, type);

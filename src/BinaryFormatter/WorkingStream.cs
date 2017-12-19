@@ -124,6 +124,14 @@ namespace BinaryFormatter
             return Encoding.UTF8.GetString(stream, offset, size);
         }
 
+        public Type ReadType()
+        {
+            byte[] bytes = ReadBytesWithSizePrefix();
+
+            string typeFullName = Encoding.UTF8.GetString(bytes, 0, bytes.Length);
+            return Type.GetType(typeFullName);
+        }
+
         public SerializedType ReadSerializedType()
         {
             short type = BitConverter.ToInt16(stream, offset);

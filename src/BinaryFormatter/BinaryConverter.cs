@@ -36,8 +36,7 @@ namespace BinaryFormatter
             Type sourceType = deserializedType.GetBaseType();
             if (sourceType == null)
             {
-                byte[] typeInfo = workingStream.ReadBytesWithSizePrefix();
-                sourceType = TypeUtils.FromUTF8Bytes(typeInfo);
+                sourceType = workingStream.ReadType();
             }
 
             BaseTypeConverter converter = ConvertersSelector.SelectConverter(sourceType);
