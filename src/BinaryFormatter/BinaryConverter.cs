@@ -55,8 +55,9 @@ namespace BinaryFormatter
                         ((IList)data).Add(item);
                     }
                     return (T)data;
-                } else
-                    return (T)preparedData;
+                }
+
+                return (T)preparedData;
             }
 
             return (T)converter.DeserializeToObject(stream);

@@ -5,7 +5,7 @@ namespace BinaryFormatterTests
 {
     public class WhenSerializingFields
     {
-        [Fact]
+        [Fact(Skip = "WIP https://github.com/lukasz-pyrzyk/BinaryFormatter/issues/72")]
         public void CanSerializeAndDeserialize()
         {
             // arrange

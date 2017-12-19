@@ -18,6 +18,11 @@ namespace BinaryFormatter
             this.stream = stream;
         }
 
+        public WorkingStream(byte[] stream, int position) : this(stream)
+        {
+            ChangeOffset(position);
+        }
+        
         public void AddOffset(int count) => offset += count;
         public void ChangeOffset(int position) => offset = position;
 
