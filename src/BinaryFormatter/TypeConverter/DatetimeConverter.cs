@@ -19,11 +19,6 @@ namespace BinaryFormatter.TypeConverter
             return DateTime.FromBinary(ticks);
         }
 
-        protected override int GetTypeSize()
-        {
-            return sizeof (long);
-        }
-
         public override SerializedType Type => SerializedType.Datetime;
     }
 }

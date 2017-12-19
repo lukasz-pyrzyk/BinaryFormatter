@@ -18,11 +18,6 @@ namespace BinaryFormatter.TypeConverter
             return stream.ReadDouble();
         }
 
-        protected override int GetTypeSize()
-        {
-            return sizeof (double);
-        }
-
         public override SerializedType Type => SerializedType.Double;
     }
 }

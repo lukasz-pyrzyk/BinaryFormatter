@@ -18,11 +18,6 @@ namespace BinaryFormatter.TypeConverter
             return stream.ReadBool();
         }
 
-        protected override int GetTypeSize()
-        {
-            return sizeof(bool);
-        }
-
         public override SerializedType Type => SerializedType.Bool;
     }
 }

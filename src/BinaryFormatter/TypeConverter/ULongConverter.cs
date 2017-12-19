@@ -18,11 +18,6 @@ namespace BinaryFormatter.TypeConverter
             return stream.ReadULong();
         }
 
-        protected override int GetTypeSize()
-        {
-            return sizeof (ulong);
-        }
-
         public override SerializedType Type => SerializedType.Ulong;
     }
 }

@@ -7,8 +7,6 @@ namespace BinaryFormatter.TypeConverter
 {
     internal class DecimalConverter : BaseTypeConverter<decimal>
     {
-        private int Size { get; set; } = 0;
-
         protected override void WriteObjectToStream(decimal obj, Stream stream)
         {
             int[] bits = decimal.GetBits(obj);
@@ -22,11 +20,6 @@ namespace BinaryFormatter.TypeConverter
         protected override decimal ProcessDeserialize(WorkingStream stream, Type sourceType)
         {
             return stream.ReadDecimal();
-        }
-
-        protected override int GetTypeSize()
-        {
-            return Size;
         }
 
         public override SerializedType Type => SerializedType.Decimal;

@@ -7,7 +7,6 @@ namespace BinaryFormatter.TypeConverter
 {
     internal class NullConverter : BaseTypeConverter<object>
     {
-        private int Size { get; set; }
 
         protected override void WriteObjectToStream(object obj, Stream stream)
         {
@@ -17,11 +16,6 @@ namespace BinaryFormatter.TypeConverter
         protected override object ProcessDeserialize(WorkingStream stream, Type sourceType)
         {
             return null;
-        }
-
-        protected override int GetTypeSize()
-        {
-            return 0;
         }
 
         public override SerializedType Type => SerializedType.Null;

@@ -18,11 +18,6 @@ namespace BinaryFormatter.TypeConverter
             return stream.ReadFloat();
         }
 
-        protected override int GetTypeSize()
-        {
-            return sizeof (float);
-        }
-
         public override SerializedType Type => SerializedType.Float;
     }
 }

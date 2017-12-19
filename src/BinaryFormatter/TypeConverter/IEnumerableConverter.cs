@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Collections;
 using System.IO;
 using System.Reflection;
-using System.Linq;
 using BinaryFormatter.Utils;
 
 
@@ -12,8 +11,6 @@ namespace BinaryFormatter.TypeConverter
 {
     internal class IEnumerableConverter : BaseTypeConverter<object>
     {
-        private int Size { get; set; }
-
         protected override void WriteObjectToStream(object obj, Stream stream)
         {
             bool isDictionary = TypeHelper.IsDictionary(obj);
@@ -46,8 +43,6 @@ namespace BinaryFormatter.TypeConverter
 
                 byte[] data = converter.Serialize(elementValue);
                 stream.WriteWithLengthPrefix(data);
-
-                Size += data.Length;
             }
         }
 
@@ -117,7 +112,6 @@ namespace BinaryFormatter.TypeConverter
                 }
             }
 
-            Size = stream.Offset - beforeOffset;
             stream.ChangeOffset(beforeOffset);
 
             if(isLinkedList)
@@ -126,11 +120,6 @@ namespace BinaryFormatter.TypeConverter
             }
 
             return deserializedCollection;
-        }
-
-        protected override int GetTypeSize()
-        {
-            return Size;
         }
 
         public override SerializedType Type => SerializedType.IEnumerable;

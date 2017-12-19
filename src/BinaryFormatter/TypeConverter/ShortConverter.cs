@@ -18,11 +18,6 @@ namespace BinaryFormatter.TypeConverter
             return stream.ReadShort();
         }
 
-        protected override int GetTypeSize()
-        {
-            return sizeof (short);
-        }
-
         public override SerializedType Type => SerializedType.Short;
     }
 }

@@ -17,11 +17,6 @@ namespace BinaryFormatter.TypeConverter
             return stream.ReadSByte();
         }
 
-        protected override int GetTypeSize()
-        {
-            return sizeof (sbyte);
-        }
-
         public override SerializedType Type => SerializedType.Sbyte;
     }
 }

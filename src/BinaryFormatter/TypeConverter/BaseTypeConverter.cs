@@ -61,8 +61,7 @@ namespace BinaryFormatter.TypeConverter
         {
             return Deserialize(stream);
         }
-
-        protected abstract int GetTypeSize();
+        
         protected abstract void WriteObjectToStream(T obj, Stream stream);
         protected abstract T ProcessDeserialize(WorkingStream stream, Type sourceType);
     }

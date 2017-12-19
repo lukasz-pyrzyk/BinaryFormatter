@@ -18,11 +18,6 @@ namespace BinaryFormatter.TypeConverter
             return stream.ReadLong();
         }
 
-        protected override int GetTypeSize()
-        {
-            return sizeof (long);
-        }
-
         public override SerializedType Type => SerializedType.Long;
     }
 }

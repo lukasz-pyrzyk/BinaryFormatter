@@ -18,11 +18,6 @@ namespace BinaryFormatter.TypeConverter
             return stream.ReadUInt();
         }
 
-        protected override int GetTypeSize()
-        {
-            return sizeof (uint);
-        }
-
         public override SerializedType Type => SerializedType.Uint;
     }
 }

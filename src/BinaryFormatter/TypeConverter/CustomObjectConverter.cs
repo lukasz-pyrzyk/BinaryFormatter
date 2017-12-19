@@ -13,8 +13,6 @@ namespace BinaryFormatter.TypeConverter
     {
         private static readonly List<string> excludedDlls = new List<string> { "CoreLib", "mscorlib" };
 
-        private int Size { get; set; }
-
         protected override void WriteObjectToStream(object obj, Stream stream)
         {
             Type t = obj.GetType();
@@ -47,11 +45,6 @@ namespace BinaryFormatter.TypeConverter
             }
 
             return instance;
-        }
-
-        protected override int GetTypeSize()
-        {
-            return Size;
         }
 
         private void DeserializeProperty<T>(PropertyInfo property, ref T instance, WorkingStream stream)

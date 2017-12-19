@@ -14,11 +14,6 @@ namespace BinaryFormatterTests.TypeConverter
         
         internal class Fake : BaseTypeConverter<string>
         {
-            protected override int GetTypeSize()
-            {
-                return Message.Length;
-            }
-
             protected override void WriteObjectToStream(string obj, Stream stream)
             {
                 var data = Encoding.UTF8.GetBytes(obj);
