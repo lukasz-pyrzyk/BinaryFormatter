@@ -23,8 +23,6 @@ namespace BinaryFormatter
         {
             ChangeOffset(position);
         }
-
-        public void AddOffset(int count) => offset += count;
         public void ChangeOffset(int position) => offset = position;
 
         public bool ReadBool()
@@ -60,9 +58,7 @@ namespace BinaryFormatter
 
         public ushort ReadUShort()
         {
-            var value = BitConverter.ToUInt16(stream, offset);
-            offset += sizeof(ushort);
-            return value;
+            return (ushort)ReadShort();
         }
 
         public int ReadInt()
@@ -74,9 +70,7 @@ namespace BinaryFormatter
 
         public uint ReadUInt()
         {
-            var value = BitConverter.ToUInt32(stream, offset);
-            offset += sizeof(uint);
-            return value;
+            return (ushort)ReadInt();
         }
 
         public float ReadFloat()
