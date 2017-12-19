@@ -18,6 +18,11 @@ namespace BinaryFormatter
             this.stream = stream;
         }
 
+        public WorkingStream(byte[] stream, int position) : this(stream)
+        {
+            ChangeOffset(position);
+        }
+        
         public void AddOffset(int count) => offset += count;
         public void ChangeOffset(int position) => offset = position;
 
@@ -117,6 +122,14 @@ namespace BinaryFormatter
         {
             int size = ReadInt();
             return Encoding.UTF8.GetString(stream, offset, size);
+        }
+
+        public Type ReadType()
+        {
+            byte[] bytes = ReadBytesWithSizePrefix();
+
+            string typeFullName = Encoding.UTF8.GetString(bytes, 0, bytes.Length);
+            return Type.GetType(typeFullName);
         }
 
         public SerializedType ReadSerializedType()

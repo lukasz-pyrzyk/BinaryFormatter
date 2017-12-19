@@ -36,8 +36,7 @@ namespace BinaryFormatter
             Type sourceType = deserializedType.GetBaseType();
             if (sourceType == null)
             {
-                byte[] typeInfo = workingStream.ReadBytesWithSizePrefix();
-                sourceType = TypeUtils.FromUTF8Bytes(typeInfo);
+                sourceType = workingStream.ReadType();
             }
 
             BaseTypeConverter converter = ConvertersSelector.SelectConverter(sourceType);
@@ -55,8 +54,9 @@ namespace BinaryFormatter
                         ((IList)data).Add(item);
                     }
                     return (T)data;
-                } else
-                    return (T)preparedData;
+                }
+
+                return (T)preparedData;
             }
 
             return (T)converter.DeserializeToObject(stream);

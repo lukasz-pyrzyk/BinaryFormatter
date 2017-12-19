@@ -3,7 +3,6 @@ using BinaryFormatter.Types;
 using System.Collections.Generic;
 using System.Collections;
 using System.IO;
-using System.Text;
 using System.Reflection;
 using System.Linq;
 using BinaryFormatter.Utils;
@@ -66,6 +65,12 @@ namespace BinaryFormatter.TypeConverter
                 {
                     property.SetValue(instance, null);
                 }
+                else if (type == SerializedType.Enum)
+                {
+                    object propertyValue = Activator.CreateInstance(property.PropertyType);
+                    DeserializeEnum(stream, ref propertyValue, ref offset);
+                    property.SetValue(instance, propertyValue);
+                }
                 else
                 {
                     object propertyValue = Activator.CreateInstance(property.PropertyType);
@@ -125,14 +130,21 @@ namespace BinaryFormatter.TypeConverter
             }
         }
 
+        private void DeserializeEnum(byte[] stream, ref object propertyValue, ref int offset)
+        {
+            var ws = new WorkingStream(stream, offset);
+            Type type = ws.ReadType();
+
+            var converter = new EnumConverter();
+            propertyValue = converter.DeserializeInto(ws, type);
+
+            offset = ws.Offset;
+        }
+
         private void DeserializeObject<T>(byte[] stream, ref T instance, ref int offset)
         {
             int typeInfoSize = BitConverter.ToInt32(stream, offset);
             offset += sizeof(int);
-            byte[] typeInfo = new byte[typeInfoSize];
-            Array.Copy(stream, offset, typeInfo, 0, typeInfo.Length);
-            string typeFullName = Encoding.UTF8.GetString(typeInfo, 0, typeInfo.Length);
-            Type sourceType = System.Type.GetType(typeFullName);
             offset += typeInfoSize;
 
             foreach (PropertyInfo property in instance.GetType().GetTypeInfo().GetAllProperties())

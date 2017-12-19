@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Text;
 using BinaryFormatter.Types;
 using BinaryFormatter.Utils;
 
@@ -16,7 +15,7 @@ namespace BinaryFormatter.TypeConverter
             var underlyingValue = Convert.ChangeType(obj, enumUnderlyingType);
 
             BinaryConverter converter = new BinaryConverter();
-            byte[] data = converter.Serialize(underlyingValue);            
+            byte[] data = converter.Serialize(underlyingValue);
             stream.WriteWithLengthPrefix(data);
 
             Size = data.Length;
@@ -24,16 +23,21 @@ namespace BinaryFormatter.TypeConverter
 
         protected override Enum ProcessDeserialize(byte[] stream, Type sourceType, ref int offset)
         {
-            int dataSize = BitConverter.ToInt32(stream, offset);
-            offset += sizeof(int);
+            var ws = new WorkingStream(stream, offset);
+            Enum result = DeserializeInto(ws, sourceType);
+            offset = ws.Offset;
 
-            byte[] enumData = new byte[dataSize];
-            Array.Copy(stream, offset, enumData, 0, dataSize);
+            return result;
+        }
+
+        public Enum DeserializeInto(WorkingStream stream, Type type)
+        {
+            byte[] enumData = stream.ReadBytesWithSizePrefix();
 
             BinaryConverter converter = new BinaryConverter();
             var underlyingValue = converter.Deserialize<object>(enumData);
 
-            return (Enum)Enum.ToObject(sourceType, underlyingValue);
+            return (Enum)Enum.ToObject(type, underlyingValue);
         }
 
         protected override int GetTypeSize()
