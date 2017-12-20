@@ -21,7 +21,8 @@ namespace BinaryFormatter
         public void Serialize(object obj, Stream stream)
         {
             BaseTypeConverter converter = ConvertersSelector.SelectConverter(obj);
-            converter.Serialize(obj, stream);
+            var serializationStream = new SerializationStream(stream);
+            converter.Serialize(obj, serializationStream);
         }
 
         public T Deserialize<T>(byte[] bytes)

@@ -1,14 +1,12 @@
 ﻿using System;
-using System.IO;
 using BinaryFormatter.Streams;
 using BinaryFormatter.Types;
-using BinaryFormatter.Utils;
 
 namespace BinaryFormatter.TypeConverter
 {
     internal class FloatConverter : BaseTypeConverter<float>
     {
-        protected override void SerializeInternal(float obj, Stream stream)
+        protected override void SerializeInternal(float obj, SerializationStream stream)
         {
             byte[] data = BitConverter.GetBytes(obj);
             stream.Write(data);

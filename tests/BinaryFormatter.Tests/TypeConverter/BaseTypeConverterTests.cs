@@ -1,11 +1,8 @@
 ﻿using System;
-using System.IO;
 using System.Text;
-using BinaryFormatter;
 using BinaryFormatter.Streams;
 using BinaryFormatter.TypeConverter;
 using BinaryFormatter.Types;
-using BinaryFormatter.Utils;
 
 namespace BinaryFormatter.Tests.TypeConverter
 {
@@ -15,7 +12,7 @@ namespace BinaryFormatter.Tests.TypeConverter
         
         internal class Fake : BaseTypeConverter<string>
         {
-            protected override void SerializeInternal(string obj, Stream stream)
+            protected override void SerializeInternal(string obj, SerializationStream stream)
             {
                 var data = Encoding.UTF8.GetBytes(obj);
                 stream.WriteWithLengthPrefix(data);

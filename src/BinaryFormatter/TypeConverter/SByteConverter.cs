@@ -1,14 +1,12 @@
 ﻿using System;
-using System.IO;
 using BinaryFormatter.Streams;
 using BinaryFormatter.Types;
-using BinaryFormatter.Utils;
 
 namespace BinaryFormatter.TypeConverter
 {
     internal class SByteConverter : BaseTypeConverter<sbyte>
     {
-        protected override void SerializeInternal(sbyte obj, Stream stream)
+        protected override void SerializeInternal(sbyte obj, SerializationStream stream)
         {
             stream.Write((byte)obj);
         }

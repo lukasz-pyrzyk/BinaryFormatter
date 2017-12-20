@@ -1,14 +1,12 @@
 ﻿using System;
-using System.IO;
 using BinaryFormatter.Streams;
 using BinaryFormatter.Types;
-using BinaryFormatter.Utils;
 
 namespace BinaryFormatter.TypeConverter
 {
     internal class EnumConverter : BaseTypeConverter<Enum>
     {
-        protected override void SerializeInternal(Enum obj, Stream stream)
+        protected override void SerializeInternal(Enum obj, SerializationStream stream)
         {
             Type enumUnderlyingType = Enum.GetUnderlyingType(obj.GetType());
             var underlyingValue = Convert.ChangeType(obj, enumUnderlyingType);

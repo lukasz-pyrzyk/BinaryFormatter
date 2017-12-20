@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using BinaryFormatter.Types;
 using BinaryFormatter.Utils;
 using System.Text;
@@ -10,12 +9,12 @@ namespace BinaryFormatter.TypeConverter
 {
     internal abstract class BaseTypeConverter<T> : BaseTypeConverter
     {
-        public override void Serialize(object obj, Stream stream)
+        public override void Serialize(object obj, SerializationStream stream)
         {
             Serialize((T)obj, stream);
         }
 
-        public void Serialize(T obj, Stream stream)
+        public void Serialize(T obj, SerializationStream stream)
         {
             Type destinationType = typeof(T);
             byte[] objectType = BitConverter.GetBytes((ushort)Type);
@@ -33,7 +32,7 @@ namespace BinaryFormatter.TypeConverter
             }
         }
 
-        protected abstract void SerializeInternal(T obj, Stream stream);
+        protected abstract void SerializeInternal(T obj, SerializationStream stream);
 
         public override object Deserialize(DeserializationStream stream)
         {
@@ -50,7 +49,7 @@ namespace BinaryFormatter.TypeConverter
 
     internal abstract class BaseTypeConverter
     {
-        public abstract void Serialize(object obj, Stream stream);
+        public abstract void Serialize(object obj, SerializationStream stream);
         public abstract object Deserialize(DeserializationStream stream);
         public abstract object Deserialize(DeserializationStream stream, Type type);
         public abstract SerializedType Type { get; }

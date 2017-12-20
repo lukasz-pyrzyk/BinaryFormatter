@@ -2,7 +2,6 @@
 using BinaryFormatter.Types;
 using System.Collections.Generic;
 using System.Collections;
-using System.IO;
 using System.Reflection;
 using BinaryFormatter.Streams;
 using BinaryFormatter.Utils;
@@ -11,7 +10,7 @@ namespace BinaryFormatter.TypeConverter
 {
     internal class IEnumerableConverter : BaseTypeConverter<object>
     {
-        protected override void SerializeInternal(object obj, Stream stream)
+        protected override void SerializeInternal(object obj, SerializationStream stream)
         {
             var objectAsCollection = (ICollection)obj;
             byte[] collectionSize = BitConverter.GetBytes(objectAsCollection.Count);

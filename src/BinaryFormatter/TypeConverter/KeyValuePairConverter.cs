@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using BinaryFormatter.Types;
 using BinaryFormatter.Utils;
 using System.Collections.Generic;
@@ -9,7 +8,7 @@ namespace BinaryFormatter.TypeConverter
 {
     internal class KeyValuePairConverter : BaseTypeConverter<object>
     {
-        protected override void SerializeInternal(object obj, Stream stream)
+        protected override void SerializeInternal(object obj, SerializationStream stream)
         {
             BinaryConverter converter = new BinaryConverter();
             KeyValuePair<object, object> objAsKeyValuePair = TypeHelper.CastFrom(obj);

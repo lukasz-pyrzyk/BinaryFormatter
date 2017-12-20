@@ -1,14 +1,12 @@
 ﻿using System;
-using System.IO;
 using BinaryFormatter.Streams;
 using BinaryFormatter.Types;
-using BinaryFormatter.Utils;
 
 namespace BinaryFormatter.TypeConverter
 {
     internal class ULongConverter : BaseTypeConverter<ulong>
     {
-        protected override void SerializeInternal(ulong obj, Stream stream)
+        protected override void SerializeInternal(ulong obj, SerializationStream stream)
         {
             byte[] data = BitConverter.GetBytes(obj);
             stream.Write(data);

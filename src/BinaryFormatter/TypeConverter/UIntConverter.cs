@@ -1,14 +1,12 @@
 ﻿using System;
-using System.IO;
 using BinaryFormatter.Streams;
 using BinaryFormatter.Types;
-using BinaryFormatter.Utils;
 
 namespace BinaryFormatter.TypeConverter
 {
     internal class UIntConverter : BaseTypeConverter<uint>
     {
-        protected override void SerializeInternal(uint obj, Stream stream)
+        protected override void SerializeInternal(uint obj, SerializationStream stream)
         {
             byte[] data = BitConverter.GetBytes(obj);
             stream.Write(data);

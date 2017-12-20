@@ -1,15 +1,13 @@
 ﻿using System;
-using System.IO;
 using System.Text;
 using BinaryFormatter.Streams;
 using BinaryFormatter.Types;
-using BinaryFormatter.Utils;
 
 namespace BinaryFormatter.TypeConverter
 {
     internal class StringConverter : BaseTypeConverter<string>
     {
-        protected override void SerializeInternal(string obj, Stream stream)
+        protected override void SerializeInternal(string obj, SerializationStream stream)
         {
             byte[] objBytes = Encoding.UTF8.GetBytes(obj);
             stream.WriteWithLengthPrefix(objBytes);
