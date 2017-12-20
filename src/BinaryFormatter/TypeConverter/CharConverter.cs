@@ -7,13 +7,13 @@ namespace BinaryFormatter.TypeConverter
 {
     internal class CharConverter : BaseTypeConverter<char>
     {
-        protected override void WriteObjectToStream(char obj, Stream stream)
+        protected override void SerializeInternal(char obj, Stream stream)
         {
             byte[] data = BitConverter.GetBytes(obj);
             stream.Write(data);
         }
 
-        protected override char ProcessDeserialize(WorkingStream stream, Type sourceType)
+        protected override char DeserializeInternal(WorkingStream stream, Type sourceType)
         {
             return stream.ReadChar();
         }

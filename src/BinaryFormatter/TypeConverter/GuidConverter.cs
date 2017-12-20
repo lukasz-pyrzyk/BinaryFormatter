@@ -7,13 +7,13 @@ namespace BinaryFormatter.TypeConverter
 {
     internal class GuidConverter : BaseTypeConverter<Guid>
     {
-        protected override void WriteObjectToStream(Guid obj, Stream stream)
+        protected override void SerializeInternal(Guid obj, Stream stream)
         {
             byte[] data = obj.ToByteArray();
             stream.WriteWithLengthPrefix(data);
         }
 
-        protected override Guid ProcessDeserialize(WorkingStream stream, Type sourceType)
+        protected override Guid DeserializeInternal(WorkingStream stream, Type sourceType)
         {
             byte[] guidData = stream.ReadBytesWithSizePrefix();
 

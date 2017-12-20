@@ -7,13 +7,13 @@ namespace BinaryFormatter.TypeConverter
 {
     internal class BoolConverter : BaseTypeConverter<bool>
     {
-        protected override void WriteObjectToStream(bool obj, Stream stream)
+        protected override void SerializeInternal(bool obj, Stream stream)
         {
             byte[] data = BitConverter.GetBytes(obj);
             stream.Write(data);
         }
 
-        protected override bool ProcessDeserialize(WorkingStream stream, Type sourceType)
+        protected override bool DeserializeInternal(WorkingStream stream, Type sourceType)
         {
             return stream.ReadBool();
         }

@@ -7,12 +7,12 @@ namespace BinaryFormatter.TypeConverter
 {
     internal class SByteConverter : BaseTypeConverter<sbyte>
     {
-        protected override void WriteObjectToStream(sbyte obj, Stream stream)
+        protected override void SerializeInternal(sbyte obj, Stream stream)
         {
             stream.Write((byte)obj);
         }
 
-        protected override sbyte ProcessDeserialize(WorkingStream stream, Type sourceType)
+        protected override sbyte DeserializeInternal(WorkingStream stream, Type sourceType)
         {
             return stream.ReadSByte();
         }

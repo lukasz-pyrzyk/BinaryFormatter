@@ -7,13 +7,13 @@ namespace BinaryFormatter.TypeConverter
 {
     internal class DoubleConverter : BaseTypeConverter<double>
     {
-        protected override void WriteObjectToStream(double obj, Stream stream)
+        protected override void SerializeInternal(double obj, Stream stream)
         {
             byte[] data = BitConverter.GetBytes(obj);
             stream.Write(data);
         }
 
-        protected override double ProcessDeserialize(WorkingStream stream, Type sourceType)
+        protected override double DeserializeInternal(WorkingStream stream, Type sourceType)
         {
             return stream.ReadDouble();
         }

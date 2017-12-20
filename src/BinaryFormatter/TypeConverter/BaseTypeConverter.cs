@@ -9,6 +9,11 @@ namespace BinaryFormatter.TypeConverter
 {
     internal abstract class BaseTypeConverter<T> : BaseTypeConverter
     {
+        public override void Serialize(object obj, Stream stream)
+        {
+            Serialize((T)obj, stream);
+        }
+
         public void Serialize(T obj, Stream stream)
         {
             Type destinationType = typeof(T);
@@ -23,34 +28,30 @@ namespace BinaryFormatter.TypeConverter
                     stream.WriteWithLengthPrefix(typeInfo);
                 }
 
-                WriteObjectToStream(obj, stream);
+                SerializeInternal(obj, stream);
             }
         }
 
-        public override void Serialize(object obj, Stream stream)
+        protected abstract void SerializeInternal(T obj, Stream stream);
+
+        public override object Deserialize(WorkingStream stream)
         {
-            Serialize((T)obj, stream);
+            return Deserialize(stream, typeof(T));
         }
 
-        public override object DeserializeToObject(WorkingStream stream)
+        public override object Deserialize(WorkingStream stream, Type type)
         {
-            return DeserializeToObject(stream, typeof(T));
+            return DeserializeInternal(stream, type);
         }
 
-        public override object DeserializeToObject(WorkingStream stream, Type type)
-        {
-            return ProcessDeserialize(stream, type);
-        }
-
-        protected abstract void WriteObjectToStream(T obj, Stream stream);
-        protected abstract T ProcessDeserialize(WorkingStream stream, Type sourceType);
+        protected abstract T DeserializeInternal(WorkingStream stream, Type sourceType);
     }
 
     internal abstract class BaseTypeConverter
     {
         public abstract void Serialize(object obj, Stream stream);
-        public abstract object DeserializeToObject(WorkingStream stream);
-        public abstract object DeserializeToObject(WorkingStream stream, Type type);
+        public abstract object Deserialize(WorkingStream stream);
+        public abstract object Deserialize(WorkingStream stream, Type type);
         public abstract SerializedType Type { get; }
     }
 }

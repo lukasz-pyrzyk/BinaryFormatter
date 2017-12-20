@@ -7,13 +7,13 @@ namespace BinaryFormatter.TypeConverter
 {
     internal class UIntConverter : BaseTypeConverter<uint>
     {
-        protected override void WriteObjectToStream(uint obj, Stream stream)
+        protected override void SerializeInternal(uint obj, Stream stream)
         {
             byte[] data = BitConverter.GetBytes(obj);
             stream.Write(data);
         }
 
-        protected override uint ProcessDeserialize(WorkingStream stream, Type sourceType)
+        protected override uint DeserializeInternal(WorkingStream stream, Type sourceType)
         {
             return stream.ReadUInt();
         }

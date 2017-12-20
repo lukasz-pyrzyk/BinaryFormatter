@@ -7,13 +7,13 @@ namespace BinaryFormatter.TypeConverter
 {
     internal class FloatConverter : BaseTypeConverter<float>
     {
-        protected override void WriteObjectToStream(float obj, Stream stream)
+        protected override void SerializeInternal(float obj, Stream stream)
         {
             byte[] data = BitConverter.GetBytes(obj);
             stream.Write(data);
         }
 
-        protected override float ProcessDeserialize(WorkingStream stream, Type sourceType)
+        protected override float DeserializeInternal(WorkingStream stream, Type sourceType)
         {
             return stream.ReadFloat();
         }

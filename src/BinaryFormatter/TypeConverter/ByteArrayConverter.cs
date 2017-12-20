@@ -7,12 +7,12 @@ namespace BinaryFormatter.TypeConverter
 {
     internal class ByteArrayConverter : BaseTypeConverter<byte[]>
     {
-        protected override void WriteObjectToStream(byte[] obj, Stream stream)
+        protected override void SerializeInternal(byte[] obj, Stream stream)
         {
             stream.WriteWithLengthPrefix(obj);
         }
 
-        protected override byte[] ProcessDeserialize(WorkingStream stream, Type sourceType)
+        protected override byte[] DeserializeInternal(WorkingStream stream, Type sourceType)
         {
             return stream.ReadBytesWithSizePrefix();
         }

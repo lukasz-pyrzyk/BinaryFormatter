@@ -7,7 +7,7 @@ namespace BinaryFormatter.TypeConverter
 {
     internal class DecimalConverter : BaseTypeConverter<decimal>
     {
-        protected override void WriteObjectToStream(decimal obj, Stream stream)
+        protected override void SerializeInternal(decimal obj, Stream stream)
         {
             int[] bits = decimal.GetBits(obj);
             foreach (int bit in bits)
@@ -17,7 +17,7 @@ namespace BinaryFormatter.TypeConverter
             }
         }
 
-        protected override decimal ProcessDeserialize(WorkingStream stream, Type sourceType)
+        protected override decimal DeserializeInternal(WorkingStream stream, Type sourceType)
         {
             return stream.ReadDecimal();
         }

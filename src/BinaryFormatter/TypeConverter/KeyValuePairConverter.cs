@@ -8,7 +8,7 @@ namespace BinaryFormatter.TypeConverter
 {
     internal class KeyValuePairConverter : BaseTypeConverter<object>
     {
-        protected override void WriteObjectToStream(object obj, Stream stream)
+        protected override void SerializeInternal(object obj, Stream stream)
         {
             BinaryConverter converter = new BinaryConverter();
             KeyValuePair<object, object> objAsKeyValuePair = TypeHelper.CastFrom(obj);
@@ -20,7 +20,7 @@ namespace BinaryFormatter.TypeConverter
             stream.WriteWithLengthPrefix(dataValue);
         }
 
-        protected override object ProcessDeserialize(WorkingStream stream, Type sourceType)
+        protected override object DeserializeInternal(WorkingStream stream, Type sourceType)
         {
             BinaryConverter converter = new BinaryConverter();
 

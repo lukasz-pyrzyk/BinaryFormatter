@@ -8,12 +8,12 @@ namespace BinaryFormatter.TypeConverter
     internal class NullConverter : BaseTypeConverter<object>
     {
 
-        protected override void WriteObjectToStream(object obj, Stream stream)
+        protected override void SerializeInternal(object obj, Stream stream)
         {
             stream.Write(new byte[0]);
         }
 
-        protected override object ProcessDeserialize(WorkingStream stream, Type sourceType)
+        protected override object DeserializeInternal(WorkingStream stream, Type sourceType)
         {
             return null;
         }

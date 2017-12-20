@@ -14,13 +14,13 @@ namespace BinaryFormatter.Tests.TypeConverter
         
         internal class Fake : BaseTypeConverter<string>
         {
-            protected override void WriteObjectToStream(string obj, Stream stream)
+            protected override void SerializeInternal(string obj, Stream stream)
             {
                 var data = Encoding.UTF8.GetBytes(obj);
                 stream.WriteWithLengthPrefix(data);
             }
 
-            protected override string ProcessDeserialize(WorkingStream stream, Type sourceType)
+            protected override string DeserializeInternal(WorkingStream stream, Type sourceType)
             {
                 return stream.ReadUTF8WithSizePrefix();
             }

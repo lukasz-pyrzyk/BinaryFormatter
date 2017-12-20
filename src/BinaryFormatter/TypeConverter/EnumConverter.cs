@@ -7,7 +7,7 @@ namespace BinaryFormatter.TypeConverter
 {
     internal class EnumConverter : BaseTypeConverter<Enum>
     {
-        protected override void WriteObjectToStream(Enum obj, Stream stream)
+        protected override void SerializeInternal(Enum obj, Stream stream)
         {
             Type enumUnderlyingType = Enum.GetUnderlyingType(obj.GetType());
             var underlyingValue = Convert.ChangeType(obj, enumUnderlyingType);
@@ -17,7 +17,7 @@ namespace BinaryFormatter.TypeConverter
             stream.WriteWithLengthPrefix(data);
         }
 
-        protected override Enum ProcessDeserialize(WorkingStream stream, Type sourceType)
+        protected override Enum DeserializeInternal(WorkingStream stream, Type sourceType)
         {
             Enum result = DeserializeInto(stream, sourceType);
             return result;

@@ -8,13 +8,13 @@ namespace BinaryFormatter.TypeConverter
 {
     internal class BigIntegerConverter : BaseTypeConverter<BigInteger>
     {
-        protected override void WriteObjectToStream(BigInteger obj, Stream stream)
+        protected override void SerializeInternal(BigInteger obj, Stream stream)
         {
             byte[] data = obj.ToByteArray();
             stream.WriteWithLengthPrefix(data);
         }
 
-        protected override BigInteger ProcessDeserialize(WorkingStream stream, Type sourceType)
+        protected override BigInteger DeserializeInternal(WorkingStream stream, Type sourceType)
         {
             byte[] bigIntegerData = stream.ReadBytesWithSizePrefix();
 

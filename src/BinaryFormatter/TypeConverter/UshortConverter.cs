@@ -7,13 +7,13 @@ namespace BinaryFormatter.TypeConverter
 {
     internal class UShortConverter : BaseTypeConverter<ushort>
     {
-        protected override void WriteObjectToStream(ushort obj, Stream stream)
+        protected override void SerializeInternal(ushort obj, Stream stream)
         {
             byte[] data = BitConverter.GetBytes(obj);
             stream.Write(data);
         }
 
-        protected override ushort ProcessDeserialize(WorkingStream stream, Type sourceType)
+        protected override ushort DeserializeInternal(WorkingStream stream, Type sourceType)
         {
             return stream.ReadUShort();
         }

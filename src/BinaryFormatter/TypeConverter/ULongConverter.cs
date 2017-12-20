@@ -7,13 +7,13 @@ namespace BinaryFormatter.TypeConverter
 {
     internal class ULongConverter : BaseTypeConverter<ulong>
     {
-        protected override void WriteObjectToStream(ulong obj, Stream stream)
+        protected override void SerializeInternal(ulong obj, Stream stream)
         {
             byte[] data = BitConverter.GetBytes(obj);
             stream.Write(data);
         }
 
-        protected override ulong ProcessDeserialize(WorkingStream stream, Type sourceType)
+        protected override ulong DeserializeInternal(WorkingStream stream, Type sourceType)
         {
             return stream.ReadULong();
         }

@@ -13,7 +13,7 @@ namespace BinaryFormatter.TypeConverter
     {
         private static readonly List<string> excludedDlls = new List<string> { "CoreLib", "mscorlib" };
 
-        protected override void WriteObjectToStream(object obj, Stream stream)
+        protected override void SerializeInternal(object obj, Stream stream)
         {
             Type t = obj.GetType();
 
@@ -30,7 +30,7 @@ namespace BinaryFormatter.TypeConverter
             }
         }
 
-        protected override object ProcessDeserialize(WorkingStream stream, Type sourceType)
+        protected override object DeserializeInternal(WorkingStream stream, Type sourceType)
         {
             var instance = Activator.CreateInstance(sourceType);
 
@@ -93,7 +93,7 @@ namespace BinaryFormatter.TypeConverter
             }
             else if (type == SerializedType.IEnumerable)
             {
-                var preparedData = converter.DeserializeToObject(stream) as IEnumerable;
+                var preparedData = converter.Deserialize(stream) as IEnumerable;
 
                 var prop = property;
                 var listType = typeof(List<>);
@@ -107,7 +107,7 @@ namespace BinaryFormatter.TypeConverter
             }
             else
             {
-                data = converter.DeserializeToObject(stream);
+                data = converter.Deserialize(stream);
             }
 
             if (instanceTypeInfo.IsValueType && !instanceTypeInfo.IsPrimitive)

@@ -7,13 +7,13 @@ namespace BinaryFormatter.TypeConverter
 {
     internal class DatetimeConverter : BaseTypeConverter<DateTime>
     {
-        protected override void WriteObjectToStream(DateTime obj, Stream stream)
+        protected override void SerializeInternal(DateTime obj, Stream stream)
         {
             byte[] data = BitConverter.GetBytes(obj.Ticks);
             stream.Write(data);
         }
 
-        protected override DateTime ProcessDeserialize(WorkingStream stream, Type sourceType)
+        protected override DateTime DeserializeInternal(WorkingStream stream, Type sourceType)
         {
             long ticks = stream.ReadLong();
             return DateTime.FromBinary(ticks);
