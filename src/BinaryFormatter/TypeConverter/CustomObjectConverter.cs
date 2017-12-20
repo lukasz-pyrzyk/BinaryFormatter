@@ -5,6 +5,7 @@ using System.Collections;
 using System.IO;
 using System.Reflection;
 using System.Linq;
+using BinaryFormatter.Streams;
 using BinaryFormatter.Utils;
 
 namespace BinaryFormatter.TypeConverter
@@ -30,7 +31,7 @@ namespace BinaryFormatter.TypeConverter
             }
         }
 
-        protected override object DeserializeInternal(WorkingStream stream, Type sourceType)
+        protected override object DeserializeInternal(DeserializationStream stream, Type sourceType)
         {
             var instance = Activator.CreateInstance(sourceType);
 
@@ -47,7 +48,7 @@ namespace BinaryFormatter.TypeConverter
             return instance;
         }
 
-        private void DeserializeProperty<T>(PropertyInfo property, ref T instance, WorkingStream stream)
+        private void DeserializeProperty<T>(PropertyInfo property, ref T instance, DeserializationStream stream)
         {
             Type instanceType = property.PropertyType;
             TypeInfo instanceTypeInfo = instanceType.GetTypeInfo();
@@ -122,14 +123,14 @@ namespace BinaryFormatter.TypeConverter
             }
         }
 
-        private void DeserializeEnum(WorkingStream stream, ref object propertyValue)
+        private void DeserializeEnum(DeserializationStream stream, ref object propertyValue)
         {
             Type type = stream.ReadType();
             var converter = new EnumConverter();
             propertyValue = converter.DeserializeInto(stream, type);
         }
 
-        private void DeserializeObject<T>(WorkingStream stream, ref T instance)
+        private void DeserializeObject<T>(DeserializationStream stream, ref T instance)
         {
             stream.ReadType();
 

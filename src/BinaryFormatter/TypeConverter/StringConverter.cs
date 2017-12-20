@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using BinaryFormatter.Streams;
 using BinaryFormatter.Types;
 using BinaryFormatter.Utils;
 
@@ -14,7 +15,7 @@ namespace BinaryFormatter.TypeConverter
             stream.WriteWithLengthPrefix(objBytes);
         }
 
-        protected override string DeserializeInternal(WorkingStream stream, Type sourceType)
+        protected override string DeserializeInternal(DeserializationStream stream, Type sourceType)
         {
             return stream.ReadUTF8WithSizePrefix();
         }

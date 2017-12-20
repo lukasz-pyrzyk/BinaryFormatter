@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using BinaryFormatter.Streams;
 using BinaryFormatter.Types;
 using BinaryFormatter.Utils;
 
@@ -13,7 +14,7 @@ namespace BinaryFormatter.TypeConverter
             stream.WriteWithLengthPrefix(data);
         }
 
-        protected override Guid DeserializeInternal(WorkingStream stream, Type sourceType)
+        protected override Guid DeserializeInternal(DeserializationStream stream, Type sourceType)
         {
             byte[] guidData = stream.ReadBytesWithSizePrefix();
 

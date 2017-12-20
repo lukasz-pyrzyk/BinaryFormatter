@@ -4,6 +4,7 @@ using BinaryFormatter.TypeConverter;
 using BinaryFormatter.Types;
 using System.Collections;
 using System.IO;
+using BinaryFormatter.Streams;
 using BinaryFormatter.Utils;
 
 namespace BinaryFormatter
@@ -25,7 +26,7 @@ namespace BinaryFormatter
 
         public T Deserialize<T>(byte[] bytes)
         {
-            var stream = new WorkingStream(bytes);
+            var stream = new DeserializationStream(bytes);
 
             SerializedType deserializedType = stream.ReadSerializedType();
             if (deserializedType == SerializedType.Null)

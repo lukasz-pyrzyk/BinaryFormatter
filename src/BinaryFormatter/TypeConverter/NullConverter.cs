@@ -1,6 +1,7 @@
 ﻿using System;
 using BinaryFormatter.Types;
 using System.IO;
+using BinaryFormatter.Streams;
 using BinaryFormatter.Utils;
 
 namespace BinaryFormatter.TypeConverter
@@ -13,7 +14,7 @@ namespace BinaryFormatter.TypeConverter
             stream.Write(new byte[0]);
         }
 
-        protected override object DeserializeInternal(WorkingStream stream, Type sourceType)
+        protected override object DeserializeInternal(DeserializationStream stream, Type sourceType)
         {
             return null;
         }

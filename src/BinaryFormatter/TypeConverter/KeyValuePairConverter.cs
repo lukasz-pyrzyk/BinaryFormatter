@@ -3,6 +3,7 @@ using System.IO;
 using BinaryFormatter.Types;
 using BinaryFormatter.Utils;
 using System.Collections.Generic;
+using BinaryFormatter.Streams;
 
 namespace BinaryFormatter.TypeConverter
 {
@@ -20,7 +21,7 @@ namespace BinaryFormatter.TypeConverter
             stream.WriteWithLengthPrefix(dataValue);
         }
 
-        protected override object DeserializeInternal(WorkingStream stream, Type sourceType)
+        protected override object DeserializeInternal(DeserializationStream stream, Type sourceType)
         {
             BinaryConverter converter = new BinaryConverter();
 

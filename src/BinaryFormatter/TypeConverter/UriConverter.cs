@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using BinaryFormatter.Streams;
 using BinaryFormatter.Types;
 using BinaryFormatter.Utils;
 
@@ -14,7 +15,7 @@ namespace BinaryFormatter.TypeConverter
             stream.WriteWithLengthPrefix(data);
         }
 
-        protected override Uri DeserializeInternal(WorkingStream stream, Type sourceType)
+        protected override Uri DeserializeInternal(DeserializationStream stream, Type sourceType)
         {
             string absoluteUri = stream.ReadUTF8WithSizePrefix();
             return new Uri(absoluteUri);

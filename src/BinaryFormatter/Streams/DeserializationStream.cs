@@ -2,9 +2,9 @@
 using System.Text;
 using BinaryFormatter.Types;
 
-namespace BinaryFormatter
+namespace BinaryFormatter.Streams
 {
-    internal class WorkingStream
+    internal class DeserializationStream
     {
         public bool HasEnded => offset == stream.Length;
 
@@ -13,12 +13,12 @@ namespace BinaryFormatter
         private readonly byte[] stream;
         private int offset;
 
-        public WorkingStream(byte[] stream)
+        public DeserializationStream(byte[] stream)
         {
             this.stream = stream;
         }
 
-        public WorkingStream(byte[] stream, int position) : this(stream)
+        public DeserializationStream(byte[] stream, int position) : this(stream)
         {
             SetOffset(position);
         }

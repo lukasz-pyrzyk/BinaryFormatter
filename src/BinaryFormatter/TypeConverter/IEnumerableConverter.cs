@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System.IO;
 using System.Reflection;
+using BinaryFormatter.Streams;
 using BinaryFormatter.Utils;
 
 namespace BinaryFormatter.TypeConverter
@@ -42,7 +43,7 @@ namespace BinaryFormatter.TypeConverter
             }
         }
 
-        protected override object DeserializeInternal(WorkingStream stream, Type sourceType)
+        protected override object DeserializeInternal(DeserializationStream stream, Type sourceType)
         {
             Type collectionType = sourceType;
             if (collectionType == typeof(object))

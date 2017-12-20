@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using BinaryFormatter.Streams;
 using BinaryFormatter.Types;
 using BinaryFormatter.Utils;
 
@@ -13,7 +14,7 @@ namespace BinaryFormatter.TypeConverter
             stream.Write(data);
         }
 
-        protected override TimeSpan DeserializeInternal(WorkingStream stream, Type sourceType)
+        protected override TimeSpan DeserializeInternal(DeserializationStream stream, Type sourceType)
         {
             long ticks = stream.ReadLong();
             return TimeSpan.FromTicks(ticks);

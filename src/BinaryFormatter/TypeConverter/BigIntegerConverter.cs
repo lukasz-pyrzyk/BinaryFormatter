@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Numerics;
+using BinaryFormatter.Streams;
 using BinaryFormatter.Types;
 using BinaryFormatter.Utils;
 
@@ -14,7 +15,7 @@ namespace BinaryFormatter.TypeConverter
             stream.WriteWithLengthPrefix(data);
         }
 
-        protected override BigInteger DeserializeInternal(WorkingStream stream, Type sourceType)
+        protected override BigInteger DeserializeInternal(DeserializationStream stream, Type sourceType)
         {
             byte[] bigIntegerData = stream.ReadBytesWithSizePrefix();
 

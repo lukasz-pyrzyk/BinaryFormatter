@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using BinaryFormatter.Streams;
 using BinaryFormatter.Types;
 using BinaryFormatter.Utils;
 
@@ -13,7 +14,7 @@ namespace BinaryFormatter.TypeConverter
             stream.Write(data);
         }
 
-        protected override short DeserializeInternal(WorkingStream stream, Type sourceType)
+        protected override short DeserializeInternal(DeserializationStream stream, Type sourceType)
         {
             return stream.ReadShort();
         }
