@@ -42,7 +42,7 @@ namespace BinaryFormatter
             }
 
             BaseTypeConverter converter = ConvertersSelector.SelectConverter(type);
-            if (converter is IEnumerableConverter)
+            if (converter is EnumerableConverter)
             {
                 var preparedData = converter.Deserialize(stream, type) as IEnumerable;
                 if (preparedData is IList)

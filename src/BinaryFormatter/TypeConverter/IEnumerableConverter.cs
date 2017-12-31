@@ -8,7 +8,7 @@ using BinaryFormatter.Utils;
 
 namespace BinaryFormatter.TypeConverter
 {
-    internal class IEnumerableConverter : BaseTypeConverter<object>
+    internal class EnumerableConverter : BaseTypeConverter<object>
     {
         protected override void SerializeInternal(object obj, SerializationStream stream)
         {
@@ -122,6 +122,6 @@ namespace BinaryFormatter.TypeConverter
             return deserializedCollection;
         }
 
-        public override SerializedType Type => SerializedType.IEnumerable;
+        public override SerializedType Type => SerializedType.Enumerable;
     }
 }

@@ -20,7 +20,7 @@
         String = 15,
         Datetime = 16,
         ByteArray = 17,
-        IEnumerable = 18,
+        Enumerable = 18,
         Guid = 19,
         Uri = 20,
         Enum = 21,

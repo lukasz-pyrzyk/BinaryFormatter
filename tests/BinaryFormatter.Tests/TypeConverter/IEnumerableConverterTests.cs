@@ -6,7 +6,7 @@ using Xunit;
 
 namespace BinaryFormatter.Tests.TypeConverter
 {
-    public class IEnumerableConverterTests
+    public class EnumerableConverterTests
     {
         [Fact]
         public void CanSerializeAndDeserialize_SimpleCollection()
@@ -71,15 +71,15 @@ namespace BinaryFormatter.Tests.TypeConverter
             byte[] bytesComplexCollection = converter.Serialize(complexCollection);
             List<object> valueFromBytesComplexCollection = converter.Deserialize<List<object>>(bytesComplexCollection);
 
-            var objectFromCollection_before = (WithTestProperties)complexCollection[0];
-            var objectFromCollection_after = (WithTestProperties)valueFromBytesComplexCollection[0];
-            Assert.Equal(objectFromCollection_before.Name, objectFromCollection_after.Name);
-            Assert.Equal(objectFromCollection_before.Age, objectFromCollection_after.Age);
-            Assert.Equal(objectFromCollection_before.Birthday, objectFromCollection_after.Birthday);
+            var objectFromCollectionBefore = (WithTestProperties)complexCollection[0];
+            var objectFromCollectionAfter = (WithTestProperties)valueFromBytesComplexCollection[0];
+            Assert.Equal(objectFromCollectionBefore.Name, objectFromCollectionAfter.Name);
+            Assert.Equal(objectFromCollectionBefore.Age, objectFromCollectionAfter.Age);
+            Assert.Equal(objectFromCollectionBefore.Birthday, objectFromCollectionAfter.Birthday);
 
-            var listFromCollection_before = complexCollection[1] as IEnumerable;
-            var listFromCollection_after = valueFromBytesComplexCollection[1] as IEnumerable;
-            Assert.Equal(listFromCollection_before, listFromCollection_after);
+            var listFromCollectionBefore = complexCollection[1] as IEnumerable;
+            var listFromCollectionAfter = valueFromBytesComplexCollection[1] as IEnumerable;
+            Assert.Equal(listFromCollectionBefore, listFromCollectionAfter);
 
             Assert.Equal(complexCollection[2], valueFromBytesComplexCollection[2]);
             Assert.Equal(complexCollection[3], valueFromBytesComplexCollection[3]);

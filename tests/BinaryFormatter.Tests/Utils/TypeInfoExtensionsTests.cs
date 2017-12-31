@@ -13,11 +13,11 @@ namespace BinaryFormatter.Tests.Utils
         class Master
         {
             public string Name { get; set; }
-            public event EventHandler testEvent_1;
+            public event EventHandler TestEvent1;
 
-            class Nested_1
+            class Nested1
             {
-                Nested_1()
+                Nested1()
                 {
                 }
             }
@@ -25,11 +25,11 @@ namespace BinaryFormatter.Tests.Utils
         class Slave : Master
         {
             public int Priority { get; set; }
-            public event EventHandler testEvent_2;
+            public event EventHandler TestEvent2;
 
-            class Nested_2
+            class Nested2
             {
-                Nested_2()
+                Nested2()
                 {
                 }
             }
@@ -38,8 +38,8 @@ namespace BinaryFormatter.Tests.Utils
         [Fact]
         public void GetAllConstructors()
         {
-            Slave TestObject = new Slave() { Name = "Test 1", Priority = 123 };
-            IEnumerable<ConstructorInfo> allConstructors = TestObject.GetType().GetTypeInfo().GetAllConstructors();
+            Slave testObject = new Slave() { Name = "Test 1", Priority = 123 };
+            IEnumerable<ConstructorInfo> allConstructors = testObject.GetType().GetTypeInfo().GetAllConstructors();
 
             Assert.Equal(allConstructors.Count(), 3);
         }
@@ -47,8 +47,8 @@ namespace BinaryFormatter.Tests.Utils
         [Fact]
         public void GetAllEvents()
         {
-            Slave TestObject = new Slave() { Name = "Test 1", Priority = 123 };
-            IEnumerable<EventInfo> allEvents = TestObject.GetType().GetTypeInfo().GetAllEvents();
+            Slave testObject = new Slave() { Name = "Test 1", Priority = 123 };
+            IEnumerable<EventInfo> allEvents = testObject.GetType().GetTypeInfo().GetAllEvents();
 
             Assert.Equal(allEvents.Count(), 2);
         }
@@ -56,8 +56,8 @@ namespace BinaryFormatter.Tests.Utils
         [Fact]
         public void GetAllFields()
         {
-            Slave TestObject = new Slave() { Name = "Test 1", Priority = 123 };
-            IEnumerable<FieldInfo> allFields = TestObject.GetType().GetTypeInfo().GetAllFields();
+            Slave testObject = new Slave() { Name = "Test 1", Priority = 123 };
+            IEnumerable<FieldInfo> allFields = testObject.GetType().GetTypeInfo().GetAllFields();
 
             Assert.Equal(allFields.Count(), 4);
         }
@@ -65,8 +65,8 @@ namespace BinaryFormatter.Tests.Utils
         [Fact]
         public void GetAllMembers()
         {
-            Slave TestObject = new Slave() { Name = "Test 1", Priority = 123 };
-            IEnumerable<MemberInfo> allMembers = TestObject.GetType().GetTypeInfo().GetAllMembers();
+            Slave testObject = new Slave() { Name = "Test 1", Priority = 123 };
+            IEnumerable<MemberInfo> allMembers = testObject.GetType().GetTypeInfo().GetAllMembers();
 
             Assert.Equal(allMembers.Count(), 32);
         }
@@ -74,8 +74,8 @@ namespace BinaryFormatter.Tests.Utils
         [Fact]
         public void GetAllMethods()
         {
-            Slave TestObject = new Slave() { Name = "Test 1", Priority = 123 };
-            IEnumerable<MemberInfo> allMethods = TestObject.GetType().GetTypeInfo().GetAllMethods();
+            Slave testObject = new Slave() { Name = "Test 1", Priority = 123 };
+            IEnumerable<MemberInfo> allMethods = testObject.GetType().GetTypeInfo().GetAllMethods();
 
             Assert.Equal(allMethods.Count(), 19);
         }
@@ -83,8 +83,8 @@ namespace BinaryFormatter.Tests.Utils
         [Fact]
         public void GetAllNestedTypes()
         {
-            Slave TestObject = new Slave() { Name = "Test 1", Priority = 123 };
-            IEnumerable<MemberInfo> allNestedTypes = TestObject.GetType().GetTypeInfo().GetAllNestedTypes();
+            Slave testObject = new Slave() { Name = "Test 1", Priority = 123 };
+            IEnumerable<MemberInfo> allNestedTypes = testObject.GetType().GetTypeInfo().GetAllNestedTypes();
 
             Assert.Equal(allNestedTypes.Count(), 2);
         }
@@ -92,8 +92,8 @@ namespace BinaryFormatter.Tests.Utils
         [Fact]
         public void GetAllProperties()
         {
-            Slave TestObject = new Slave() { Name = "Test 1", Priority = 123 };
-            IEnumerable<PropertyInfo> allProperties = TestObject.GetType().GetTypeInfo().GetAllProperties();
+            Slave testObject = new Slave() { Name = "Test 1", Priority = 123 };
+            IEnumerable<PropertyInfo> allProperties = testObject.GetType().GetTypeInfo().GetAllProperties();
 
             Assert.Equal(allProperties.Count(), 2);
         }

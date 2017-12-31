@@ -11,7 +11,7 @@ namespace BinaryFormatter
 {
     internal static class ConvertersSelector
     {
-        private static readonly Dictionary<Type, BaseTypeConverter> _converters = new Dictionary<Type, BaseTypeConverter>
+        private static readonly Dictionary<Type, BaseTypeConverter> Converters = new Dictionary<Type, BaseTypeConverter>
         {
             [typeof(byte)] = new ByteConverter(),
             [typeof(sbyte)] = new SByteConverter(),
@@ -30,7 +30,7 @@ namespace BinaryFormatter
             [typeof(DateTime)] = new DatetimeConverter(),
             [typeof(TimeSpan)] = new TimespanConverter(),
             [typeof(byte[])] = new ByteArrayConverter(),
-            [typeof(IEnumerable)] = new IEnumerableConverter(),
+            [typeof(IEnumerable)] = new EnumerableConverter(),
             [typeof(object)] = new CustomObjectConverter(),
             [typeof(Guid)] = new GuidConverter(),
             [typeof(Uri)] = new UriConverter(),
@@ -39,16 +39,16 @@ namespace BinaryFormatter
             [typeof(BigInteger)] = new BigIntegerConverter()
         };
 
-        private static readonly Dictionary<SerializedType, BaseTypeConverter> _convertersBySerializedType =
+        private static readonly Dictionary<SerializedType, BaseTypeConverter> ConvertersBySerializedType =
             new Dictionary<SerializedType, BaseTypeConverter>();
 
         static ConvertersSelector()
         {
-            _convertersBySerializedType.Add(SerializedType.Null, NullConverter);
+            ConvertersBySerializedType.Add(SerializedType.Null, NullConverter);
 
-            foreach (var pair in _converters)
+            foreach (var pair in Converters)
             {
-                _convertersBySerializedType.Add(pair.Value.Type, pair.Value);
+                ConvertersBySerializedType.Add(pair.Value.Type, pair.Value);
             }
         }
 
@@ -67,7 +67,7 @@ namespace BinaryFormatter
             if (type == null) return NullConverter;
 
             BaseTypeConverter converter;
-            if (_converters.TryGetValue(type, out converter))
+            if (Converters.TryGetValue(type, out converter))
             {
                 return converter;
             }
@@ -76,7 +76,7 @@ namespace BinaryFormatter
             bool isKeyValuePair = typeInfo.IsGenericType && type.GetGenericTypeDefinition() == typeof(KeyValuePair<,>);
             if (isKeyValuePair)
             {
-                if (_converters.TryGetValue(typeof(KeyValuePair<,>), out converter))
+                if (Converters.TryGetValue(typeof(KeyValuePair<,>), out converter))
                 {
                     return converter;
                 }
@@ -85,7 +85,7 @@ namespace BinaryFormatter
             bool isEnumerableType = type.GetTypeInfo().ImplementedInterfaces.Any(t => t == typeof(IEnumerable));
             if (isEnumerableType)
             {
-                if (_converters.TryGetValue(typeof(IEnumerable), out converter))
+                if (Converters.TryGetValue(typeof(IEnumerable), out converter))
                 {
                     return converter;
                 }
@@ -94,7 +94,7 @@ namespace BinaryFormatter
             bool isEnumType = type.GetTypeInfo().IsEnum;
             if (isEnumType)
             {
-                if (_converters.TryGetValue(typeof(Enum), out converter))
+                if (Converters.TryGetValue(typeof(Enum), out converter))
                 {
                     return converter;
                 }
@@ -106,7 +106,7 @@ namespace BinaryFormatter
         public static BaseTypeConverter ForSerializedType(SerializedType type)
         {
             BaseTypeConverter converter;
-            if (_convertersBySerializedType.TryGetValue(type, out converter))
+            if (ConvertersBySerializedType.TryGetValue(type, out converter))
             {
                 return converter;
             }

@@ -3,7 +3,7 @@ using Xunit;
 
 namespace BinaryFormatter.Tests
 {
-    public class WhenWorkingWith_Classes
+    public class WhenWorkingWithClasses
     {
         class WithoutCtor
         {

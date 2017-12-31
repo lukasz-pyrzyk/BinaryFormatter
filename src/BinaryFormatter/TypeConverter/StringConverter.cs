@@ -15,7 +15,7 @@ namespace BinaryFormatter.TypeConverter
 
         protected override string DeserializeInternal(DeserializationStream stream, Type sourceType)
         {
-            return stream.ReadUTF8WithSizePrefix();
+            return stream.ReadUtf8WithSizePrefix();
         }
 
         public override SerializedType Type => SerializedType.String;

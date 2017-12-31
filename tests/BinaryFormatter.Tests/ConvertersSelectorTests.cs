@@ -37,7 +37,7 @@ namespace BinaryFormatter.Tests
             yield return new[] { (object)default(decimal), typeof(DecimalConverter) };
             yield return new[] { (object)default(double), typeof(DoubleConverter) };
             yield return new[] { (object)default(float), typeof(FloatConverter) };
-            yield return new[] { (object)new List<object>(), typeof(IEnumerableConverter) };
+            yield return new[] { (object)new List<object>(), typeof(EnumerableConverter) };
             yield return new[] { (object)default(long), typeof(LongConverter) };
             yield return new[] { (object)default(sbyte), typeof(SByteConverter) };
             yield return new[] { (object)default(short), typeof(ShortConverter) };
