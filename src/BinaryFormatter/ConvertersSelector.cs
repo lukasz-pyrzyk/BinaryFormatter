@@ -30,7 +30,7 @@ namespace BinaryFormatter
             [typeof(DateTime)] = new DatetimeConverter(),
             [typeof(TimeSpan)] = new TimespanConverter(),
             [typeof(byte[])] = new ByteArrayConverter(),
-            [typeof(IEnumerable)] = new EnumerableConverter(),
+            [typeof(IEnumerable)] = new IEnumerableConverter(),
             [typeof(object)] = new CustomObjectConverter(),
             [typeof(Guid)] = new GuidConverter(),
             [typeof(Uri)] = new UriConverter(),

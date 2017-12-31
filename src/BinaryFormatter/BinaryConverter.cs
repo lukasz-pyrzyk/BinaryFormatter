@@ -38,7 +38,7 @@ namespace BinaryFormatter
             Type type = deserializedType.GetBaseType() ?? stream.ReadType();
 
             BaseTypeConverter converter = ConvertersSelector.SelectConverter(type);
-            if (converter is EnumerableConverter)
+            if (converter is IEnumerableConverter)
             {
                 var preparedData = converter.Deserialize(stream, type) as IEnumerable;
                 if (preparedData is IList)

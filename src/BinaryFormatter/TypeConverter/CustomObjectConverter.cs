@@ -91,7 +91,7 @@ namespace BinaryFormatter.TypeConverter
             {
                 data = null;
             }
-            else if (type == SerializedType.Enumerable)
+            else if (type == SerializedType.IEnumerable)
             {
                 var preparedData = converter.Deserialize(stream) as IEnumerable;
 
