@@ -2,6 +2,7 @@
 using System.Linq;
 using FluentAssertions;
 using Xunit;
+// ReSharper disable UnusedAutoPropertyAccessor.Local
 
 namespace BinaryFormatter.Tests.TypeConverter
 {
@@ -25,21 +26,25 @@ namespace BinaryFormatter.Tests.TypeConverter
         public void CanSerializeAndDeserialize_ComplexObject()
         {
             // Arrange
-            var obj = new ComplexObject();
-            obj.MasterRow = new ComplexObjectRow();
-            obj.MasterRow.Data = new[]
+            var obj = new ComplexObject
             {
-                new ComplexObjectColumn { Name = "FirstKey", Value = "12345" },
-                new ComplexObjectColumn { Name = "SecondKey", Value = "98776" }
-            };
-            obj.DetailRows = new[]
-            {
-                new ComplexObjectRow
+                MasterRow = new ComplexObjectRow
                 {
-                    Data = new []
+                    Data = new[]
                     {
-                        new ComplexObjectColumn { Name = "FirstColumn", Value = "FirstValue" },
-                        new ComplexObjectColumn { Name = "SecondColumn", Value = "SecondValue" }
+                        new ComplexObjectColumn {Name = "FirstKey", Value = "12345"},
+                        new ComplexObjectColumn {Name = "SecondKey", Value = "98776"}
+                    }
+                },
+                DetailRows = new[]
+                {
+                    new ComplexObjectRow
+                    {
+                        Data = new[]
+                        {
+                            new ComplexObjectColumn {Name = "FirstColumn", Value = "FirstValue"},
+                            new ComplexObjectColumn {Name = "SecondColumn", Value = "SecondValue"}
+                        }
                     }
                 }
             };

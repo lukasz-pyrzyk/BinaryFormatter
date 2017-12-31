@@ -35,11 +35,7 @@ namespace BinaryFormatter
                 return default(T);
             }
 
-            Type type = deserializedType.GetBaseType();
-            if (type == null)
-            {
-                type = stream.ReadType();
-            }
+            Type type = deserializedType.GetBaseType() ?? stream.ReadType();
 
             BaseTypeConverter converter = ConvertersSelector.SelectConverter(type);
             if (converter is EnumerableConverter)

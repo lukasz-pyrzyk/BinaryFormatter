@@ -9,7 +9,7 @@ namespace BinaryFormatter.TypeConverter
 
         protected override void SerializeInternal(object obj, SerializationStream stream)
         {
-            stream.Write(new byte[0]);
+            stream.Write();
         }
 
         protected override object DeserializeInternal(DeserializationStream stream, Type sourceType)

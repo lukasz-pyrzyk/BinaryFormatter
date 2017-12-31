@@ -46,17 +46,17 @@ namespace BinaryFormatter.Utils
                 var constructedListType = listType.MakeGenericType(genericTypes);
                 return HasConversionOperator(obj.GetType(), constructedListType);
             }
-            
-            return false;         
+
+            return false;
         }
 
         public static bool HasConversionOperator(Type from, Type to)
         {
-            Func<Expression, UnaryExpression> bodyFunction = body => Expression.Convert(body, to);
+            UnaryExpression BodyFunction(Expression body) => Expression.Convert(body, to);
             ParameterExpression inp = Expression.Parameter(from, "inp");
             try
-            {                
-                Expression.Lambda(bodyFunction(inp), inp).Compile();
+            {
+                Expression.Lambda(BodyFunction(inp), inp).Compile();
                 return true;
             }
             catch (InvalidOperationException)

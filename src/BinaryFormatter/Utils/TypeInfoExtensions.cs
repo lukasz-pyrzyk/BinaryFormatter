@@ -69,7 +69,7 @@ namespace BinaryFormatter.Utils
 
         public static bool IsBaseType(this TypeInfo typeInfo)
         {
-            return BaseTypes.Any(bt => bt == typeInfo);
+            return BaseTypes.Any(bt => Equals(bt, typeInfo));
         }
     }
 }

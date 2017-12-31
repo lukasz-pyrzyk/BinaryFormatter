@@ -13,8 +13,8 @@ namespace BinaryFormatter.TypeConverter
             BinaryConverter converter = new BinaryConverter();
             KeyValuePair<object, object> objAsKeyValuePair = TypeHelper.CastFrom(obj);
 
-            byte[] dataKey = converter.Serialize(objAsKeyValuePair.Key);            
-            stream.WriteWithLengthPrefix(dataKey);          
+            byte[] dataKey = converter.Serialize(objAsKeyValuePair.Key);
+            stream.WriteWithLengthPrefix(dataKey);
 
             byte[] dataValue = converter.Serialize(objAsKeyValuePair.Value);
             stream.WriteWithLengthPrefix(dataValue);
@@ -30,7 +30,7 @@ namespace BinaryFormatter.TypeConverter
             byte[] valueData = stream.ReadBytesWithSizePrefix();
             var deserializedValue = converter.Deserialize<object>(valueData);
 
-            var newKeyValuePair = Activator.CreateInstance(sourceType, new[] { deserializedKey, deserializedValue });            
+            var newKeyValuePair = Activator.CreateInstance(sourceType, deserializedKey, deserializedValue);
             return newKeyValuePair;
         }
 

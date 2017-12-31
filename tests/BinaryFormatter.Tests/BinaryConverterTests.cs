@@ -119,11 +119,11 @@ namespace BinaryFormatter.Tests
             deserialized.Should().Be(value);
         }
 
-        [Fact]
-        public void CanSerialize_Bool()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void CanSerialize_Bool(bool value)
         {
-            bool value = false;
-
             bool deserialized = TestHelper.SerializeAndDeserialize(value);
 
             deserialized.Should().Be(value);
@@ -172,9 +172,7 @@ namespace BinaryFormatter.Tests
         [Fact]
         public void CanSerialize_Null()
         {
-            object value = null;
-
-            var deserialized = TestHelper.SerializeAndDeserialize(value);
+            var deserialized = TestHelper.SerializeAndDeserialize((object)null);
 
             deserialized.Should().BeNull();
         }

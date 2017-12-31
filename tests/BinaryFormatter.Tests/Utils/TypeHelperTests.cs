@@ -10,7 +10,7 @@ namespace BinaryFormatter.Tests.Utils
         public void CastFrom_KeyValuePair()
         {
             KeyValuePair<int, string> kvp = new KeyValuePair<int, string>(1, "one");
-            object kvpAsObject = (object)kvp;
+            object kvpAsObject = kvp;
             KeyValuePair<object, object> kvpAfterCast = TypeHelper.CastFrom(kvpAsObject);
 
             Assert.Equal(kvp.Key, kvpAfterCast.Key);
@@ -20,8 +20,7 @@ namespace BinaryFormatter.Tests.Utils
         [Fact]
         public void IsDictionary_True()
         {
-            var valueForCheck = new Dictionary<int, string>();
-            valueForCheck.Add(1, "one");
+            var valueForCheck = new Dictionary<int, string> { { 1, "one" } };
             Assert.True(TypeHelper.IsDictionary(valueForCheck));
         }
 
@@ -35,8 +34,7 @@ namespace BinaryFormatter.Tests.Utils
         [Fact]
         public void IsList_True()
         {
-            var valueForCheck = new List<int>();
-            valueForCheck.Add(1);
+            var valueForCheck = new List<int> { 1 };
             Assert.True(TypeHelper.IsList(valueForCheck));
         }
 

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using FluentAssertions;
 using Xunit;
+// ReSharper disable UnusedAutoPropertyAccessor.Local
 
 namespace BinaryFormatter.Tests.TypeConverter
 {
