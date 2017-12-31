@@ -7,12 +7,12 @@ using Xunit;
 
 namespace BinaryFormatter.Tests
 {
-    public class WhenWorkingWithClasses
+    public class WhenSerializingClasses
     {
         [Fact]
-        public void CanWorkWith_ClassesWithoutCustomCtor_WithProperties_WithPublicSetter()
+        public void WithoutCustomCtor_WithProperties_WithPublicSetter()
         {
-            var before = new WithoutCtor { Int = 1, Double = 1, String = "lorem ipsum" };
+            var before = new ObjWithoutCtor { Int = 1, Double = 1, String = "lorem ipsum" };
 
             var after = TestHelper.SerializeAndDeserialize(before);
 
@@ -20,9 +20,9 @@ namespace BinaryFormatter.Tests
         }
 
         [Fact]
-        public void CanWorkWith_Classes_WithReadonlyProperties()
+        public void ReadonlyPropertiesAreSkipped()
         {
-            var before = new WithReadonlyProperties
+            var before = new ObjWithReadonlyProperties
             {
                 Name = "John",
                 BirthDay = DateTime.Now.AddYears(-50)
@@ -33,14 +33,14 @@ namespace BinaryFormatter.Tests
             after.Should().BeEquivalentTo(before);
         }
 
-        private class WithoutCtor
+        private class ObjWithoutCtor
         {
             public int Int { get; set; }
             public double Double { get; set; }
             public string String { get; set; }
         }
 
-        private class WithReadonlyProperties
+        private class ObjWithReadonlyProperties
         {
             public string Name { get; set; }
             public DateTime BirthDay { get; set; }
