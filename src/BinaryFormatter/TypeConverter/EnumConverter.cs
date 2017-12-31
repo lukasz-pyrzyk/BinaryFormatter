@@ -1,13 +1,12 @@
 ﻿using System;
-using System.IO;
+using BinaryFormatter.Streams;
 using BinaryFormatter.Types;
-using BinaryFormatter.Utils;
 
 namespace BinaryFormatter.TypeConverter
 {
     internal class EnumConverter : BaseTypeConverter<Enum>
     {
-        protected override void WriteObjectToStream(Enum obj, Stream stream)
+        protected override void SerializeInternal(Enum obj, SerializationStream stream)
         {
             Type enumUnderlyingType = Enum.GetUnderlyingType(obj.GetType());
             var underlyingValue = Convert.ChangeType(obj, enumUnderlyingType);
@@ -17,13 +16,13 @@ namespace BinaryFormatter.TypeConverter
             stream.WriteWithLengthPrefix(data);
         }
 
-        protected override Enum ProcessDeserialize(WorkingStream stream, Type sourceType)
+        protected override Enum DeserializeInternal(DeserializationStream stream, Type sourceType)
         {
             Enum result = DeserializeInto(stream, sourceType);
             return result;
         }
 
-        public Enum DeserializeInto(WorkingStream stream, Type type)
+        public Enum DeserializeInto(DeserializationStream stream, Type type)
         {
             byte[] enumData = stream.ReadBytesWithSizePrefix();
 

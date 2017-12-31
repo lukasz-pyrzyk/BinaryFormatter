@@ -1,19 +1,18 @@
 ﻿using System;
-using System.IO;
+using BinaryFormatter.Streams;
 using BinaryFormatter.Types;
-using BinaryFormatter.Utils;
 
 namespace BinaryFormatter.TypeConverter
 {
     internal class DoubleConverter : BaseTypeConverter<double>
     {
-        protected override void WriteObjectToStream(double obj, Stream stream)
+        protected override void SerializeInternal(double obj, SerializationStream stream)
         {
             byte[] data = BitConverter.GetBytes(obj);
             stream.Write(data);
         }
 
-        protected override double ProcessDeserialize(WorkingStream stream, Type sourceType)
+        protected override double DeserializeInternal(DeserializationStream stream, Type sourceType)
         {
             return stream.ReadDouble();
         }

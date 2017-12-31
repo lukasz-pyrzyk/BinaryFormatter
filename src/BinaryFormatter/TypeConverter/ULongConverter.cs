@@ -1,19 +1,18 @@
 ﻿using System;
-using System.IO;
+using BinaryFormatter.Streams;
 using BinaryFormatter.Types;
-using BinaryFormatter.Utils;
 
 namespace BinaryFormatter.TypeConverter
 {
     internal class ULongConverter : BaseTypeConverter<ulong>
     {
-        protected override void WriteObjectToStream(ulong obj, Stream stream)
+        protected override void SerializeInternal(ulong obj, SerializationStream stream)
         {
             byte[] data = BitConverter.GetBytes(obj);
             stream.Write(data);
         }
 
-        protected override ulong ProcessDeserialize(WorkingStream stream, Type sourceType)
+        protected override ulong DeserializeInternal(DeserializationStream stream, Type sourceType)
         {
             return stream.ReadULong();
         }

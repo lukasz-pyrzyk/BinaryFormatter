@@ -1,19 +1,18 @@
 ﻿using System;
-using System.IO;
+using BinaryFormatter.Streams;
 using BinaryFormatter.Types;
-using BinaryFormatter.Utils;
 
 namespace BinaryFormatter.TypeConverter
 {
     internal class UShortConverter : BaseTypeConverter<ushort>
     {
-        protected override void WriteObjectToStream(ushort obj, Stream stream)
+        protected override void SerializeInternal(ushort obj, SerializationStream stream)
         {
             byte[] data = BitConverter.GetBytes(obj);
             stream.Write(data);
         }
 
-        protected override ushort ProcessDeserialize(WorkingStream stream, Type sourceType)
+        protected override ushort DeserializeInternal(DeserializationStream stream, Type sourceType)
         {
             return stream.ReadUShort();
         }

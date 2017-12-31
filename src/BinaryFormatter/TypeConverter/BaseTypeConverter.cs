@@ -1,56 +1,54 @@
 ﻿using System;
-using System.IO;
 using BinaryFormatter.Types;
 using BinaryFormatter.Utils;
 using System.Text;
 using System.Reflection;
+using BinaryFormatter.Streams;
 
 namespace BinaryFormatter.TypeConverter
 {
     internal abstract class BaseTypeConverter<T> : BaseTypeConverter
     {
-        public void Serialize(T obj, Stream stream)
+        private static readonly Type destinationType = typeof(T);
+        private static readonly bool isBaseType = destinationType.GetTypeInfo().IsBaseType();
+
+        public override void Serialize(object obj, SerializationStream stream)
         {
-            Type destinationType = typeof(T);
             byte[] objectType = BitConverter.GetBytes((ushort)Type);
             stream.Write(objectType);
 
             if (obj != null)
             {
-                if (!destinationType.GetTypeInfo().IsBaseType())
+                if (!isBaseType)
                 {
                     byte[] typeInfo = Encoding.UTF8.GetBytes(obj.GetType().AssemblyQualifiedName);
                     stream.WriteWithLengthPrefix(typeInfo);
                 }
 
-                WriteObjectToStream(obj, stream);
+                SerializeInternal((T)obj, stream);
             }
         }
 
-        public override void Serialize(object obj, Stream stream)
+        protected abstract void SerializeInternal(T obj, SerializationStream stream);
+
+        public override object Deserialize(DeserializationStream stream)
         {
-            Serialize((T)obj, stream);
+            return Deserialize(stream, typeof(T));
         }
 
-        public override object DeserializeToObject(WorkingStream stream)
+        public override object Deserialize(DeserializationStream stream, Type type)
         {
-            return DeserializeToObject(stream, typeof(T));
+            return DeserializeInternal(stream, type);
         }
 
-        public override object DeserializeToObject(WorkingStream stream, Type type)
-        {
-            return ProcessDeserialize(stream, type);
-        }
-
-        protected abstract void WriteObjectToStream(T obj, Stream stream);
-        protected abstract T ProcessDeserialize(WorkingStream stream, Type sourceType);
+        protected abstract T DeserializeInternal(DeserializationStream stream, Type sourceType);
     }
 
     internal abstract class BaseTypeConverter
     {
-        public abstract void Serialize(object obj, Stream stream);
-        public abstract object DeserializeToObject(WorkingStream stream);
-        public abstract object DeserializeToObject(WorkingStream stream, Type type);
+        public abstract void Serialize(object obj, SerializationStream stream);
+        public abstract object Deserialize(DeserializationStream stream);
+        public abstract object Deserialize(DeserializationStream stream, Type type);
         public abstract SerializedType Type { get; }
     }
 }

@@ -2,23 +2,28 @@
 using System.IO;
 using System.Linq;
 using System.Text;
-using BinaryFormatter.Utils;
+using BinaryFormatter.Streams;
+using FluentAssertions;
 using Xunit;
 
-namespace BinaryFormatter.Tests.Utils
+namespace BinaryFormatter.Tests.Streams
 {
-    public class StreamExtensionsTests
+    public class WhenWritingToSerializationStream
     {
         [Fact]
         public void Write_WritesAllElementsToTheStream()
         {
+            // Arrange
             var stream = new MemoryStream();
+            var serializationStream = new SerializationStream(stream);
             var data = new byte[100];
-            stream.Write(data);
+            serializationStream.Write(data);
 
+            // Act
             byte[] dataFromStream = stream.ToArray();
 
-            Assert.Equal(data, dataFromStream);
+            // Assert
+            data.Should().Equal(dataFromStream);
         }
 
         [Fact]
@@ -26,21 +31,22 @@ namespace BinaryFormatter.Tests.Utils
         {
             // Arrange
             var stream = new MemoryStream();
+            var serializationStream = new SerializationStream(stream);
             var data = Encoding.UTF8.GetBytes("Hello world");
             var expectedBytesHeader = BitConverter.GetBytes(data.Length);
 
             // Act
-            stream.WriteWithLengthPrefix(data);
-            
+            serializationStream.WriteWithLengthPrefix(data);
+
             // Assert
             byte[] dataFromStream = stream.ToArray();
-            Assert.Equal(dataFromStream.Length, data.Length + sizeof(int));
+            dataFromStream.Should().HaveCount(data.Length + sizeof(int));
 
             byte[] lengthPrefix = dataFromStream.Take(sizeof(int)).ToArray();
-            Assert.Equal(expectedBytesHeader, lengthPrefix);
+            expectedBytesHeader.Should().Equal(lengthPrefix);
 
             byte[] dataBytes = dataFromStream.Skip(sizeof(int)).ToArray();
-            Assert.Equal(data, dataBytes);
+            data.Should().Equal(dataBytes);
         }
     }
 }

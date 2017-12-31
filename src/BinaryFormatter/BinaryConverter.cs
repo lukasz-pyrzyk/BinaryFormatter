@@ -4,6 +4,7 @@ using BinaryFormatter.TypeConverter;
 using BinaryFormatter.Types;
 using System.Collections;
 using System.IO;
+using BinaryFormatter.Streams;
 using BinaryFormatter.Utils;
 
 namespace BinaryFormatter
@@ -20,12 +21,13 @@ namespace BinaryFormatter
         public void Serialize(object obj, Stream stream)
         {
             BaseTypeConverter converter = ConvertersSelector.SelectConverter(obj);
-            converter.Serialize(obj, stream);
+            var serializationStream = new SerializationStream(stream);
+            converter.Serialize(obj, serializationStream);
         }
 
         public T Deserialize<T>(byte[] bytes)
         {
-            var stream = new WorkingStream(bytes);
+            var stream = new DeserializationStream(bytes);
 
             SerializedType deserializedType = stream.ReadSerializedType();
             if (deserializedType == SerializedType.Null)
@@ -42,7 +44,7 @@ namespace BinaryFormatter
             BaseTypeConverter converter = ConvertersSelector.SelectConverter(type);
             if (converter is IEnumerableConverter)
             {
-                var preparedData = converter.DeserializeToObject(stream, type) as IEnumerable;
+                var preparedData = converter.Deserialize(stream, type) as IEnumerable;
                 if (preparedData is IList)
                 {
                     var listType = typeof(List<>);
@@ -59,7 +61,7 @@ namespace BinaryFormatter
                 return (T)preparedData;
             }
 
-            return (T)converter.DeserializeToObject(stream, type);
+            return (T)converter.Deserialize(stream, type);
         }
     }
 }

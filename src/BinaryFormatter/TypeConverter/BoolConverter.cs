@@ -1,19 +1,18 @@
 ﻿using System;
-using System.IO;
+using BinaryFormatter.Streams;
 using BinaryFormatter.Types;
-using BinaryFormatter.Utils;
 
 namespace BinaryFormatter.TypeConverter
 {
     internal class BoolConverter : BaseTypeConverter<bool>
     {
-        protected override void WriteObjectToStream(bool obj, Stream stream)
+        protected override void SerializeInternal(bool obj, SerializationStream stream)
         {
             byte[] data = BitConverter.GetBytes(obj);
             stream.Write(data);
         }
 
-        protected override bool ProcessDeserialize(WorkingStream stream, Type sourceType)
+        protected override bool DeserializeInternal(DeserializationStream stream, Type sourceType)
         {
             return stream.ReadBool();
         }

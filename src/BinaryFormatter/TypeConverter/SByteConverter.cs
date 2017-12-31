@@ -1,18 +1,17 @@
 ﻿using System;
-using System.IO;
+using BinaryFormatter.Streams;
 using BinaryFormatter.Types;
-using BinaryFormatter.Utils;
 
 namespace BinaryFormatter.TypeConverter
 {
     internal class SByteConverter : BaseTypeConverter<sbyte>
     {
-        protected override void WriteObjectToStream(sbyte obj, Stream stream)
+        protected override void SerializeInternal(sbyte obj, SerializationStream stream)
         {
             stream.Write((byte)obj);
         }
 
-        protected override sbyte ProcessDeserialize(WorkingStream stream, Type sourceType)
+        protected override sbyte DeserializeInternal(DeserializationStream stream, Type sourceType)
         {
             return stream.ReadSByte();
         }

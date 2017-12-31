@@ -1,18 +1,17 @@
 ﻿using System;
-using System.IO;
+using BinaryFormatter.Streams;
 using BinaryFormatter.Types;
-using BinaryFormatter.Utils;
 
 namespace BinaryFormatter.TypeConverter
 {
     internal class ByteConverter : BaseTypeConverter<byte>
     {
-        protected override void WriteObjectToStream(byte obj, Stream stream)
+        protected override void SerializeInternal(byte obj, SerializationStream stream)
         {
             stream.Write(obj);
         }
 
-        protected override byte ProcessDeserialize(WorkingStream stream, Type sourceType)
+        protected override byte DeserializeInternal(DeserializationStream stream, Type sourceType)
         {
             return stream.ReadByte();
         }

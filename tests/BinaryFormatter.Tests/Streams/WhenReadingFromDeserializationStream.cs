@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using BinaryFormatter.Streams;
 using FluentAssertions;
 using Xunit;
 
-namespace BinaryFormatter.Tests
+namespace BinaryFormatter.Tests.Streams
 {
-    public class WorkingStreamTests
+    public class WhenReadingFromDeserializationStream
     {
         [Fact]
         public void Ends_WhenOffsetIsEqualStreamLength()
@@ -15,7 +16,7 @@ namespace BinaryFormatter.Tests
             var data = new byte[64];
 
             // Act
-            var stream = new WorkingStream(data, data.Length);
+            var stream = new DeserializationStream(data, data.Length);
 
             // Assert
             stream.HasEnded.Should().BeTrue();
@@ -28,7 +29,7 @@ namespace BinaryFormatter.Tests
             var data = new byte[0];
 
             // Act
-            var stream = new WorkingStream(data);
+            var stream = new DeserializationStream(data);
 
             // Assert
             stream.HasEnded.Should().BeTrue();
@@ -41,7 +42,7 @@ namespace BinaryFormatter.Tests
             var data = new byte[64];
 
             // Act
-            var stream = new WorkingStream(data, data.Length - 1);
+            var stream = new DeserializationStream(data, data.Length - 1);
 
             // Assert
             stream.HasEnded.Should().BeFalse();
@@ -55,7 +56,7 @@ namespace BinaryFormatter.Tests
             const int newIndex = 2;
 
             // Act
-            var stream = new WorkingStream(data);
+            var stream = new DeserializationStream(data);
             stream.SetOffset(newIndex);
 
             // Assert
@@ -71,7 +72,7 @@ namespace BinaryFormatter.Tests
             var data = BitConverter.GetBytes(value);
 
             // Act
-            var stream = new WorkingStream(data);
+            var stream = new DeserializationStream(data);
             var result = stream.ReadBool();
 
             // Assert
@@ -89,7 +90,7 @@ namespace BinaryFormatter.Tests
             var data = BitConverter.GetBytes(value);
 
             // Act
-            var stream = new WorkingStream(data);
+            var stream = new DeserializationStream(data);
             var result = stream.ReadByte();
 
             // Assert
@@ -107,7 +108,7 @@ namespace BinaryFormatter.Tests
             var data = BitConverter.GetBytes(value);
 
             // Act
-            var stream = new WorkingStream(data);
+            var stream = new DeserializationStream(data);
             var result = stream.ReadSByte();
 
             // Assert
@@ -125,7 +126,7 @@ namespace BinaryFormatter.Tests
             var data = BitConverter.GetBytes(value);
 
             // Act
-            var stream = new WorkingStream(data);
+            var stream = new DeserializationStream(data);
             var result = stream.ReadChar();
 
             // Assert
@@ -143,7 +144,7 @@ namespace BinaryFormatter.Tests
             var data = BitConverter.GetBytes(value);
 
             // Act
-            var stream = new WorkingStream(data);
+            var stream = new DeserializationStream(data);
             var result = stream.ReadUShort();
 
             // Assert
@@ -161,7 +162,7 @@ namespace BinaryFormatter.Tests
             var data = BitConverter.GetBytes(value);
 
             // Act
-            var stream = new WorkingStream(data);
+            var stream = new DeserializationStream(data);
             var result = stream.ReadShort();
 
             // Assert
@@ -179,7 +180,7 @@ namespace BinaryFormatter.Tests
             var data = BitConverter.GetBytes(value);
 
             // Act
-            var stream = new WorkingStream(data);
+            var stream = new DeserializationStream(data);
             var result = stream.ReadUInt();
 
             // Assert
@@ -197,7 +198,7 @@ namespace BinaryFormatter.Tests
             var data = BitConverter.GetBytes(value);
 
             // Act
-            var stream = new WorkingStream(data);
+            var stream = new DeserializationStream(data);
             var result = stream.ReadInt();
 
             // Assert
@@ -215,7 +216,7 @@ namespace BinaryFormatter.Tests
             var data = BitConverter.GetBytes(value);
 
             // Act
-            var stream = new WorkingStream(data);
+            var stream = new DeserializationStream(data);
             var result = stream.ReadFloat();
 
             // Assert
@@ -233,7 +234,7 @@ namespace BinaryFormatter.Tests
             var data = BitConverter.GetBytes(value);
 
             // Act
-            var stream = new WorkingStream(data);
+            var stream = new DeserializationStream(data);
             var result = stream.ReadDouble();
 
             // Assert
@@ -251,7 +252,7 @@ namespace BinaryFormatter.Tests
             var data = BitConverter.GetBytes(value);
 
             // Act
-            var stream = new WorkingStream(data);
+            var stream = new DeserializationStream(data);
             var result = stream.ReadULong();
 
             // Assert
@@ -269,7 +270,7 @@ namespace BinaryFormatter.Tests
             var data = BitConverter.GetBytes(value);
 
             // Act
-            var stream = new WorkingStream(data);
+            var stream = new DeserializationStream(data);
             var result = stream.ReadLong();
 
             // Assert
@@ -295,7 +296,7 @@ namespace BinaryFormatter.Tests
             }
 
             // Act
-            var stream = new WorkingStream(finalData.ToArray());
+            var stream = new DeserializationStream(finalData.ToArray());
             var result = stream.ReadBytesWithSizePrefix();
 
             // Assert
@@ -310,7 +311,7 @@ namespace BinaryFormatter.Tests
             var data = Encoding.UTF8.GetBytes("hello world");
 
             // Act
-            var stream = new WorkingStream(data);
+            var stream = new DeserializationStream(data);
             var result = stream.ReadBytes(data.Length);
 
             // Assert
@@ -337,7 +338,7 @@ namespace BinaryFormatter.Tests
             }
 
             // Act
-            var stream = new WorkingStream(finalData.ToArray());
+            var stream = new DeserializationStream(finalData.ToArray());
             var result = stream.ReadUTF8WithSizePrefix();
 
             // Assert
@@ -357,7 +358,7 @@ namespace BinaryFormatter.Tests
             Array.Copy(typeInfo, 0, data, sizeBytes.Length, typeInfo.Length);
 
             // Act
-            var stream = new WorkingStream(data);
+            var stream = new DeserializationStream(data);
             Type type = stream.ReadType();
 
             // Assert
