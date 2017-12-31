@@ -55,20 +55,18 @@ namespace BinaryFormatter.Tests.TypeConverter
                         "Bill",
                         "Andrew"
                     }
-                }
-            };
-            before.Add(
+                },
                 new List<string>
                 {
                     "lorem ipsum",
                     "Кто не ходит, тот и не падает."
-                }
-            );
-            before.Add(new KeyValuePair<int, string>(1, "one"));
-            before.Add(new KeyValuePair<int, string>(2, "two"));
-            before.Add(new KeyValuePair<int, string>(3, "three"));
+                },
+                new KeyValuePair<int, string>(1, "one"),
+                new KeyValuePair<int, string>(2, "two"),
+                new KeyValuePair<int, string>(3, "three")
+            };
 
-            List<object> after = TestHelper.SerializeAndDeserialize(before);
+            var after = TestHelper.SerializeAndDeserialize(before);
 
             var objectFromCollectionBefore = (WithTestProperties)before[0];
             var objectFromCollectionAfter = (WithTestProperties)after[0];
@@ -88,13 +86,10 @@ namespace BinaryFormatter.Tests.TypeConverter
         [Fact]
         public void CanSerializeAndDeserialize_ReadOnlyCollection()
         {
-            var converter = new BinaryConverter();
+            IReadOnlyCollection<int> before = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
-            IReadOnlyCollection<int> simpleCollection = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-
-            byte[] bytesSimpleCollection = converter.Serialize(simpleCollection);
-            var valueFromBytesSimpleCollection = converter.Deserialize<IReadOnlyCollection<int>>(bytesSimpleCollection);
-            Assert.Equal(valueFromBytesSimpleCollection, simpleCollection);
+            var after = TestHelper.SerializeAndDeserialize(before);
+            Assert.Equal(after, before);
         }
 
         [Fact]
@@ -121,34 +116,31 @@ namespace BinaryFormatter.Tests.TypeConverter
         [Fact]
         public void CanSerializeAndDeserialize_ComplexIDictionaryCollection()
         {
-            var converter = new BinaryConverter();
-            Dictionary<int, object> dictionaryCollection = new Dictionary<int, object>();
-            dictionaryCollection.Add(1, new WithTestProperties
+            var before = new Dictionary<int, object>
             {
-                Name = "Joe",
-                Age = 30,
-                Birthday = DateTime.Now.AddYears(-30),
-                Friends = new List<string>
                 {
-                    "Jim",
-                    "John",
-                    "Linus"
+                    1, new WithTestProperties
+                    {
+                        Name = "Joe",
+                        Age = 30,
+                        Birthday = DateTime.Now.AddYears(-30),
+                        Friends = new List<string>
+                        {
+                            "Jim",
+                            "John",
+                            "Linus"
+                        }
+                    }
                 }
-            });
-            var dictionaryForTest = new Dictionary<int, int>();
-            dictionaryForTest.Add(1, 1);
-            dictionaryForTest.Add(2, 2);
-            dictionaryForTest.Add(3, 3);
-            dictionaryCollection.Add(2, dictionaryForTest);
+            };
+            var dictionaryForTest = new Dictionary<int, int> { { 1, 1 }, { 2, 2 }, { 3, 3 } };
+            before.Add(2, dictionaryForTest);
 
-            byte[] bytesDictionaryCollection = converter.Serialize(dictionaryCollection);
-            var valueFromBytesDictionaryCollection = converter.Deserialize<Dictionary<int, object>>(bytesDictionaryCollection);
+            var after = TestHelper.SerializeAndDeserialize(before);
 
             // Check first element
-            object valBefore;
-            dictionaryCollection.TryGetValue(1, out valBefore);
-            object valAfter;
-            valueFromBytesDictionaryCollection.TryGetValue(1, out valAfter);
+            before.TryGetValue(1, out var valBefore);
+            after.TryGetValue(1, out var valAfter);
 
             Assert.Equal(((WithTestProperties)valBefore).Name, ((WithTestProperties)valAfter).Name);
             Assert.Equal(((WithTestProperties)valBefore).Age, ((WithTestProperties)valAfter).Age);
@@ -156,10 +148,8 @@ namespace BinaryFormatter.Tests.TypeConverter
             Assert.Equal(((WithTestProperties)valBefore).Friends, ((WithTestProperties)valAfter).Friends);
 
             // Check second element
-            object valDictionaryBefore;
-            dictionaryCollection.TryGetValue(2, out valDictionaryBefore);
-            object valDictionaryAfter;
-            valueFromBytesDictionaryCollection.TryGetValue(2, out valDictionaryAfter);
+            before.TryGetValue(2, out var valDictionaryBefore);
+            after.TryGetValue(2, out object valDictionaryAfter);
 
             Assert.Equal(valDictionaryBefore, valDictionaryAfter);
         }
@@ -167,41 +157,35 @@ namespace BinaryFormatter.Tests.TypeConverter
         [Fact]
         public void CanSerializeAndDeserialize_SimpleLinkedListCollection()
         {
-            var converter = new BinaryConverter();
+            var before = new LinkedList<string>();
+            before.AddLast("zero");
+            before.AddLast("one");
+            before.AddLast("two");
+            before.AddLast("three");
+            before.AddLast("four");
+            before.AddLast("five");
+            before.AddLast("six");
+            before.AddLast("seven");
+            before.AddLast("eight");
+            before.AddLast("nine");
 
-            LinkedList<string> linkedListCollection = new LinkedList<string>();
-            linkedListCollection.AddLast("zero");
-            linkedListCollection.AddLast("one");
-            linkedListCollection.AddLast("two");
-            linkedListCollection.AddLast("three");
-            linkedListCollection.AddLast("four");
-            linkedListCollection.AddLast("five");
-            linkedListCollection.AddLast("six");
-            linkedListCollection.AddLast("seven");
-            linkedListCollection.AddLast("eight");
-            linkedListCollection.AddLast("nine");
-
-            byte[] bytesLinkedListCollection = converter.Serialize(linkedListCollection);
-            var valueFromBytesLinkedListCollection = converter.Deserialize<LinkedList<string>>(bytesLinkedListCollection);
-            Assert.Equal(valueFromBytesLinkedListCollection, linkedListCollection);
+            var after = TestHelper.SerializeAndDeserialize(before);
+            Assert.Equal(after, before);
         }
 
         [Fact]
         public void CanSerializeAndDeserialize_ComplexLinkedListCollection()
         {
-            var converter = new BinaryConverter();
+            var before = new LinkedList<object>();
+            before.AddLast("zero");
+            before.AddLast(1);
+            before.AddLast(new List<string> { "I", "love", "the", ".NET Core" });
 
-            LinkedList<object> linkedListCollection = new LinkedList<object>();
-            linkedListCollection.AddLast("zero");
-            linkedListCollection.AddLast(1);
-            linkedListCollection.AddLast(new List<string> { "I", "love", "the", ".NET Core" });
-
-            byte[] bytesLinkedListCollection = converter.Serialize(linkedListCollection);
-            var valueFromBytesLinkedListCollection = converter.Deserialize<LinkedList<object>>(bytesLinkedListCollection);
-            Assert.Equal(valueFromBytesLinkedListCollection, linkedListCollection);
+            var after = TestHelper.SerializeAndDeserialize(before);
+            Assert.Equal(after, before);
         }
 
-        class WithTestProperties
+        private class WithTestProperties
         {
             public string Name { get; set; }
             public int Age { get; set; }
