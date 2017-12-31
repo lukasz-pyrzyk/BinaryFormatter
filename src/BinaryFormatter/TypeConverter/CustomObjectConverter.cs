@@ -11,7 +11,7 @@ namespace BinaryFormatter.TypeConverter
 {
     internal class CustomObjectConverter : BaseTypeConverter<object>
     {
-        private static readonly List<string> excludedDlls = new List<string> { "CoreLib", "mscorlib" };
+        private static readonly List<string> ExcludedDlls = new List<string> { "CoreLib", "mscorlib" };
 
         protected override void SerializeInternal(object obj, SerializationStream stream)
         {
@@ -53,7 +53,7 @@ namespace BinaryFormatter.TypeConverter
             TypeInfo instanceTypeInfo = instanceType.GetTypeInfo();
             SerializedType type = stream.ReadSerializedType();
 
-            if (!excludedDlls.Any(x => property.PropertyType.AssemblyQualifiedName.Contains(x)))
+            if (!ExcludedDlls.Any(x => property.PropertyType.AssemblyQualifiedName.Contains(x)))
             {
                 if (type == SerializedType.Null)
                 {

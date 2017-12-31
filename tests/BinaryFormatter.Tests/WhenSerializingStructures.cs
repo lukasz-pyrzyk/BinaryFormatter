@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Xunit;
+// ReSharper disable UnusedAutoPropertyAccessor.Local
 
 namespace BinaryFormatter.Tests
 {
@@ -33,12 +34,13 @@ namespace BinaryFormatter.Tests
             deserialized.Person.Should().Be(person);
         }
 
-        [Fact]
-        public void StructureInClasses_WithDifferentProperties_CanBeSerializedAndDeserialized()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void StructureInClasses_WithDifferentProperties_CanBeSerializedAndDeserialized(bool isAdult)
         {
             // Arrange
             var person = new Person { Id = 7 };
-            var isAdult = true;
             var obj = new ClassWithStructAndBool { Person = person, IsAdult = isAdult };
             
             // act

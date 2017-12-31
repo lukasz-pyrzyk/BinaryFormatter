@@ -6,16 +6,16 @@ namespace BinaryFormatter.Streams
 {
     internal class DeserializationStream
     {
-        public bool HasEnded => offset == stream.Length;
+        public bool HasEnded => _offset == _stream.Length;
 
-        public int Offset => offset;
+        public int Offset => _offset;
 
-        private readonly byte[] stream;
-        private int offset;
+        private readonly byte[] _stream;
+        private int _offset;
 
         public DeserializationStream(byte[] stream)
         {
-            this.stream = stream;
+            _stream = stream;
         }
 
         public DeserializationStream(byte[] stream, int position) : this(stream)
@@ -23,18 +23,18 @@ namespace BinaryFormatter.Streams
             SetOffset(position);
         }
 
-        public void SetOffset(int position) => offset = position;
+        public void SetOffset(int position) => _offset = position;
 
         public bool ReadBool()
         {
-            var value = BitConverter.ToBoolean(stream, offset);
-            offset += sizeof(bool);
+            var value = BitConverter.ToBoolean(_stream, _offset);
+            _offset += sizeof(bool);
             return value;
         }
 
         public byte ReadByte()
         {
-            return stream[offset++];
+            return _stream[_offset++];
         }
 
         public sbyte ReadSByte()
@@ -44,72 +44,72 @@ namespace BinaryFormatter.Streams
 
         public char ReadChar()
         {
-            var value = BitConverter.ToChar(stream, offset);
-            offset += sizeof(char);
+            var value = BitConverter.ToChar(_stream, _offset);
+            _offset += sizeof(char);
             return value;
         }
 
         public short ReadShort()
         {
-            var value = BitConverter.ToInt16(stream, offset);
-            offset += sizeof(short);
+            var value = BitConverter.ToInt16(_stream, _offset);
+            _offset += sizeof(short);
             return value;
         }
 
         public ushort ReadUShort()
         {
-            var value = BitConverter.ToUInt16(stream, offset);
-            offset += sizeof(ushort);
+            var value = BitConverter.ToUInt16(_stream, _offset);
+            _offset += sizeof(ushort);
             return value;
         }
 
         public int ReadInt()
         {
-            int value = BitConverter.ToInt32(stream, offset);
-            offset += sizeof(int);
+            int value = BitConverter.ToInt32(_stream, _offset);
+            _offset += sizeof(int);
             return value;
         }
 
         public uint ReadUInt()
         {
-            uint value = BitConverter.ToUInt32(stream, offset);
-            offset += sizeof(uint);
+            uint value = BitConverter.ToUInt32(_stream, _offset);
+            _offset += sizeof(uint);
             return value;
         }
 
         public float ReadFloat()
         {
-            var value = BitConverter.ToSingle(stream, offset);
-            offset += sizeof(float);
+            var value = BitConverter.ToSingle(_stream, _offset);
+            _offset += sizeof(float);
             return value;
         }
 
         public double ReadDouble()
         {
-            var value = BitConverter.ToDouble(stream, offset);
-            offset += sizeof(double);
+            var value = BitConverter.ToDouble(_stream, _offset);
+            _offset += sizeof(double);
             return value;
         }
 
         public long ReadLong()
         {
-            var value = BitConverter.ToInt64(stream, offset);
-            offset += sizeof(long);
+            var value = BitConverter.ToInt64(_stream, _offset);
+            _offset += sizeof(long);
             return value;
         }
 
         public ulong ReadULong()
         {
-            var value = BitConverter.ToUInt64(stream, offset);
-            offset += sizeof(ulong);
+            var value = BitConverter.ToUInt64(_stream, _offset);
+            _offset += sizeof(ulong);
             return value;
         }
 
         public byte[] ReadBytes(int count)
         {
             var newArray = new byte[count];
-            Array.Copy(stream, offset, newArray, 0, newArray.Length);
-            offset += newArray.Length;
+            Array.Copy(_stream, _offset, newArray, 0, newArray.Length);
+            _offset += newArray.Length;
             return newArray;
         }
 
@@ -120,7 +120,7 @@ namespace BinaryFormatter.Streams
             return ReadBytes(size);
         }
 
-        public string ReadUTF8WithSizePrefix()
+        public string ReadUtf8WithSizePrefix()
         {
             byte[] data = ReadBytesWithSizePrefix();
             return Encoding.UTF8.GetString(data, 0, data.Length);
@@ -128,14 +128,14 @@ namespace BinaryFormatter.Streams
 
         public Type ReadType()
         {
-            string typeFullName = ReadUTF8WithSizePrefix();
+            string typeFullName = ReadUtf8WithSizePrefix();
             return Type.GetType(typeFullName);
         }
 
         public SerializedType ReadSerializedType()
         {
-            short type = BitConverter.ToInt16(stream, offset);
-            offset += sizeof(SerializedType);
+            short type = BitConverter.ToInt16(_stream, _offset);
+            _offset += sizeof(SerializedType);
             return (SerializedType)type;
         }
 

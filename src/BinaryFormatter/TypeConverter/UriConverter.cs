@@ -15,7 +15,7 @@ namespace BinaryFormatter.TypeConverter
 
         protected override Uri DeserializeInternal(DeserializationStream stream, Type sourceType)
         {
-            string absoluteUri = stream.ReadUTF8WithSizePrefix();
+            string absoluteUri = stream.ReadUtf8WithSizePrefix();
             return new Uri(absoluteUri);
         }
 

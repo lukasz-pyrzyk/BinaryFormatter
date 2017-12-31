@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Xunit;
+// ReSharper disable UnusedMember.Local
 
 namespace BinaryFormatter.Tests
 {
@@ -33,12 +34,13 @@ namespace BinaryFormatter.Tests
             deserialized.Gender.Should().Be(gender);
         }
 
-        [Fact]
-        public void EnumInClasses_WithDifferentProperties_CanBeSerializedAndDeserialized()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void EnumInClasses_WithDifferentProperties_CanBeSerializedAndDeserialized(bool isAdult)
         {
             // Arrange
             var gender = Gender.Male;
-            var isAdult = true;
             var obj = new ClassWithEnumAndBool { Gender = gender, IsAdult = isAdult };
 
             // act

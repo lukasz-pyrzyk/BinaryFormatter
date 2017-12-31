@@ -33,12 +33,13 @@ namespace BinaryFormatter.Tests
             deserialized.Age.Should().Be(age);
         }
 
-        [Fact]
-        public void PrimitiveInClasses_WithDifferentProperties_CanBeSerializedAndDeserialized()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void PrimitiveInClasses_WithDifferentProperties_CanBeSerializedAndDeserialized(bool isAdult)
         {
             // Arrange
             var age = 23;
-            var isAdult = true;
             var obj = new ClassWithIntAndBool { Age = age, IsAdult = isAdult };
 
             // act

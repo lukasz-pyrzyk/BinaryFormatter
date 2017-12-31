@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using BinaryFormatter.Utils;
+using FluentAssertions;
 using Xunit;
 
 namespace BinaryFormatter.Tests.Utils
@@ -9,42 +10,40 @@ namespace BinaryFormatter.Tests.Utils
         [Fact]
         public void CastFrom_KeyValuePair()
         {
-            KeyValuePair<int, string> kvp = new KeyValuePair<int, string>(1, "one");
-            object kvpAsObject = (object)kvp;
+            var kvp = new KeyValuePair<int, string>(1, "one");
+            object kvpAsObject = kvp;
             KeyValuePair<object, object> kvpAfterCast = TypeHelper.CastFrom(kvpAsObject);
 
-            Assert.Equal(kvp.Key, kvpAfterCast.Key);
-            Assert.Equal(kvp.Value, kvpAfterCast.Value);
+            kvpAfterCast.Key.Should().Be(kvp.Key);
+            kvpAfterCast.Value.Should().Be(kvp.Value);
         }
 
         [Fact]
         public void IsDictionary_True()
         {
-            var valueForCheck = new Dictionary<int, string>();
-            valueForCheck.Add(1, "one");
-            Assert.True(TypeHelper.IsDictionary(valueForCheck));
+            var valueForCheck = new Dictionary<int, string> { { 1, "one" } };
+            TypeHelper.IsDictionary(valueForCheck).Should().BeTrue();
         }
 
         [Fact]
         public void IsDictionary_False()
         {
             var valueForCheck = "this is not a dictionary";
-            Assert.False(TypeHelper.IsDictionary(valueForCheck));
+            TypeHelper.IsDictionary(valueForCheck).Should().BeFalse();
         }
 
         [Fact]
         public void IsList_True()
         {
-            var valueForCheck = new List<int>();
-            valueForCheck.Add(1);
-            Assert.True(TypeHelper.IsList(valueForCheck));
+            var valueForCheck = new List<int> { 1 };
+            TypeHelper.IsList(valueForCheck).Should().BeTrue();
         }
 
         [Fact]
         public void IsList_False()
         {
             var valueForCheck = "this is not a list";
-            Assert.False(TypeHelper.IsList(valueForCheck));
+            TypeHelper.IsList(valueForCheck).Should().BeFalse();
         }
 
         [Fact]
@@ -52,28 +51,28 @@ namespace BinaryFormatter.Tests.Utils
         {
             var valueForCheck = new LinkedList<int>();
             valueForCheck.AddLast(1);
-            Assert.True(TypeHelper.IsLinkedList(valueForCheck));
+            TypeHelper.IsLinkedList(valueForCheck).Should().BeTrue();
         }
 
         [Fact]
         public void IsLinkedList_False()
         {
             var valueForCheck = "this is not a linked list";
-            Assert.False(TypeHelper.IsLinkedList(valueForCheck));
+            TypeHelper.IsLinkedList(valueForCheck).Should().BeFalse();
         }
 
         [Fact]
         public void HasConversionOperator_True()
         {
             bool hasConversionOperator = TypeHelper.HasConversionOperator(typeof(float), typeof(int));
-            Assert.True(hasConversionOperator);
+            hasConversionOperator.Should().BeTrue();
         }
 
         [Fact]
         public void HasConversionOperator_False()
         {
             bool hasConversionOperator = TypeHelper.HasConversionOperator(typeof(string), typeof(int));
-            Assert.False(hasConversionOperator);
+            hasConversionOperator.Should().BeFalse();
         }
     }
 }

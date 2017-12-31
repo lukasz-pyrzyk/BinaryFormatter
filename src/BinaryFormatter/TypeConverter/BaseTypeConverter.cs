@@ -9,8 +9,8 @@ namespace BinaryFormatter.TypeConverter
 {
     internal abstract class BaseTypeConverter<T> : BaseTypeConverter
     {
-        private static readonly Type destinationType = typeof(T);
-        private static readonly bool isBaseType = destinationType.GetTypeInfo().IsBaseType();
+        private static readonly Type DestinationType = typeof(T);
+        private static readonly bool IsBaseType = DestinationType.GetTypeInfo().IsBaseType();
 
         public override void Serialize(object obj, SerializationStream stream)
         {
@@ -19,7 +19,7 @@ namespace BinaryFormatter.TypeConverter
 
             if (obj != null)
             {
-                if (!isBaseType)
+                if (!IsBaseType)
                 {
                     byte[] typeInfo = Encoding.UTF8.GetBytes(obj.GetType().AssemblyQualifiedName);
                     stream.WriteWithLengthPrefix(typeInfo);

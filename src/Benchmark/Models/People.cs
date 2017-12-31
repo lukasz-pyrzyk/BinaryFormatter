@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Benchmark.Types;
 
 namespace Benchmark.Models
 {

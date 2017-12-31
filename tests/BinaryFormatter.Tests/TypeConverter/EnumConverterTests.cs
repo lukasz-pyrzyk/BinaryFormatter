@@ -1,91 +1,89 @@
 ﻿using System;
 using System.Collections.Generic;
+using FluentAssertions;
 using Xunit;
+// ReSharper disable EnumUnderlyingTypeIsInt
 
 namespace BinaryFormatter.Tests.TypeConverter
 {
     public class EnumConverterTests
     {
-        BinaryConverter converter = new BinaryConverter();
-
         [Theory]
         [MemberData(nameof(TestCases))]
-        public void CanSerializeAndDeserialize(Enum enumValue)
+        public void CanSerializeAndDeserialize(Enum before)
         {
-            byte[] bytes = converter.Serialize(enumValue);
-            var after = converter.Deserialize<object>(bytes);
+            var after = TestHelper.SerializeAndDeserialize(before);
 
-            Assert.Equal(enumValue, after);
-            Assert.Equal(enumValue.GetType(), after.GetType());
+            before.Should().Be(after);
         }
 
-        public enum TestEnum_Byte : byte
+        public enum TestEnumByte : byte
         {
-            byte_0 = 0x0,
-            byte_1 = 0x1,
-            byte_2 = 0x2,
-            byte_4 = 0x4
+            Byte0 = 0x0,
+            Byte1 = 0x1,
+            Byte2 = 0x2,
+            Byte4 = 0x4
         }
-        public enum TestEnum_SByte : sbyte
+        public enum TestEnumSByte : sbyte
         {
-            sbyte_0 = 0x0,
-            sbyte_1 = 0x1,
-            sbyte_2 = 0x2,
-            sbyte_3 = 0x4
+            Sbyte0 = 0x0,
+            Sbyte1 = 0x1,
+            Sbyte2 = 0x2,
+            Sbyte3 = 0x4
         }
-        public enum TestEnum_Int : int
+        public enum TestEnumInt : int
         {
-            int_0 = 0,
-            int_1 = 1,
-            int_2 = 2,
-            int_3 = 3
+            Int0 = 0,
+            Int1 = 1,
+            Int2 = 2,
+            Int3 = 3
         }
-        public enum TestEnum_UInt : uint
+        public enum TestEnumUInt : uint
         {
-            uint_0 = 0,
-            uint_1 = 1,
-            uint_2 = 2,
-            uint_3 = 3
+            Uint0 = 0,
+            Uint1 = 1,
+            Uint2 = 2,
+            Uint3 = 3
         }
-        public enum TestEnum_Long : long
+        public enum TestEnumLong : long
         {
-            long_0 = 0,
-            long_1 = 1,
-            long_2 = 2,
-            long_3 = 3
+            Long0 = 0,
+            Long1 = 1,
+            Long2 = 2,
+            Long3 = 3
         }
-        public enum TestEnum_ULong : ulong
+        public enum TestEnumULong : ulong
         {
-            ulong_0 = 0,
-            ulong_1 = 1,
-            ulong_2 = 2,
-            ulong_3 = 3
+            Ulong0 = 0,
+            Ulong1 = 1,
+            Ulong2 = 2,
+            Ulong3 = 3
         }
-        public enum TestEnum_Short : short
+        public enum TestEnumShort : short
         {
-            short_0 = 0,
-            short_1 = 1,
-            short_2 = 2,
-            short_3 = 3
+            Short0 = 0,
+            Short1 = 1,
+            Short2 = 2,
+            Short3 = 3
         }
-        public enum TestEnum_UShort : ushort
+        public enum TestEnumUShort : ushort
         {
-            ushort_0 = 0,
-            ushort_1 = 1,
-            ushort_2 = 2,
-            ushort_3 = 3
+            Ushort0 = 0,
+            Ushort1 = 1,
+            Ushort2 = 2,
+            Ushort3 = 3
         }
 
         public static IEnumerable<object[]> TestCases()
         {
-            yield return new[] { (object)TestEnum_Int.int_2 };
-            yield return new[] { (object)TestEnum_UInt.uint_3 };
-            yield return new[] { (object)TestEnum_Short.short_2 };
-            yield return new[] { (object)TestEnum_UShort.ushort_3 };            
-            yield return new[] { (object)TestEnum_Long.long_2};
-            yield return new[] { (object)TestEnum_ULong.ulong_3 };
-            yield return new[] { (object)TestEnum_Byte.byte_4 };
-            yield return new[] { (object)TestEnum_SByte.sbyte_2 };
+            yield return new[] { (object)TestEnumInt.Int2 };
+            yield return new[] { (object)TestEnumUInt.Uint3 };
+            yield return new[] { (object)TestEnumShort.Short2 };
+            yield return new[] { (object)TestEnumUShort.Ushort3 };
+            yield return new[] { (object)TestEnumLong.Long2 };
+            yield return new[] { (object)TestEnumULong.Ulong3 };
+            yield return new[] { (object)TestEnumByte.Byte4 };
+            yield return new[] { (object)TestEnumSByte.Sbyte2 };
         }
     }
 }

@@ -8,7 +8,7 @@ namespace BinaryFormatter.Utils
 {
     public static class TypeInfoExtensions
     {
-        private static readonly List<TypeInfo> _baseTypes = new List<TypeInfo>
+        private static readonly List<TypeInfo> BaseTypes = new List<TypeInfo>
         {
             typeof(byte).GetTypeInfo(),
             typeof(sbyte).GetTypeInfo(),
@@ -69,7 +69,7 @@ namespace BinaryFormatter.Utils
 
         public static bool IsBaseType(this TypeInfo typeInfo)
         {
-            return _baseTypes.Any(bt => bt == typeInfo);
+            return BaseTypes.Any(bt => Equals(bt, typeInfo));
         }
     }
 }

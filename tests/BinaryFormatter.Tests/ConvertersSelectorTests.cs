@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Numerics;
 using BinaryFormatter.TypeConverter;
+using FluentAssertions;
 using Xunit;
 
 namespace BinaryFormatter.Tests
@@ -11,23 +12,23 @@ namespace BinaryFormatter.Tests
         [Fact]
         public void ReturnsNullConverter_WhenObjIsNull()
         {
-            var converter = BinaryFormatter.ConvertersSelector.SelectConverter(null);
-            Assert.True(converter is NullConverter);
+            var converter = ConvertersSelector.SelectConverter(null);
+            converter.Should().BeOfType<NullConverter>();
         }
 
         [Theory]
         [MemberData(nameof(TestCases))]
         public void CorrectlyMapsTypesToConverters(object obj, Type expectedType)
         {
-            var fromType = BinaryFormatter.ConvertersSelector.SelectConverter(obj);
-            var fromSerializedType = BinaryFormatter.ConvertersSelector.ForSerializedType(fromType.Type);
+            var fromGetType = ConvertersSelector.SelectConverter(obj);
+            var fromType = ConvertersSelector.ForSerializedType(fromGetType.Type);
 
-            Assert.Equal(fromType, fromSerializedType);
-            Assert.Equal(fromType.GetType(), expectedType);
+            fromGetType.Should().Be(fromType);
+            fromGetType.Should().BeOfType(expectedType);
         }
 
         public static IEnumerable<object[]> TestCases()
-        {            
+        {
             yield return new[] { (object)default(bool), typeof(BoolConverter) };
             yield return new[] { (object)new byte[0], typeof(ByteArrayConverter) };
             yield return new[] { (object)default(byte), typeof(ByteConverter) };
@@ -46,10 +47,10 @@ namespace BinaryFormatter.Tests
             yield return new[] { (object)default(ulong), typeof(ULongConverter) };
             yield return new[] { (object)default(ushort), typeof(UShortConverter) };
             yield return new[] { (object)default(Guid), typeof(GuidConverter) };
-            yield return new[] { (object)(new Uri("https://github.com")), typeof(UriConverter) };
-            yield return new[] { (object)(DayOfWeek.Thursday), typeof(EnumConverter) };
-            yield return new[] { (object)(new KeyValuePair<int, string>()), typeof(KeyValuePairConverter) };
-            yield return new[] { (object)(BigInteger.Parse("90612345123875509091827560007100099")), typeof(BigIntegerConverter) };
+            yield return new[] { (object)new Uri("https://github.com"), typeof(UriConverter) };
+            yield return new[] { (object)DayOfWeek.Thursday, typeof(EnumConverter) };
+            yield return new[] { (object)new KeyValuePair<int, string>(), typeof(KeyValuePairConverter) };
+            yield return new[] { (object)BigInteger.Parse("90612345123875509091827560007100099"), typeof(BigIntegerConverter) };
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using FluentAssertions;
 using Xunit;
+// ReSharper disable UnusedAutoPropertyAccessor.Local
 
 namespace BinaryFormatter.Tests.Bugs
 {

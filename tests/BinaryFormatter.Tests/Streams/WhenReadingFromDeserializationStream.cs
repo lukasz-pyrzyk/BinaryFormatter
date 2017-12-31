@@ -320,7 +320,7 @@ namespace BinaryFormatter.Tests.Streams
         }
 
         [Fact]
-        public void StringInUTF8CanBeReaded()
+        public void StringInUtf8CanBeReaded()
         {
             // Arrange
             const string s = "hello world";
@@ -339,7 +339,7 @@ namespace BinaryFormatter.Tests.Streams
 
             // Act
             var stream = new DeserializationStream(finalData.ToArray());
-            var result = stream.ReadUTF8WithSizePrefix();
+            var result = stream.ReadUtf8WithSizePrefix();
 
             // Assert
             result.Should().Be(s);
