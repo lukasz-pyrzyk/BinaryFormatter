@@ -12,13 +12,11 @@ namespace BinaryFormatter.Tests
         [Fact]
         public void CanSerialize_Byte()
         {
-            var value = byte.MinValue;;
+            var value = byte.MinValue;
 
-            BinaryConverter converter = new BinaryConverter();
-            byte[] bytes = converter.Serialize(value);
-            var deserializedValue = converter.Deserialize<byte>(bytes);
+            var deserialized = TestHelper.SerializeAndDeserialize(value);
 
-            Assert.Equal(value, deserializedValue);
+            deserialized.Should().Be(value);
         }
 
         [Fact]
@@ -26,11 +24,9 @@ namespace BinaryFormatter.Tests
         {
             sbyte value = sbyte.MinValue;
 
-            BinaryConverter converter = new BinaryConverter();
-            byte[] bytes = converter.Serialize(value);
-            sbyte deserializedValue = converter.Deserialize<sbyte>(bytes);
+            var deserialized = TestHelper.SerializeAndDeserialize(value);
 
-            Assert.Equal(value, deserializedValue);
+            deserialized.Should().Be(value);
         }
 
         [Fact]
@@ -38,11 +34,9 @@ namespace BinaryFormatter.Tests
         {
             char value = char.MinValue;
 
-            BinaryConverter converter = new BinaryConverter();
-            byte[] bytes = converter.Serialize(value);
-            char deserializedValue = converter.Deserialize<char>(bytes);
+            var deserialized = TestHelper.SerializeAndDeserialize(value);
 
-            Assert.Equal(value, deserializedValue);
+            deserialized.Should().Be(value);
         }
 
         [Fact]
@@ -50,11 +44,9 @@ namespace BinaryFormatter.Tests
         {
             short value = short.MinValue;
 
-            BinaryConverter converter = new BinaryConverter();
-            byte[] bytes = converter.Serialize(value);
-            short deserializedValue = converter.Deserialize<short>(bytes);
+            var deserialized = TestHelper.SerializeAndDeserialize(value);
 
-            Assert.Equal(value, deserializedValue);
+            deserialized.Should().Be(value);
         }
 
         [Fact]
@@ -62,11 +54,9 @@ namespace BinaryFormatter.Tests
         {
             ushort value = ushort.MinValue;
 
-            BinaryConverter converter = new BinaryConverter();
-            byte[] bytes = converter.Serialize(value);
-            ushort deserializedValue = converter.Deserialize<ushort>(bytes);
+            var deserialized = TestHelper.SerializeAndDeserialize(value);
 
-            Assert.Equal(value, deserializedValue);
+            deserialized.Should().Be(value);
         }
 
         [Fact]
@@ -74,11 +64,9 @@ namespace BinaryFormatter.Tests
         {
             uint value = uint.MinValue;
 
-            BinaryConverter converter = new BinaryConverter();
-            byte[] bytes = converter.Serialize(value);
-            uint deserializedValue = converter.Deserialize<uint>(bytes);
+            var deserialized = TestHelper.SerializeAndDeserialize(value);
 
-            Assert.Equal(value, deserializedValue);
+            deserialized.Should().Be(value);
         }
 
         [Fact]
@@ -86,11 +74,9 @@ namespace BinaryFormatter.Tests
         {
             int value = int.MinValue;
 
-            BinaryConverter converter = new BinaryConverter();
-            byte[] bytes = converter.Serialize(value);
-            int deserializedValue = converter.Deserialize<int>(bytes);
+            var deserialized = TestHelper.SerializeAndDeserialize(value);
 
-            Assert.Equal(value, deserializedValue);
+            deserialized.Should().Be(value);
         }
 
         [Fact]
@@ -98,11 +84,9 @@ namespace BinaryFormatter.Tests
         {
             ulong value = ulong.MinValue;
 
-            BinaryConverter converter = new BinaryConverter();
-            byte[] bytes = converter.Serialize(value);
-            ulong deserializedValue = converter.Deserialize<ulong>(bytes);
+            var deserialized = TestHelper.SerializeAndDeserialize(value);
 
-            Assert.Equal(value, deserializedValue);
+            deserialized.Should().Be(value);
         }
 
         [Fact]
@@ -110,11 +94,9 @@ namespace BinaryFormatter.Tests
         {
             long value = long.MinValue;
 
-            BinaryConverter converter = new BinaryConverter();
-            byte[] bytes = converter.Serialize(value);
-            long deserializedValue = converter.Deserialize<long>(bytes);
+            var deserialized = TestHelper.SerializeAndDeserialize(value);
 
-            Assert.Equal(value, deserializedValue);
+            deserialized.Should().Be(value);
         }
 
         [Fact]
@@ -122,11 +104,9 @@ namespace BinaryFormatter.Tests
         {
             float value = float.MinValue;
 
-            BinaryConverter converter = new BinaryConverter();
-            byte[] bytes = converter.Serialize(value);
-            float deserializedValue = converter.Deserialize<float>(bytes);
+            var deserialized = TestHelper.SerializeAndDeserialize(value);
 
-            Assert.Equal(value, deserializedValue);
+            deserialized.Should().Be(value);
         }
 
         [Fact]
@@ -134,11 +114,9 @@ namespace BinaryFormatter.Tests
         {
             double value = double.MinValue;
 
-            BinaryConverter converter = new BinaryConverter();
-            byte[] bytes = converter.Serialize(value);
-            double deserializedValue = converter.Deserialize<double>(bytes);
+            var deserialized = TestHelper.SerializeAndDeserialize(value);
 
-            Assert.Equal(value, deserializedValue);
+            deserialized.Should().Be(value);
         }
 
         [Fact]
@@ -156,35 +134,19 @@ namespace BinaryFormatter.Tests
         {
             decimal value = decimal.MinValue;
 
-            BinaryConverter converter = new BinaryConverter();
-            byte[] bytes = converter.Serialize(value);
-            decimal deserializedValue = converter.Deserialize<decimal>(bytes);
+            var deserialized = TestHelper.SerializeAndDeserialize(value);
 
-            Assert.Equal(value, deserializedValue);
+            deserialized.Should().Be(value);
         }
 
-        [Fact]
-        public void CanSerialize_String()
+        [Theory]
+        [InlineData("lorem ipsum")]
+        [InlineData("Кто не ходит, тот и не падает.")]
+        public void CanSerialize_String(string value)
         {
-            string value = "lorem ipsum";
+            var deserialized = TestHelper.SerializeAndDeserialize(value);
 
-            BinaryConverter converter = new BinaryConverter();
-            byte[] bytes = converter.Serialize(value);
-            string deserializedValue = converter.Deserialize<string>(bytes);
-
-            Assert.Equal(value, deserializedValue);
-        }
-
-        [Fact]
-        public void CanSerialize_CyrillicsString()
-        {
-            string value = "Кто не ходит, тот и не падает.";
-
-            BinaryConverter converter = new BinaryConverter();
-            byte[] bytes = converter.Serialize(value);
-            string deserializedValue = converter.Deserialize<string>(bytes);
-
-            Assert.Equal(value, deserializedValue);
+            deserialized.Should().Be(value);
         }
 
         [Fact]
@@ -192,11 +154,9 @@ namespace BinaryFormatter.Tests
         {
             DateTime value = DateTime.MinValue;
 
-            BinaryConverter converter = new BinaryConverter();
-            byte[] bytes = converter.Serialize(value);
-            DateTime deserializedValue = converter.Deserialize<DateTime>(bytes);
+            var deserialized = TestHelper.SerializeAndDeserialize(value);
 
-            Assert.Equal(value, deserializedValue);
+            deserialized.Should().Be(value);
         }
 
         [Fact]
@@ -204,11 +164,9 @@ namespace BinaryFormatter.Tests
         {
             var value = TimeSpan.MaxValue;
 
-            BinaryConverter converter = new BinaryConverter();
-            byte[] bytes = converter.Serialize(value);
-            TimeSpan deserializedValue = converter.Deserialize<TimeSpan>(bytes);
+            var deserialized = TestHelper.SerializeAndDeserialize(value);
 
-            Assert.Equal(value, deserializedValue);
+            deserialized.Should().Be(value);
         }
 
         [Fact]
@@ -216,11 +174,9 @@ namespace BinaryFormatter.Tests
         {
             object value = null;
 
-            BinaryConverter converter = new BinaryConverter();
-            byte[] bytes = converter.Serialize(value);
-            object deserializedValue = converter.Deserialize<object>(bytes);
+            var deserialized = TestHelper.SerializeAndDeserialize(value);
 
-            Assert.Equal(value, deserializedValue);
+            deserialized.Should().BeNull();
         }
 
         [Fact]
@@ -228,25 +184,19 @@ namespace BinaryFormatter.Tests
         {
             byte[] value = Encoding.UTF8.GetBytes("lorem ipsum");
 
-            BinaryConverter converter = new BinaryConverter();
-            byte[] bytes = converter.Serialize(value);
-            byte[] deserializedValue = converter.Deserialize<byte[]>(bytes);
+            var deserialized = TestHelper.SerializeAndDeserialize(value);
 
-            Assert.Equal(value, deserializedValue);
+            deserialized.Should().Equal(value);
         }
 
         [Fact]
         public void CanSerialize_IEnumerable()
         {
-            List<string> value = new List<string>();
-            value.Add("lorem ipsum");
-            value.Add("Кто не ходит, тот и не падает.");
+            List<string> value = new List<string> { "lorem ipsum", "Кто не ходит, тот и не падает." };
 
-            BinaryConverter converter = new BinaryConverter();
-            byte[] bytes = converter.Serialize(value);
-            List<string> deserializedValue = converter.Deserialize<List<string>>(bytes);
+            var deserialized = TestHelper.SerializeAndDeserialize(value);
 
-            Assert.Equal(value, deserializedValue);
+            deserialized.Should().Equal(value);
         }
 
         [Fact]
@@ -254,11 +204,9 @@ namespace BinaryFormatter.Tests
         {
             Guid value = Guid.NewGuid();
 
-            BinaryConverter converter = new BinaryConverter();
-            byte[] bytes = converter.Serialize(value);
-            Guid deserializedValue = converter.Deserialize<Guid>(bytes);
+            var deserialized = TestHelper.SerializeAndDeserialize(value);
 
-            Assert.Equal(value, deserializedValue);
+            deserialized.Should().Be(value);
         }
 
         [Fact]
@@ -266,11 +214,9 @@ namespace BinaryFormatter.Tests
         {
             Uri value = new Uri("https://github.com/lukasz-pyrzyk/BinaryFormatter");
 
-            BinaryConverter converter = new BinaryConverter();
-            byte[] bytes = converter.Serialize(value);
-            Uri deserializedValue = converter.Deserialize<Uri>(bytes);
+            var deserialized = TestHelper.SerializeAndDeserialize(value);
 
-            Assert.Equal(value, deserializedValue);
+            deserialized.Should().Be(value);
         }
 
         [Fact]
@@ -278,11 +224,9 @@ namespace BinaryFormatter.Tests
         {
             Enum value = DayOfWeek.Sunday;
 
-            BinaryConverter converter = new BinaryConverter();
-            byte[] bytes = converter.Serialize(value);
-            Enum deserializedValue = converter.Deserialize<Enum>(bytes);
+            var deserialized = TestHelper.SerializeAndDeserialize(value);
 
-            Assert.Equal(value, deserializedValue);
+            deserialized.Should().Be(value);
         }
 
         [Fact]
@@ -290,11 +234,9 @@ namespace BinaryFormatter.Tests
         {
             KeyValuePair<int, string> value = new KeyValuePair<int, string>(1, "one");
 
-            BinaryConverter converter = new BinaryConverter();
-            byte[] bytes = converter.Serialize(value);
-            KeyValuePair<int, string> deserializedValue = converter.Deserialize<KeyValuePair<int, string>>(bytes);
+            var deserialized = TestHelper.SerializeAndDeserialize(value);
 
-            Assert.Equal(value, deserializedValue);
+            deserialized.Should().Be(value);
         }
 
         [Fact]
@@ -302,11 +244,9 @@ namespace BinaryFormatter.Tests
         {
             BigInteger value = BigInteger.Parse("90612345123875509091827560007100099");
 
-            BinaryConverter converter = new BinaryConverter();
-            byte[] bytes = converter.Serialize(value);
-            BigInteger deserializedValue = converter.Deserialize<BigInteger>(bytes);
+            var deserialized = TestHelper.SerializeAndDeserialize(value);
 
-            Assert.Equal(value, deserializedValue);
+            deserialized.Should().Be(value);
         }
     }
 }
