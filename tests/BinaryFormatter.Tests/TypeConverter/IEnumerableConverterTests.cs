@@ -139,10 +139,7 @@ namespace BinaryFormatter.Tests.TypeConverter
             before.TryGetValue(1, out var valBefore);
             after.TryGetValue(1, out var valAfter);
 
-            Assert.Equal(((WithTestProperties)valBefore).Name, ((WithTestProperties)valAfter).Name);
-            Assert.Equal(((WithTestProperties)valBefore).Age, ((WithTestProperties)valAfter).Age);
-            Assert.Equal(((WithTestProperties)valBefore).Birthday, ((WithTestProperties)valAfter).Birthday);
-            Assert.Equal(((WithTestProperties)valBefore).Friends, ((WithTestProperties)valAfter).Friends);
+            ((WithTestProperties) valBefore).Should().BeEquivalentTo((WithTestProperties) valAfter);
 
             // Check second element
             before.TryGetValue(2, out var valDictionaryBefore);
