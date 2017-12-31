@@ -16,20 +16,13 @@ namespace BinaryFormatter.Tests
         {
             public string Name { get; set; }
             public DateTime BirthDay { get; set; }
-            public int Age
-            {
-                get
-                {
-                    return DateTime.Now.Year - BirthDay.Year;
-                }
-            }               
+            public int Age => DateTime.Now.Year - BirthDay.Year;
         }
-
 
         [Fact]
         public void CanWorkWith_ClassesWithoutCustomCtor_WithProperties_WithPublicSetter()
         {
-            var before = new WithoutCtor(){Int = 1, Double = 1, String = "lorem ipsum"};
+            var before = new WithoutCtor { Int = 1, Double = 1, String = "lorem ipsum" };
 
             var formatter = new BinaryConverter();
             byte[] data = formatter.Serialize(before);
@@ -44,7 +37,7 @@ namespace BinaryFormatter.Tests
         [Fact]
         public void CanWorkWith_Classes_WithReadonlyProperties()
         {
-            var before = new WithReadonlyProperties()
+            var before = new WithReadonlyProperties
             {
                 Name = "John",
                 BirthDay = DateTime.Now.AddYears(-50)
