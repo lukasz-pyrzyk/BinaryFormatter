@@ -7,6 +7,7 @@
     <Authors>Łukasz Pyrzyk</Authors>
     <TargetFrameworks>netstandard1.1</TargetFrameworks>
     <AssemblyName>BinaryFormatter</AssemblyName>
+    <LanguageVersion>7.2</LanguageVersion>
     <PackageId>BinaryFormatter</PackageId>
     <PackageTags>binary serializer formatter deserializer serialization</PackageTags>
     <PackageIconUrl>https://raw.githubusercontent.com/lukasz-pyrzyk/BinaryFormatter/master/Nuget/nuget-icon.png</PackageIconUrl>
