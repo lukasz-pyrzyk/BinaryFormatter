@@ -66,8 +66,7 @@ namespace BinaryFormatter
         {
             if (type == null) return NullConverter;
 
-            BaseTypeConverter converter;
-            if (Converters.TryGetValue(type, out converter))
+            if (Converters.TryGetValue(type, out BaseTypeConverter converter))
             {
                 return converter;
             }
@@ -105,8 +104,7 @@ namespace BinaryFormatter
 
         public static BaseTypeConverter ForSerializedType(SerializedType type)
         {
-            BaseTypeConverter converter;
-            if (ConvertersBySerializedType.TryGetValue(type, out converter))
+            if (ConvertersBySerializedType.TryGetValue(type, out BaseTypeConverter converter))
             {
                 return converter;
             }
