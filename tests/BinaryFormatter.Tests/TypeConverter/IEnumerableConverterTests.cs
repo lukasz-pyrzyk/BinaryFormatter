@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using FluentAssertions;
 using Xunit;
 
 namespace BinaryFormatter.Tests.TypeConverter
@@ -68,19 +69,15 @@ namespace BinaryFormatter.Tests.TypeConverter
 
             var after = TestHelper.SerializeAndDeserialize(before);
 
-            var objectFromCollectionBefore = (WithTestProperties)before[0];
-            var objectFromCollectionAfter = (WithTestProperties)after[0];
-            Assert.Equal(objectFromCollectionBefore.Name, objectFromCollectionAfter.Name);
-            Assert.Equal(objectFromCollectionBefore.Age, objectFromCollectionAfter.Age);
-            Assert.Equal(objectFromCollectionBefore.Birthday, objectFromCollectionAfter.Birthday);
+            after[0].Should().BeEquivalentTo(before[0]);
 
-            var listFromCollectionBefore = before[1] as IEnumerable;
-            var listFromCollectionAfter = after[1] as IEnumerable;
-            Assert.Equal(listFromCollectionBefore, listFromCollectionAfter);
+            var collectionBefore = before[1] as IEnumerable;
+            var collectionAfter = after[1] as IEnumerable;
+            collectionAfter.Should().Equal(collectionBefore);
 
-            Assert.Equal(before[2], after[2]);
-            Assert.Equal(before[3], after[3]);
-            Assert.Equal(before[4], after[4]);
+            before[2].Should().Be(after[2]);
+            before[3].Should().Be(after[3]);
+            before[4].Should().Be(after[4]);
         }
 
         [Fact]
@@ -89,7 +86,7 @@ namespace BinaryFormatter.Tests.TypeConverter
             IReadOnlyCollection<int> before = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
             var after = TestHelper.SerializeAndDeserialize(before);
-            Assert.Equal(after, before);
+            after.Should().Equal(before);
         }
 
         [Fact]
@@ -170,7 +167,7 @@ namespace BinaryFormatter.Tests.TypeConverter
             before.AddLast("nine");
 
             var after = TestHelper.SerializeAndDeserialize(before);
-            Assert.Equal(after, before);
+            after.Should().Equal(before);
         }
 
         [Fact]
