@@ -1,5 +1,6 @@
 ﻿using BinaryFormatter.Types;
 using BinaryFormatter.Utils;
+using FluentAssertions;
 using Xunit;
 
 namespace BinaryFormatter.Tests.Utils
@@ -27,7 +28,7 @@ namespace BinaryFormatter.Tests.Utils
         [InlineData(SerializedType.BitInteger)]
         internal void IsBaseType(SerializedType type)
         {
-            Assert.True(type.IsBaseType());
+            type.IsBaseType().Should().BeTrue();
         }
 
         [Theory]
@@ -37,7 +38,7 @@ namespace BinaryFormatter.Tests.Utils
         [InlineData(SerializedType.Null)]
         internal void IsNotBaseType(SerializedType type)
         {
-            Assert.False(type.IsBaseType());
+            type.IsBaseType().Should().BeFalse();
         }
     }
 }
