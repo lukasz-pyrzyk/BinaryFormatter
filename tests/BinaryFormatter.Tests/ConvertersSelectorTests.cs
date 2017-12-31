@@ -11,7 +11,7 @@ namespace BinaryFormatter.Tests
         [Fact]
         public void ReturnsNullConverter_WhenObjIsNull()
         {
-            var converter = BinaryFormatter.ConvertersSelector.SelectConverter(null);
+            var converter = ConvertersSelector.SelectConverter(null);
             Assert.True(converter is NullConverter);
         }
 
@@ -19,8 +19,8 @@ namespace BinaryFormatter.Tests
         [MemberData(nameof(TestCases))]
         public void CorrectlyMapsTypesToConverters(object obj, Type expectedType)
         {
-            var fromType = BinaryFormatter.ConvertersSelector.SelectConverter(obj);
-            var fromSerializedType = BinaryFormatter.ConvertersSelector.ForSerializedType(fromType.Type);
+            var fromType = ConvertersSelector.SelectConverter(obj);
+            var fromSerializedType = ConvertersSelector.ForSerializedType(fromType.Type);
 
             Assert.Equal(fromType, fromSerializedType);
             Assert.Equal(fromType.GetType(), expectedType);

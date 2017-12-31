@@ -9,7 +9,7 @@ namespace BinaryFormatter.Streams
 
         public SerializationStream(Stream internalStream)
         {
-            this._internalStream = internalStream;
+            _internalStream = internalStream;
         }
 
         public void Write(params byte[] buffer)

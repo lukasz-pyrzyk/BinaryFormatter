@@ -15,7 +15,7 @@ namespace BinaryFormatter.Streams
 
         public DeserializationStream(byte[] stream)
         {
-            this._stream = stream;
+            _stream = stream;
         }
 
         public DeserializationStream(byte[] stream, int position) : this(stream)
