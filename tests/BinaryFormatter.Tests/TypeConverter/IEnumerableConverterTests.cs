@@ -11,79 +11,78 @@ namespace BinaryFormatter.Tests.TypeConverter
         [Fact]
         public void CanSerializeAndDeserialize_SimpleCollection()
         {
-            var converter = new BinaryConverter();
+            var before = new List<object>
+            {
+                true,
+                Encoding.UTF8.GetBytes("lorem ipsum"),
+                byte.MaxValue,
+                char.MaxValue,
+                DateTime.Now,
+                decimal.MaxValue,
+                double.MaxValue,
+                float.MaxValue,
+                int.MaxValue,
+                long.MaxValue,
+                sbyte.MaxValue,
+                short.MaxValue,
+                "Lorem ipsum",
+                "Кто не ходит, тот и не падает.",
+                uint.MaxValue,
+                ulong.MaxValue,
+                ushort.MaxValue,
+                Guid.NewGuid(),
+                new KeyValuePair<int, string>(5, "five")
+            };
 
-            List<object> simpleCollection = new List<object>();
-            simpleCollection.Add(true);
-            simpleCollection.Add(Encoding.UTF8.GetBytes("lorem ipsum"));
-            simpleCollection.Add(byte.MaxValue);
-            simpleCollection.Add(char.MaxValue);
-            simpleCollection.Add(DateTime.Now);
-            simpleCollection.Add(decimal.MaxValue);
-            simpleCollection.Add(double.MaxValue);
-            simpleCollection.Add(float.MaxValue);
-            simpleCollection.Add(int.MaxValue);
-            simpleCollection.Add(long.MaxValue);
-            simpleCollection.Add(sbyte.MaxValue);
-            simpleCollection.Add(short.MaxValue);
-            simpleCollection.Add("Lorem ipsum");
-            simpleCollection.Add("Кто не ходит, тот и не падает.");
-            simpleCollection.Add(uint.MaxValue);
-            simpleCollection.Add(ulong.MaxValue);
-            simpleCollection.Add(ushort.MaxValue);
-            simpleCollection.Add(Guid.NewGuid());
-            simpleCollection.Add(new KeyValuePair<int, string>(5, "five"));
-
-            byte[] bytesSimpleCollection = converter.Serialize(simpleCollection);
-            var valueFromBytesSimpleCollection = converter.Deserialize<List<object>>(bytesSimpleCollection);
-            Assert.Equal(valueFromBytesSimpleCollection, simpleCollection);
+            var after = TestHelper.SerializeAndDeserialize(before);
+            Assert.Equal(after, before);
         }
 
         [Fact]
         public void CanSerializeAndDeserialize_ComplexCollection()
         {
-            var converter = new BinaryConverter();
-
-            List<object> complexCollection = new List<object>();
-            complexCollection.Add(new WithTestProperties()
+            var before = new List<object>
             {
-                Name = "John",
-                Age = 60,
-                Birthday = DateTime.Now.AddYears(-60),
-                Friends = new List<string>()
+                new WithTestProperties
                 {
-                    "Joe",
-                    "Linus",
-                    "Bill",
-                    "Andrew"
+                    Name = "John",
+                    Age = 60,
+                    Birthday = DateTime.Now.AddYears(-60),
+                    Friends = new List<string>
+                    {
+                        "Joe",
+                        "Linus",
+                        "Bill",
+                        "Andrew"
+                    }
                 }
-            });
-            complexCollection.Add(
-                new List<string>()
+            };
+            before.Add(
+                new List<string>
                 {
                     "lorem ipsum",
                     "Кто не ходит, тот и не падает."
                 }
             );
-            complexCollection.Add(new KeyValuePair<int, string>(1, "one"));
-            complexCollection.Add(new KeyValuePair<int, string>(2, "two"));
-            complexCollection.Add(new KeyValuePair<int, string>(3, "three"));
-            byte[] bytesComplexCollection = converter.Serialize(complexCollection);
-            List<object> valueFromBytesComplexCollection = converter.Deserialize<List<object>>(bytesComplexCollection);
+            before.Add(new KeyValuePair<int, string>(1, "one"));
+            before.Add(new KeyValuePair<int, string>(2, "two"));
+            before.Add(new KeyValuePair<int, string>(3, "three"));
 
-            var objectFromCollectionBefore = (WithTestProperties)complexCollection[0];
-            var objectFromCollectionAfter = (WithTestProperties)valueFromBytesComplexCollection[0];
+            List<object> after = TestHelper.SerializeAndDeserialize(before);
+
+            var objectFromCollectionBefore = (WithTestProperties)before[0];
+            var objectFromCollectionAfter = (WithTestProperties)after[0];
             Assert.Equal(objectFromCollectionBefore.Name, objectFromCollectionAfter.Name);
             Assert.Equal(objectFromCollectionBefore.Age, objectFromCollectionAfter.Age);
             Assert.Equal(objectFromCollectionBefore.Birthday, objectFromCollectionAfter.Birthday);
 
-            var listFromCollectionBefore = complexCollection[1] as IEnumerable;
-            var listFromCollectionAfter = valueFromBytesComplexCollection[1] as IEnumerable;
+            var listFromCollectionBefore = before[1] as IEnumerable;
+            var listFromCollectionAfter = after[1] as IEnumerable;
             Assert.Equal(listFromCollectionBefore, listFromCollectionAfter);
 
-            Assert.Equal(complexCollection[2], valueFromBytesComplexCollection[2]);
-            Assert.Equal(complexCollection[3], valueFromBytesComplexCollection[3]);
-            Assert.Equal(complexCollection[4], valueFromBytesComplexCollection[4]);
+            Assert.Equal(before[2], after[2]);
+            Assert.Equal(before[3], after[3]);
+            Assert.Equal(before[4], after[4]);
         }
 
         [Fact]
@@ -91,8 +90,8 @@ namespace BinaryFormatter.Tests.TypeConverter
         {
             var converter = new BinaryConverter();
 
-            IReadOnlyCollection<int> simpleCollection = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-            
+            IReadOnlyCollection<int> simpleCollection = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+
             byte[] bytesSimpleCollection = converter.Serialize(simpleCollection);
             var valueFromBytesSimpleCollection = converter.Deserialize<IReadOnlyCollection<int>>(bytesSimpleCollection);
             Assert.Equal(valueFromBytesSimpleCollection, simpleCollection);
@@ -101,36 +100,35 @@ namespace BinaryFormatter.Tests.TypeConverter
         [Fact]
         public void CanSerializeAndDeserialize_SimpleIDictionaryCollection()
         {
-            var converter = new BinaryConverter();
+            var before = new Dictionary<int, string>
+            {
+                {0, "zero"},
+                {1, "one"},
+                {2, "two"},
+                {3, "three"},
+                {4, "four"},
+                {5, "five"},
+                {6, "six"},
+                {7, "seven"},
+                {8, "eight"},
+                {9, "nine"}
+            };
 
-            Dictionary<int, string> dictionaryCollection = new Dictionary<int, string>();
-            dictionaryCollection.Add(0, "zero");
-            dictionaryCollection.Add(1, "one");
-            dictionaryCollection.Add(2, "two");
-            dictionaryCollection.Add(3, "three");
-            dictionaryCollection.Add(4, "four");
-            dictionaryCollection.Add(5, "five");
-            dictionaryCollection.Add(6, "six");
-            dictionaryCollection.Add(7, "seven");
-            dictionaryCollection.Add(8, "eight");
-            dictionaryCollection.Add(9, "nine");            
-
-            byte[] bytesDictionaryCollection = converter.Serialize(dictionaryCollection);
-            var valueFromBytesDictionaryCollection = converter.Deserialize<Dictionary<int, string>>(bytesDictionaryCollection);
-            Assert.Equal(valueFromBytesDictionaryCollection, dictionaryCollection);
+            var after = TestHelper.SerializeAndDeserialize(before);
+            Assert.Equal(after, before);
         }
 
         [Fact]
         public void CanSerializeAndDeserialize_ComplexIDictionaryCollection()
         {
             var converter = new BinaryConverter();
-
             Dictionary<int, object> dictionaryCollection = new Dictionary<int, object>();
-            dictionaryCollection.Add(1, new WithTestProperties() {
+            dictionaryCollection.Add(1, new WithTestProperties
+            {
                 Name = "Joe",
                 Age = 30,
                 Birthday = DateTime.Now.AddYears(-30),
-                Friends = new List<string>()
+                Friends = new List<string>
                 {
                     "Jim",
                     "John",
@@ -196,7 +194,7 @@ namespace BinaryFormatter.Tests.TypeConverter
             LinkedList<object> linkedListCollection = new LinkedList<object>();
             linkedListCollection.AddLast("zero");
             linkedListCollection.AddLast(1);
-            linkedListCollection.AddLast(new List<string>() { "I", "love", "the", ".NET Core" });
+            linkedListCollection.AddLast(new List<string> { "I", "love", "the", ".NET Core" });
 
             byte[] bytesLinkedListCollection = converter.Serialize(linkedListCollection);
             var valueFromBytesLinkedListCollection = converter.Deserialize<LinkedList<object>>(bytesLinkedListCollection);
@@ -208,7 +206,7 @@ namespace BinaryFormatter.Tests.TypeConverter
             public string Name { get; set; }
             public int Age { get; set; }
             public DateTime Birthday { get; set; }
-            public List<string> Friends { get; set; }            
+            public List<string> Friends { get; set; }
         }
     }
 }
