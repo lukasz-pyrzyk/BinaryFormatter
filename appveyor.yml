@@ -4,6 +4,6 @@ image:
 - Ubuntu
 
 build_script:
-- sh: ./scripts/build.sh
+- sh: sudo ./scripts/build.sh
 test_script:
-- sh: ./scripts/runTests.sh
+- sh: sudo ./scripts/runTests.sh
