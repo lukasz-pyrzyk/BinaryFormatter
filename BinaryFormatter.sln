@@ -11,7 +11,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{0F2CAD1A-85DE-49DF-83ED-D53FD463EC2A}"
 	ProjectSection(SolutionItems) = preProject
-		scripts\build.sh = scripts\build.sh
 		scripts\createNugetPackages.sh = scripts\createNugetPackages.sh
 		scripts\runTests.sh = scripts\runTests.sh
 	EndProjectSection
