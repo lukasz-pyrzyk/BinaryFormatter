@@ -3,8 +3,7 @@ image:
 - Visual Studio 2017
 - Ubuntu
 
-build:
-  verbosity: minimal
-
+build_script:
+- sh: ./scripts/build.sh
 test_script:
-- sh: sudo ./scripts/runTests.sh
+- sh: ./scripts/runTests.sh
