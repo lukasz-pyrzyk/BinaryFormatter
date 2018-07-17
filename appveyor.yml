@@ -6,9 +6,9 @@ image:
 build_script:
 - ps: >-
 
-    .\Scripts\build.ps1
+    .\scripts\build.ps1
 
 test_script:
 - ps: >-
 
-    .\Scripts\runTests.ps1
+    .\scripts\runTests.ps1
