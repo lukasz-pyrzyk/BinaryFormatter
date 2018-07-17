@@ -1,9 +1,9 @@
-version: 2.1.4.{build}
+version: 3.0.0.{build}
 image:
 - Visual Studio 2017
 - Ubuntu
 
 build_script:
-- sh: sudo ./scripts/build.sh
+- sh: sudo .\scripts\build.sh
 test_script:
-- sh: sudo ./scripts/runTests.sh
+- sh: sudo .\scripts\runTests.sh
