@@ -1,0 +1,1 @@
+﻿dotnet test ./tests/BinaryFormatter.Tests/BinaryFormatter.Tests.csproj

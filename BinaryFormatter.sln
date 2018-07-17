@@ -11,9 +11,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{0F2CAD1A-85DE-49DF-83ED-D53FD463EC2A}"
 	ProjectSection(SolutionItems) = preProject
-		scripts\build.sh = scripts\build.sh
-		scripts\createNugetPackages.sh = scripts\createNugetPackages.sh
-		scripts\runTests.sh = scripts\runTests.sh
+		scripts\build.ps1 = scripts\build.ps1
+		scripts\createNugetPackages.ps1 = scripts\createNugetPackages.ps1
+		scripts\runTests.ps1 = scripts\runTests.ps1
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BinaryFormatter", "src\BinaryFormatter\BinaryFormatter.csproj", "{16D9DF6C-9D2C-45AD-83A5-FD2C0CA46F47}"

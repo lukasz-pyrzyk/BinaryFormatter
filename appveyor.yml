@@ -4,6 +4,11 @@ image:
 - Ubuntu
 
 build_script:
-- sh: sudo .\scripts\build.sh
+- ps: >-
+
+    .\Scripts\build.ps1
+
 test_script:
-- sh: sudo .\scripts\runTests.sh
+- ps: >-
+
+    .\Scripts\runTests.ps1
