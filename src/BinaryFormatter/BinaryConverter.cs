@@ -32,7 +32,7 @@ namespace BinaryFormatter
             SerializedType deserializedType = stream.ReadSerializedType();
             if (deserializedType == SerializedType.Null)
             {
-                return default(T);
+                return default;
             }
 
             Type type = deserializedType.GetBaseType() ?? stream.ReadType();
