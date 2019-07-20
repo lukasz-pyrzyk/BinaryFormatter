@@ -9,7 +9,7 @@ namespace Benchmark.Configs
         public CustomConfig()
         {
             Add(MarkdownExporter.GitHub);
-            Add(new MemoryDiagnoser());
+            Add(MemoryDiagnoser.Default);
         }
     }
 }
