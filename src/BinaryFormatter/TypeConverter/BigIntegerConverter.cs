@@ -20,6 +20,6 @@ namespace BinaryFormatter.TypeConverter
             return new BigInteger(bigIntegerData);
         }
 
-        public override SerializedType Type => SerializedType.BitInteger;
+        public override SerializedType Type => SerializedType.BigInteger;
     }
 }

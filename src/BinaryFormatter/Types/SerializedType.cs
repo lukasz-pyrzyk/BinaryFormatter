@@ -26,7 +26,7 @@
         Enum = 21,
         KeyValuePair = 22,        
         Timespan = 23,
-        BitInteger = 24,
+        BigInteger = 24,
         CustomObject = 99
     }
 }
