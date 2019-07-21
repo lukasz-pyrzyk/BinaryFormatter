@@ -10,7 +10,7 @@
     <PackageId>BinaryFormatter</PackageId>
     <PackageTags>binary serializer formatter deserializer serialization binaryformatter</PackageTags>
     <PackageIconUrl>https://raw.githubusercontent.com/lukasz-pyrzyk/BinaryFormatter/master/Nuget/nuget-icon.png</PackageIconUrl>
-    <PackageProjectUrl>https://raw.githubusercontent.com/lukasz-pyrzyk/BinaryFormatter</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/lukasz-pyrzyk/BinaryFormatter</PackageProjectUrl>
     <PackageLicenseUrl>https://raw.githubusercontent.com/lukasz-pyrzyk/BinaryFormatter/master/License.txt</PackageLicenseUrl>
   </PropertyGroup>
 
