@@ -50,36 +50,15 @@ namespace BinaryFormatter
 
         public static BaseTypeConverter SelectConverter(Type type)
         {
-            if (type is null) return Converters[SerializedType.Null];
-
             if (Converters.TryGetValue(type.GetSerializedType(), out BaseTypeConverter converter))
             {
                 return converter;
-            }
-
-            TypeInfo typeInfo = type.GetTypeInfo();
-            bool isKeyValuePair = typeInfo.IsGenericType && type.GetGenericTypeDefinition() == typeof(KeyValuePair<,>);
-            if (isKeyValuePair)
-            {
-                if (Converters.TryGetValue(SerializedType.KeyValuePair, out converter))
-                {
-                    return converter;
-                }
             }
 
             bool isEnumerableType = type.GetTypeInfo().ImplementedInterfaces.Any(t => t == typeof(IEnumerable));
             if (isEnumerableType)
             {
                 if (Converters.TryGetValue(SerializedType.IEnumerable, out converter))
-                {
-                    return converter;
-                }
-            }
-
-            bool isEnumType = type.GetTypeInfo().IsEnum;
-            if (isEnumType)
-            {
-                if (Converters.TryGetValue(SerializedType.Enum, out converter))
                 {
                     return converter;
                 }

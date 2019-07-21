@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using BinaryFormatter.Types;
 using System.Numerics;
+using System.Reflection;
 
 namespace BinaryFormatter.Utils
 {
@@ -35,6 +38,7 @@ namespace BinaryFormatter.Utils
 
         internal static SerializedType GetSerializedType(this Type type)
         {
+            if (type is null) return SerializedType.Null;
             if (type == typeof(bool)) return SerializedType.Bool;
             if (type == typeof(byte)) return SerializedType.Byte;
             if (type == typeof(byte[])) return SerializedType.ByteArray;
@@ -55,6 +59,19 @@ namespace BinaryFormatter.Utils
             if (type == typeof(Guid)) return SerializedType.Guid;
             if (type == typeof(Uri)) return SerializedType.Uri;
             if (type == typeof(BigInteger)) return SerializedType.BigInteger;
+
+            TypeInfo typeInfo = type.GetTypeInfo();
+            bool isKeyValuePair = typeInfo.IsGenericType && type.GetGenericTypeDefinition() == typeof(KeyValuePair<,>);
+            if (isKeyValuePair)
+            {
+                return SerializedType.KeyValuePair;
+            }
+
+            bool isEnumType = type.GetTypeInfo().IsEnum;
+            if (isEnumType)
+            {
+                return SerializedType.Enum;
+            }
 
             return SerializedType.Unknown;
         }
