@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Reflection;
@@ -84,10 +85,19 @@ namespace BinaryFormatter.Tests.Utils
         [InlineData(typeof(BigInteger))]
         [InlineData(typeof(Guid))]
         [InlineData(typeof(Uri))]
-        public void IsSupportedBySerializer(Type type)
+        public void IsBaseTypeSupportedBySerializer(Type type)
         {
             bool supported = type.GetTypeInfo().IsBaseTypeSupportedBySerializer();
             supported.Should().BeTrue();
+        }
+
+        [Theory]
+        [InlineData(typeof(IEnumerable))]
+        [InlineData(typeof(KeyValuePair<,>))]
+        public void IsNotBaseTypeSupportedBySerializer(Type type)
+        {
+            bool supported = type.GetTypeInfo().IsBaseTypeSupportedBySerializer();
+            supported.Should().BeFalse();
         }
     }
 }
