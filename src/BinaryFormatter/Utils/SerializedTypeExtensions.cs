@@ -67,6 +67,12 @@ namespace BinaryFormatter.Utils
                 return SerializedType.KeyValuePair;
             }
 
+            bool isEnumerableType = type.GetTypeInfo().ImplementedInterfaces.Any(t => t == typeof(IEnumerable));
+            if (isEnumerableType)
+            {
+                return SerializedType.IEnumerable;
+            }
+
             bool isEnumType = type.GetTypeInfo().IsEnum;
             if (isEnumType)
             {

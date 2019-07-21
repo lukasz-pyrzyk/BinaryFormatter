@@ -55,15 +55,6 @@ namespace BinaryFormatter
                 return converter;
             }
 
-            bool isEnumerableType = type.GetTypeInfo().ImplementedInterfaces.Any(t => t == typeof(IEnumerable));
-            if (isEnumerableType)
-            {
-                if (Converters.TryGetValue(SerializedType.IEnumerable, out converter))
-                {
-                    return converter;
-                }
-            }
-
             return ForSerializedType(SerializedType.CustomObject);
         }
 

@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Numerics;
 using System.Reflection;
 using BinaryFormatter.Types;
 
@@ -68,7 +67,13 @@ namespace BinaryFormatter.Utils
             return type.GetTypeInfo().DeclaredFields.Where(x => !x.IsStatic && !x.IsInitOnly);
         }
 
-        internal static bool IsSupportedBySerializer(this Type type) =>
-            type.GetSerializedType() != SerializedType.Unknown;
+        internal static bool IsBaseTypeSupportedBySerializer(this Type type)
+        {
+            var serializedType = type.GetSerializedType();
+            return
+                serializedType != SerializedType.Unknown &&
+                serializedType != SerializedType.IEnumerable &&
+                serializedType != SerializedType.KeyValuePair;
+        }
     }
 }

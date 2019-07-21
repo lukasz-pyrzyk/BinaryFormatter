@@ -17,7 +17,7 @@ namespace BinaryFormatter.TypeConverter
 
             if (obj != null)
             {
-                if (!DestinationType.IsSupportedBySerializer())
+                if (!DestinationType.IsBaseTypeSupportedBySerializer())
                 {
                     byte[] typeInfo = Encoding.UTF8.GetBytes(obj.GetType().AssemblyQualifiedName);
                     stream.WriteWithLengthPrefix(typeInfo);

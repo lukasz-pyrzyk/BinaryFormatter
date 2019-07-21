@@ -86,7 +86,7 @@ namespace BinaryFormatter.Tests.Utils
         [InlineData(typeof(Uri))]
         public void IsSupportedBySerializer(Type type)
         {
-            bool supported = type.GetTypeInfo().IsSupportedBySerializer();
+            bool supported = type.GetTypeInfo().IsBaseTypeSupportedBySerializer();
             supported.Should().BeTrue();
         }
     }
