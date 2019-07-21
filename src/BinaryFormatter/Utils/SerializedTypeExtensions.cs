@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using BinaryFormatter.Types;
 using System.Numerics;
 
@@ -6,11 +7,6 @@ namespace BinaryFormatter.Utils
 {
     public static class SerializedTypeExtensions
     {
-        internal static bool IsBaseType(this SerializedType serializedType)
-        {
-            return serializedType.GetBaseType() != null;
-        }
-
         internal static Type GetBaseType(this SerializedType serializedType)
         {
             if (serializedType == SerializedType.Bool) return typeof(bool);

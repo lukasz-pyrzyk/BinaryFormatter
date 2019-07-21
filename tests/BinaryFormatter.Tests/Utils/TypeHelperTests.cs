@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Numerics;
+using System.Reflection;
 using BinaryFormatter.Utils;
 using FluentAssertions;
 using Xunit;
@@ -33,20 +36,6 @@ namespace BinaryFormatter.Tests.Utils
         }
 
         [Fact]
-        public void IsList_True()
-        {
-            var valueForCheck = new List<int> { 1 };
-            TypeHelper.IsList(valueForCheck).Should().BeTrue();
-        }
-
-        [Fact]
-        public void IsList_False()
-        {
-            var valueForCheck = "this is not a list";
-            TypeHelper.IsList(valueForCheck).Should().BeFalse();
-        }
-
-        [Fact]
         public void IsLinkedList_True()
         {
             var valueForCheck = new LinkedList<int>();
@@ -73,6 +62,32 @@ namespace BinaryFormatter.Tests.Utils
         {
             bool hasConversionOperator = TypeHelper.HasConversionOperator(typeof(string), typeof(int));
             hasConversionOperator.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData(typeof(byte))]
+        [InlineData(typeof(sbyte))]
+        [InlineData(typeof(char))]
+        [InlineData(typeof(short))]
+        [InlineData(typeof(ushort))]
+        [InlineData(typeof(int))]
+        [InlineData(typeof(uint))]
+        [InlineData(typeof(ulong))]
+        [InlineData(typeof(long))]
+        [InlineData(typeof(float))]
+        [InlineData(typeof(double))]
+        [InlineData(typeof(decimal))]
+        [InlineData(typeof(string))]
+        [InlineData(typeof(DateTime))]
+        [InlineData(typeof(TimeSpan))]
+        [InlineData(typeof(byte[]))]
+        [InlineData(typeof(BigInteger))]
+        [InlineData(typeof(Guid))]
+        [InlineData(typeof(Uri))]
+        public void IsSupportedBySerializer(Type type)
+        {
+            bool supported = type.GetTypeInfo().IsSupportedBySerializer();
+            supported.Should().BeTrue();
         }
     }
 }
