@@ -15,16 +15,14 @@ namespace BinaryFormatter.TypeConverter
 
         protected override void SerializeInternal(object obj, SerializationStream stream)
         {
-            Type t = obj.GetType();
+            ICollection<FieldInfo> properties = obj.GetType().GetTypeInfo().GetAllFields().ToArray();
 
-            ICollection<PropertyInfo> properties = t.GetTypeInfo().GetAllProperties().ToArray();
-
-            foreach (PropertyInfo property in properties)
+            foreach (var field in properties)
             {
-                if (!property.CanWrite || property.GetMethod.IsStatic)
-                    continue;
+                //if (!field.p.CanWrite || field.GetMethod.IsStatic)
+                //    continue;
 
-                object prop = property.GetValue(obj);
+                object prop = field.GetValue(obj);
                 var converter = ConvertersSelector.SelectConverter(prop);
                 converter.Serialize(prop, stream);
             }
@@ -34,12 +32,12 @@ namespace BinaryFormatter.TypeConverter
         {
             var instance = Activator.CreateInstance(sourceType);
 
-            foreach (PropertyInfo property in sourceType.GetTypeInfo().GetAllProperties())
+            foreach (var field in sourceType.GetTypeInfo().GetAllFields())
             {
-                if (!property.CanWrite)
-                    continue;
+                //if (!field.CanWrite)
+                //    continue;
 
-                DeserializeProperty(property, ref instance, stream);
+                DeserializeField(field, ref instance, stream);
                 if (stream.HasEnded)
                     break;
             }
@@ -47,40 +45,40 @@ namespace BinaryFormatter.TypeConverter
             return instance;
         }
 
-        private void DeserializeProperty<T>(PropertyInfo property, ref T instance, DeserializationStream stream)
+        private void DeserializeField<T>(FieldInfo field, ref T instance, DeserializationStream stream)
         {
-            Type instanceType = property.PropertyType;
+            Type instanceType = field.FieldType;
             TypeInfo instanceTypeInfo = instanceType.GetTypeInfo();
             SerializedType type = stream.ReadSerializedType();
 
-            if (!ExcludedDlls.Any(x => property.PropertyType.AssemblyQualifiedName.Contains(x)))
+            if (!ExcludedDlls.Any(x => field.FieldType.AssemblyQualifiedName.Contains(x)))
             {
                 if (type == SerializedType.Null)
                 {
-                    property.SetValue(instance, null);
+                    field.SetValue(instance, null);
                 }
                 else if (type == SerializedType.Enum)
                 {
-                    object propertyValue = Activator.CreateInstance(property.PropertyType);
+                    object propertyValue = Activator.CreateInstance(field.FieldType);
                     DeserializeEnum(stream, ref propertyValue);
-                    property.SetValue(instance, propertyValue);
+                    field.SetValue(instance, propertyValue);
                 }
                 else
                 {
-                    object propertyValue = Activator.CreateInstance(property.PropertyType);
+                    object propertyValue = Activator.CreateInstance(field.FieldType);
                     DeserializeObject(stream, ref propertyValue);
-                    property.SetValue(instance, propertyValue);
+                    field.SetValue(instance, propertyValue);
                 }
                 return;
             }
 
             if (type == SerializedType.Null)
             {
-                property.SetValue(instance, null, property.GetIndexParameters());
+                field.SetValue(instance, null);
                 return;
             }
 
-            if (!property.PropertyType.GetTypeInfo().IsBaseType())
+            if (!field.FieldType.GetTypeInfo().IsBaseType())
             {
                 stream.ReadType();
             }
@@ -95,9 +93,9 @@ namespace BinaryFormatter.TypeConverter
             {
                 var preparedData = converter.Deserialize(stream) as IEnumerable;
 
-                var prop = property;
+                var prop = field;
                 var listType = typeof(List<>);
-                var genericArgs = prop.PropertyType.GenericTypeArguments;
+                var genericArgs = prop.FieldType.GenericTypeArguments;
                 var concreteType = listType.MakeGenericType(genericArgs);
                 data = Activator.CreateInstance(concreteType);
                 foreach (var item in preparedData)
@@ -113,12 +111,12 @@ namespace BinaryFormatter.TypeConverter
             if (instanceTypeInfo.IsValueType && !instanceTypeInfo.IsPrimitive)
             {
                 object boxedInstance = instance;
-                property.SetValue(boxedInstance, data, property.GetIndexParameters());
+                field.SetValue(boxedInstance, data);
                 instance = (T)boxedInstance;
             }
             else
             {
-                property.SetValue(instance, data, property.GetIndexParameters());
+                field.SetValue(instance, data);
             }
         }
 
@@ -133,12 +131,12 @@ namespace BinaryFormatter.TypeConverter
         {
             stream.ReadType();
 
-            foreach (PropertyInfo property in instance.GetType().GetTypeInfo().GetAllProperties())
+            foreach (var field in instance.GetType().GetTypeInfo().GetAllFields())
             {
-                if (!property.CanWrite)
-                    continue;
+                //if (!field.CanWrite)
+                //    continue;
 
-                DeserializeProperty(property, ref instance, stream);
+                DeserializeField(field, ref instance, stream);
                 if (stream.HasEnded)
                     return;
             }
