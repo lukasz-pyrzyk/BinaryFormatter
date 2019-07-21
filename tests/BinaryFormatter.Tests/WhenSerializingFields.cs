@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.IO;
+using FluentAssertions;
 using Xunit;
 
 namespace BinaryFormatter.Tests
@@ -9,25 +10,52 @@ namespace BinaryFormatter.Tests
         public void CanSerializeAndDeserialize()
         {
             // arrange
-            var obj = TestHelper.Create<StreamMessage>();
+            var obj = TestHelper.Create<SimpleClassWithFields>();
 
             // act
             var fromBytes = TestHelper.SerializeAndDeserialize(obj);
 
             // assert
             fromBytes.Should().NotBeNull();
-            fromBytes.StreamContent.Should().Be(obj.StreamContent);
+            fromBytes.StreamName.Should().Be(obj.StreamName);
             fromBytes.StreamType.Should().Be(obj.StreamType);
             fromBytes.StreamSize.Should().Be(obj.StreamSize);
             fromBytes.StreamContent.Should().Be(obj.StreamContent);
         }
 
-        public class StreamMessage
+        [Fact]
+        public void CanSerializeAndDeserializeWithStaticField()
+        {
+            // arrange
+            var staticValueBefore = SimpleClassWithFieldsAndStaticField.StaticField;
+            var obj = TestHelper.Create<SimpleClassWithFieldsAndStaticField>();
+
+            // act
+            var converter = new BinaryConverter();
+            var stream = new MemoryStream();
+            converter.Serialize(obj, stream);
+            stream.Seek(0, SeekOrigin.Begin);
+            var fromBytes = converter.Deserialize<SimpleClassWithFieldsAndStaticField>(stream.ToArray());
+
+            // assert
+            fromBytes.Should().NotBeNull();
+            fromBytes.NormalField.Should().Be(obj.NormalField);
+            SimpleClassWithFieldsAndStaticField.StaticField.Should().Be(staticValueBefore);
+            stream.Length.Should().BeLessThan(300, "long static value shoudn't be added to the stream");
+        }
+
+        public class SimpleClassWithFields
         {
             public string StreamName;
             public int StreamType;
             public float StreamSize;
             public byte StreamContent;
+        }
+
+        public class SimpleClassWithFieldsAndStaticField
+        {
+            public static string StaticField = new string('t', 99999);
+            public string NormalField;
         }
     }
 }

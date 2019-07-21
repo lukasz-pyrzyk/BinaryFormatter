@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -63,6 +64,11 @@ namespace BinaryFormatter.Utils
             {
                 return false;
             }
+        }
+
+        public static IEnumerable<FieldInfo> GetFieldsAccessibleForSerializer(this Type type)
+        {
+            return type.GetTypeInfo().GetAllFields().Where(x => !x.IsStatic);
         }
     }
 }

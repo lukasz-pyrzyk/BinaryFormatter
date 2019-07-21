@@ -15,13 +15,10 @@ namespace BinaryFormatter.TypeConverter
 
         protected override void SerializeInternal(object obj, SerializationStream stream)
         {
-            ICollection<FieldInfo> properties = obj.GetType().GetTypeInfo().GetAllFields().ToArray();
+            var fields = obj.GetType().GetFieldsAccessibleForSerializer();
 
-            foreach (var field in properties)
+            foreach (var field in fields)
             {
-                //if (!field.p.CanWrite || field.GetMethod.IsStatic)
-                //    continue;
-
                 object prop = field.GetValue(obj);
                 var converter = ConvertersSelector.SelectConverter(prop);
                 converter.Serialize(prop, stream);
@@ -32,11 +29,8 @@ namespace BinaryFormatter.TypeConverter
         {
             var instance = Activator.CreateInstance(sourceType);
 
-            foreach (var field in sourceType.GetTypeInfo().GetAllFields())
+            foreach (var field in sourceType.GetFieldsAccessibleForSerializer())
             {
-                //if (!field.CanWrite)
-                //    continue;
-
                 DeserializeField(field, ref instance, stream);
                 if (stream.HasEnded)
                     break;
@@ -131,11 +125,8 @@ namespace BinaryFormatter.TypeConverter
         {
             stream.ReadType();
 
-            foreach (var field in instance.GetType().GetTypeInfo().GetAllFields())
+            foreach (var field in typeof(T).GetFieldsAccessibleForSerializer())
             {
-                //if (!field.CanWrite)
-                //    continue;
-
                 DeserializeField(field, ref instance, stream);
                 if (stream.HasEnded)
                     return;
