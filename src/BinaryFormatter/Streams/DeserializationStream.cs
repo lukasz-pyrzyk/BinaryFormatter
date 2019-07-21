@@ -6,12 +6,11 @@ namespace BinaryFormatter.Streams
 {
     internal class DeserializationStream
     {
-        public bool HasEnded => _offset == _stream.Length;
+        public bool HasEnded => Offset == _stream.Length;
 
-        public int Offset => _offset;
+        public int Offset { get; private set; }
 
         private readonly byte[] _stream;
-        private int _offset;
 
         public DeserializationStream(byte[] stream)
         {
@@ -23,18 +22,18 @@ namespace BinaryFormatter.Streams
             SetOffset(position);
         }
 
-        public void SetOffset(int position) => _offset = position;
+        public void SetOffset(int position) => Offset = position;
 
         public bool ReadBool()
         {
-            var value = BitConverter.ToBoolean(_stream, _offset);
-            _offset += sizeof(bool);
+            var value = BitConverter.ToBoolean(_stream, Offset);
+            Offset += sizeof(bool);
             return value;
         }
 
         public byte ReadByte()
         {
-            return _stream[_offset++];
+            return _stream[Offset++];
         }
 
         public sbyte ReadSByte()
@@ -44,72 +43,72 @@ namespace BinaryFormatter.Streams
 
         public char ReadChar()
         {
-            var value = BitConverter.ToChar(_stream, _offset);
-            _offset += sizeof(char);
+            var value = BitConverter.ToChar(_stream, Offset);
+            Offset += sizeof(char);
             return value;
         }
 
         public short ReadShort()
         {
-            var value = BitConverter.ToInt16(_stream, _offset);
-            _offset += sizeof(short);
+            var value = BitConverter.ToInt16(_stream, Offset);
+            Offset += sizeof(short);
             return value;
         }
 
         public ushort ReadUShort()
         {
-            var value = BitConverter.ToUInt16(_stream, _offset);
-            _offset += sizeof(ushort);
+            var value = BitConverter.ToUInt16(_stream, Offset);
+            Offset += sizeof(ushort);
             return value;
         }
 
         public int ReadInt()
         {
-            int value = BitConverter.ToInt32(_stream, _offset);
-            _offset += sizeof(int);
+            int value = BitConverter.ToInt32(_stream, Offset);
+            Offset += sizeof(int);
             return value;
         }
 
         public uint ReadUInt()
         {
-            uint value = BitConverter.ToUInt32(_stream, _offset);
-            _offset += sizeof(uint);
+            uint value = BitConverter.ToUInt32(_stream, Offset);
+            Offset += sizeof(uint);
             return value;
         }
 
         public float ReadFloat()
         {
-            var value = BitConverter.ToSingle(_stream, _offset);
-            _offset += sizeof(float);
+            var value = BitConverter.ToSingle(_stream, Offset);
+            Offset += sizeof(float);
             return value;
         }
 
         public double ReadDouble()
         {
-            var value = BitConverter.ToDouble(_stream, _offset);
-            _offset += sizeof(double);
+            var value = BitConverter.ToDouble(_stream, Offset);
+            Offset += sizeof(double);
             return value;
         }
 
         public long ReadLong()
         {
-            var value = BitConverter.ToInt64(_stream, _offset);
-            _offset += sizeof(long);
+            var value = BitConverter.ToInt64(_stream, Offset);
+            Offset += sizeof(long);
             return value;
         }
 
         public ulong ReadULong()
         {
-            var value = BitConverter.ToUInt64(_stream, _offset);
-            _offset += sizeof(ulong);
+            var value = BitConverter.ToUInt64(_stream, Offset);
+            Offset += sizeof(ulong);
             return value;
         }
 
         public byte[] ReadBytes(int count)
         {
             var newArray = new byte[count];
-            Array.Copy(_stream, _offset, newArray, 0, newArray.Length);
-            _offset += newArray.Length;
+            Array.Copy(_stream, Offset, newArray, 0, newArray.Length);
+            Offset += newArray.Length;
             return newArray;
         }
 
@@ -134,8 +133,8 @@ namespace BinaryFormatter.Streams
 
         public SerializedType ReadSerializedType()
         {
-            short type = BitConverter.ToInt16(_stream, _offset);
-            _offset += sizeof(SerializedType);
+            short type = BitConverter.ToInt16(_stream, Offset);
+            Offset += sizeof(SerializedType);
             return (SerializedType)type;
         }
 
