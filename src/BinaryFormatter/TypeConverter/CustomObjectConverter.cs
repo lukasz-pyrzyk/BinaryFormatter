@@ -72,7 +72,7 @@ namespace BinaryFormatter.TypeConverter
                 return;
             }
 
-            if (!field.FieldType.GetTypeInfo().IsBaseType())
+            if (!field.FieldType.IsBaseTypeSupportedBySerializer())
             {
                 stream.ReadType();
             }

@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using BinaryFormatter.Types;
 
 namespace BinaryFormatter.Utils
 {
-    public static class TypeHelper
+    internal static class TypeHelper
     {
-        public static KeyValuePair<object, object> CastFrom(Object obj)
+        internal static KeyValuePair<object, object> CastFrom(object obj)
         {
             var type = obj.GetType();
             var typeInfo = type.GetTypeInfo();
@@ -27,17 +28,12 @@ namespace BinaryFormatter.Utils
             throw new ArgumentException(" ### -> public static KeyValuePair<object , object > CastFrom(Object obj): Error: obj argument must be KeyValuePair <,> ");
         }
 
-        public static bool IsDictionary(object obj)
+        internal static bool IsDictionary(object obj)
         {
             return obj is IDictionary;
         }
 
-        public static bool IsList(object obj)
-        {
-            return obj is IList;
-        }
-
-        public static bool IsLinkedList(object obj)
+        internal static bool IsLinkedList(object obj)
         {
             Type[] genericTypes = obj.GetType().GenericTypeArguments;
 
@@ -51,7 +47,7 @@ namespace BinaryFormatter.Utils
             return false;
         }
 
-        public static bool HasConversionOperator(Type from, Type to)
+        internal static bool HasConversionOperator(Type from, Type to)
         {
             UnaryExpression BodyFunction(Expression body) => Expression.Convert(body, to);
             ParameterExpression inp = Expression.Parameter(from, "inp");
@@ -66,9 +62,18 @@ namespace BinaryFormatter.Utils
             }
         }
 
-        public static IEnumerable<FieldInfo> GetFieldsAccessibleForSerializer(this Type type)
+        internal static IEnumerable<FieldInfo> GetFieldsAccessibleForSerializer(this Type type)
         {
-            return type.GetTypeInfo().GetAllFields().Where(x => !x.IsStatic && !x.IsInitOnly);
+            return type.GetTypeInfo().DeclaredFields.Where(x => !x.IsStatic && !x.IsInitOnly);
+        }
+
+        internal static bool IsBaseTypeSupportedBySerializer(this Type type)
+        {
+            var serializedType = type.GetSerializedType();
+            return
+                serializedType != SerializedType.Unknown &&
+                serializedType != SerializedType.IEnumerable &&
+                serializedType != SerializedType.KeyValuePair;
         }
     }
 }

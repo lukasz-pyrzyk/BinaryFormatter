@@ -1,16 +1,15 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using BinaryFormatter.Types;
 using System.Numerics;
+using System.Reflection;
 
 namespace BinaryFormatter.Utils
 {
     public static class SerializedTypeExtensions
     {
-        internal static bool IsBaseType(this SerializedType serializedType)
-        {
-            return serializedType.GetBaseType() != null;
-        }
-
         internal static Type GetBaseType(this SerializedType serializedType)
         {
             if (serializedType == SerializedType.Bool) return typeof(bool);
@@ -39,6 +38,7 @@ namespace BinaryFormatter.Utils
 
         internal static SerializedType GetSerializedType(this Type type)
         {
+            if (type is null) return SerializedType.Null;
             if (type == typeof(bool)) return SerializedType.Bool;
             if (type == typeof(byte)) return SerializedType.Byte;
             if (type == typeof(byte[])) return SerializedType.ByteArray;
@@ -59,6 +59,25 @@ namespace BinaryFormatter.Utils
             if (type == typeof(Guid)) return SerializedType.Guid;
             if (type == typeof(Uri)) return SerializedType.Uri;
             if (type == typeof(BigInteger)) return SerializedType.BigInteger;
+
+            var typeInfo = type.GetTypeInfo();
+            bool isKeyValuePair = typeInfo.IsGenericType && type.GetGenericTypeDefinition() == typeof(KeyValuePair<,>);
+            if (isKeyValuePair)
+            {
+                return SerializedType.KeyValuePair;
+            }
+
+            bool isEnumerableType = typeInfo.ImplementedInterfaces.Any(t => t == typeof(IEnumerable));
+            if (isEnumerableType)
+            {
+                return SerializedType.IEnumerable;
+            }
+
+            bool isEnumType = typeInfo.IsEnum;
+            if (isEnumType)
+            {
+                return SerializedType.Enum;
+            }
 
             return SerializedType.Unknown;
         }
