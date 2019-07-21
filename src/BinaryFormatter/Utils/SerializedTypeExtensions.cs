@@ -60,20 +60,20 @@ namespace BinaryFormatter.Utils
             if (type == typeof(Uri)) return SerializedType.Uri;
             if (type == typeof(BigInteger)) return SerializedType.BigInteger;
 
-            TypeInfo typeInfo = type.GetTypeInfo();
+            var typeInfo = type.GetTypeInfo();
             bool isKeyValuePair = typeInfo.IsGenericType && type.GetGenericTypeDefinition() == typeof(KeyValuePair<,>);
             if (isKeyValuePair)
             {
                 return SerializedType.KeyValuePair;
             }
 
-            bool isEnumerableType = type.GetTypeInfo().ImplementedInterfaces.Any(t => t == typeof(IEnumerable));
+            bool isEnumerableType = typeInfo.ImplementedInterfaces.Any(t => t == typeof(IEnumerable));
             if (isEnumerableType)
             {
                 return SerializedType.IEnumerable;
             }
 
-            bool isEnumType = type.GetTypeInfo().IsEnum;
+            bool isEnumType = typeInfo.IsEnum;
             if (isEnumType)
             {
                 return SerializedType.Enum;
