@@ -68,7 +68,7 @@ namespace BinaryFormatter.Utils
 
         public static IEnumerable<FieldInfo> GetFieldsAccessibleForSerializer(this Type type)
         {
-            return type.GetTypeInfo().GetAllFields().Where(x => !x.IsStatic);
+            return type.GetTypeInfo().GetAllFields().Where(x => !x.IsStatic && !x.IsInitOnly);
         }
     }
 }

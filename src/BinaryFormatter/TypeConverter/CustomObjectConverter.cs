@@ -125,7 +125,7 @@ namespace BinaryFormatter.TypeConverter
         {
             stream.ReadType();
 
-            foreach (var field in typeof(T).GetFieldsAccessibleForSerializer())
+            foreach (var field in instance.GetType().GetFieldsAccessibleForSerializer())
             {
                 DeserializeField(field, ref instance, stream);
                 if (stream.HasEnded)

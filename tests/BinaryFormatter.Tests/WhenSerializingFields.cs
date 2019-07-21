@@ -41,7 +41,27 @@ namespace BinaryFormatter.Tests
             fromBytes.Should().NotBeNull();
             fromBytes.NormalField.Should().Be(obj.NormalField);
             SimpleClassWithFieldsAndStaticField.StaticField.Should().Be(staticValueBefore);
-            stream.Length.Should().BeLessThan(300, "long static value shoudn't be added to the stream");
+            stream.Length.Should().BeLessThan(300, "long static value shouldn't be added to the stream");
+        }
+
+        [Fact]
+        public void CanSerializeAndDeserializeWithReadonlyField()
+        {
+            // arrange
+            var obj = TestHelper.Create<SimpleClassWithFieldsAndReadonlyField>();
+
+            // act
+            var converter = new BinaryConverter();
+            var stream = new MemoryStream();
+            converter.Serialize(obj, stream);
+            stream.Seek(0, SeekOrigin.Begin);
+            var fromBytes = converter.Deserialize<SimpleClassWithFieldsAndReadonlyField>(stream.ToArray());
+
+            // assert
+            fromBytes.Should().NotBeNull();
+            fromBytes.NormalField.Should().Be(obj.NormalField);
+            fromBytes.ReadonlyField.Should().Be(obj.ReadonlyField);
+            stream.Length.Should().BeLessThan(300, "long readonly value shouldn't be added to the stream");
         }
 
         public class SimpleClassWithFields
@@ -55,6 +75,12 @@ namespace BinaryFormatter.Tests
         public class SimpleClassWithFieldsAndStaticField
         {
             public static string StaticField = new string('t', 99999);
+            public string NormalField;
+        }
+
+        public class SimpleClassWithFieldsAndReadonlyField
+        {
+            public readonly string ReadonlyField = new string('t', 99999);
             public string NormalField;
         }
     }
